@@ -1,12 +1,9 @@
-import org.gradle.internal.os.OperatingSystem
-
 plugins {
     id 'org.jetbrains.kotlin.jvm' version "$kotlin_version"
     id 'application'
 }
 
 repositories {
-    maven { url 'https://jitpack.io' }
     jcenter()
 }
 
@@ -25,9 +22,11 @@ dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
 
+    implementation 'com.beust:klaxon:5.0.1'
+
     compile 'no.tornado:tornadofx:1.7.17'
 }
 
 application {
-    mainClassName = 'dev.willcs.modeller.AppKt'
+    mainClassName = 'dev.willcs.fantastic_engine.AppKt'
 }
