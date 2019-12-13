@@ -1,8 +1,9 @@
-package dev.willcs.fantastic_engine.model
+package dev.willcs.fantastic_engine.model.modelling.json
 
 import com.beust.klaxon.Converter
 import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
+import dev.willcs.fantastic_engine.model.modelling.Point3D
 
 object KlaxonInstance {
     val INSTANCE: Klaxon = Klaxon()

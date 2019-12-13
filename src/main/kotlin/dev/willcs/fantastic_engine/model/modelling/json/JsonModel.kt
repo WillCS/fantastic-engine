@@ -1,8 +1,11 @@
-package dev.willcs.fantastic_engine.model
+package dev.willcs.fantastic_engine.model.modelling.json
 
 import com.beust.klaxon.Json
 
-data class Model(
+import dev.willcs.fantastic_engine.model.modelling.Point3D
+import dev.willcs.fantastic_engine.model.modelling.Rect2D
+
+data class JsonModel(
     var parent:           String,
 
     @Json(name = "display")
@@ -50,10 +53,6 @@ data class ElementFace(
     
     @Json(name = "tintindex")
     val tintIndex:       Boolean = false
-)
-
-data class Texture(
-    val id: String
 )
 
 enum class BlockFace {

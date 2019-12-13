@@ -3,26 +3,13 @@ package dev.willcs.fantastic_engine
 import javafx.scene.control.Label
 import javafx.scene.layout.BorderPane
 import tornadofx.*
-import dev.willcs.fantastic_engine.model.Volume3D
-import dev.willcs.fantastic_engine.model.Point3D
-import dev.willcs.fantastic_engine.model.registerJsonConversions
+import dev.willcs.fantastic_engine.model.modelling.Volume3D
+import dev.willcs.fantastic_engine.model.modelling.Point3D
+import dev.willcs.fantastic_engine.model.modelling.json.registerJsonConversions
+import dev.willcs.fantastic_engine.view.GraphicsView
+import dev.willcs.fantastic_engine.view.RootView
 
-class ModelApp : App(MasterView::class)
-
-class MasterView : View() {
-    override val root = borderpane {
-        top<TopView>()
-        bottom<BottomView>()
-    }
-}
-class TopView : View() {
-    override val root = label("hehe")
-}
-
-class BottomView: View() {
-    override val root = label("funny")
-
-}
+class ModelApp : App(RootView::class)
 
 fun main(args: Array<String>) {
     registerJsonConversions()

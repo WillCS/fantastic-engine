@@ -25,6 +25,18 @@ dependencies {
     implementation 'com.beust:klaxon:5.0.1'
 
     compile 'no.tornado:tornadofx:1.7.17'
+
+    compile "org.jogamp.gluegen:gluegen-rt:2.3.2"
+    compile "org.jogamp.jogl:jogl-all:2.3.2"
+
+    ['linux', 'windows'].each { os ->
+        ['amd64', 'i586'].each { arch ->
+            runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-$os-$arch"
+            runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-$os-$arch"
+        }
+    }
+    runtime "org.jogamp.gluegen:gluegen-rt:2.3.2:natives-macosx-universal"
+    runtime "org.jogamp.jogl:jogl-all:2.3.2:natives-macosx-universal"
 }
 
 application {
