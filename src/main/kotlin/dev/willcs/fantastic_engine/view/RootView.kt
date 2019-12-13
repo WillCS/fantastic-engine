@@ -2,6 +2,7 @@ package dev.willcs.fantastic_engine.view
 
 import tornadofx.*
 import dev.willcs.fantastic_engine.model.modelling.json.Element
+import dev.willcs.fantastic_engine.controller.UIAction
 
 class RootView : View() {
     private val graphicsView: GraphicsView by inject()
@@ -19,17 +20,23 @@ class RootView : View() {
         top {
             menubar {
                 menu("File") {
-                    menu("New") {
-                        item("Json Model")
-                        item("Entity Model")
+                    item(UIAction.NEW.titleKey, UIAction.NEW.keyCombination!!)
+                    item(UIAction.OPEN.titleKey, UIAction.OPEN.keyCombination!!)
+
+                    separator()
+
+                    item(UIAction.SAVE.titleKey,UIAction.SAVE.keyCombination!!)
+                    item(UIAction.SAVE_AS.titleKey, UIAction.SAVE_AS.keyCombination!!)
+
+                    separator()
+
+                    item(UIAction.EXPORT.titleKey)
+
+                    separator()
+
+                    item(UIAction.EXIT.titleKey, UIAction.EXIT.keyCombination!!).action {
+                        close()
                     }
-                    
-                    item("Open")
-                    separator()
-                    item("Save")
-                    item("Save as")
-                    separator()
-                    item("Export")
                 }
                 
                 menu("Edit")
@@ -45,5 +52,10 @@ class RootView : View() {
         }
 
         center = graphicsView.root
+    }
+
+    override fun onBeforeShow() {
+        this.setWindowMinSize(640, 480)
+        this.title = "fantastic-engine"
     }
 }

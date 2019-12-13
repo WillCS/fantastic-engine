@@ -5,11 +5,14 @@ import com.jogamp.opengl.awt.GLJPanel
 import com.jogamp.opengl.glu.GLU
 import javafx.embed.swing.SwingNode
 import tornadofx.*
+import dev.willcs.fantastic_engine.controller.ModelProvider
 
 /*  Thanks to Pixel on StackOverflow for their solution that helped 
  *  me figure this out - https://stackoverflow.com/a/58434114 */
 
 class GraphicsView : View() {
+    private val modelProvider: ModelProvider by inject()
+
     override val root = stackpane {}
 
     init {
@@ -22,7 +25,7 @@ class GraphicsView : View() {
 
         swingNode.content = jPanel
 
-        root.children.add(swingNode)
+        this.root.children.add(swingNode)
     }
 }
 
