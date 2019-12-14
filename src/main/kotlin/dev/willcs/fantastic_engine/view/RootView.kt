@@ -1,6 +1,7 @@
 package dev.willcs.fantastic_engine.view
 
 import tornadofx.*
+import dev.willcs.fantastic_engine.model.ModelType
 import dev.willcs.fantastic_engine.model.modelling.json.Element
 import dev.willcs.fantastic_engine.controller.UIAction
 
@@ -20,7 +21,10 @@ class RootView : View() {
         top {
             menubar {
                 menu("File") {
-                    item(UIAction.NEW.titleKey, UIAction.NEW.keyCombination!!)
+                    item(UIAction.NEW.titleKey, UIAction.NEW.keyCombination!!).action {
+                        find<NewModelFragment>().openModal()
+                    }
+
                     item(UIAction.OPEN.titleKey, UIAction.OPEN.keyCombination!!)
 
                     separator()
@@ -30,7 +34,7 @@ class RootView : View() {
 
                     separator()
 
-                    item(UIAction.EXPORT.titleKey)
+                    item(UIAction.EXPORT.titleKey, UIAction.EXPORT.keyCombination!!)
 
                     separator()
 
@@ -52,6 +56,10 @@ class RootView : View() {
         }
 
         center = graphicsView.root
+    }
+
+    fun initNewModel(type: ModelType): Unit {
+        
     }
 
     override fun onBeforeShow() {

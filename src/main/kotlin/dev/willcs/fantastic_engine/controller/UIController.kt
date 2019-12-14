@@ -7,8 +7,9 @@ enum class UIAction(val titleKey: String, val keyCombination: String? = null) {
     OPEN("open", "Shortcut+O"),
     SAVE("save", "Shortcut+S"),
     SAVE_AS("save_as", "Shortcut+Shift+S"),
-    EXPORT("export"),
-    EXIT("exit", "Shortcut+Q")
+    EXPORT("export", "Shortcut+Shift+E"),
+    EXIT("exit", "Shortcut+Q"),
+    CREATE("create")
 }
 
 class UIController : Controller() {
