@@ -4,6 +4,8 @@ import tornadofx.*
 import dev.willcs.fantastic_engine.model.ModelType
 import dev.willcs.fantastic_engine.model.modelling.json.Element
 import dev.willcs.fantastic_engine.controller.UIAction
+import dev.willcs.fantastic_engine.controller.event.*
+import dev.willcs.fantastic_engine.controller.UIController
 
 class RootView : View() {
     private val graphicsView: GraphicsView by inject()
@@ -22,24 +24,33 @@ class RootView : View() {
             menubar {
                 menu("File") {
                     item(UIAction.NEW.titleKey, UIAction.NEW.keyCombination!!).action {
-                        find<NewModelFragment>().openModal()
+                        fire(UIInputEvent(UIAction.NEW))
                     }
 
-                    item(UIAction.OPEN.titleKey, UIAction.OPEN.keyCombination!!)
+                    item(UIAction.OPEN.titleKey, UIAction.OPEN.keyCombination!!).action {
+                        fire(UIInputEvent(UIAction.OPEN))
+                    }
 
                     separator()
 
-                    item(UIAction.SAVE.titleKey,UIAction.SAVE.keyCombination!!)
-                    item(UIAction.SAVE_AS.titleKey, UIAction.SAVE_AS.keyCombination!!)
+                    item(UIAction.SAVE.titleKey,UIAction.SAVE.keyCombination!!).action {
+                        fire(UIInputEvent(UIAction.SAVE))
+                    }
+
+                    item(UIAction.SAVE_AS.titleKey, UIAction.SAVE_AS.keyCombination!!).action {
+                        fire(UIInputEvent(UIAction.SAVE_AS))
+                    }
 
                     separator()
 
-                    item(UIAction.EXPORT.titleKey, UIAction.EXPORT.keyCombination!!)
+                    item(UIAction.EXPORT.titleKey, UIAction.EXPORT.keyCombination!!).action {
+                        fire(UIInputEvent(UIAction.EXPORT))
+                    }
 
                     separator()
 
                     item(UIAction.EXIT.titleKey, UIAction.EXIT.keyCombination!!).action {
-                        close()
+                        fire(UIInputEvent(UIAction.EXIT))
                     }
                 }
                 
@@ -58,12 +69,34 @@ class RootView : View() {
         center = graphicsView.root
     }
 
-    fun initNewModel(type: ModelType): Unit {
-        
+    init {
+        subscribe<ExitApplicationEvent> {
+            handleCloseEvent()
+        }
+
+        subscribe<NewModelEvent> {
+            handleNewModelEvent()
+        }
+
+        subscribe<OpenModelEvent> {
+            handleOpenModelEvent()
+        }
     }
 
     override fun onBeforeShow() {
         this.setWindowMinSize(640, 480)
         this.title = "fantastic-engine"
+    }
+
+    private fun handleCloseEvent() {
+        this.close()
+    }
+
+    private fun handleNewModelEvent() {
+        find<NewModelFragment>().openModal()
+    }
+
+    private fun handleOpenModelEvent() {
+        
     }
 }

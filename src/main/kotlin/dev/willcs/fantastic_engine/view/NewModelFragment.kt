@@ -30,11 +30,11 @@ class NewModelFragment : Fragment() {
             }
 
             vbox(spacing = 20, alignment = Pos.CENTER) {
-                button(UIAction.CREATE.titleKey) {
-                    action {
+                // button(UIAction.CREATE.titleKey) {
+                //     action {
 
-                    }
-                }
+                //     }
+                // }
             }
         }
     }

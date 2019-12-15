@@ -1,7 +1,7 @@
 package dev.willcs.fantastic_engine.model.modelling.json
 
 import com.beust.klaxon.Json
-
+import dev.willcs.fantastic_engine.model.modelling.Model
 import dev.willcs.fantastic_engine.model.modelling.Point3D
 import dev.willcs.fantastic_engine.model.modelling.Rect2D
 import dev.willcs.fantastic_engine.model.modelling.Texture
@@ -17,7 +17,7 @@ data class JsonModel(
 
     @Json(name = "ambientocclusion")
     var ambientOcclusion: Boolean = true
-)
+) : Model()
 
 data class Element(
     @Json(name = "__comment")

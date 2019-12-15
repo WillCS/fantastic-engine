@@ -5,13 +5,16 @@ import com.jogamp.opengl.awt.GLJPanel
 import com.jogamp.opengl.glu.GLU
 import javafx.embed.swing.SwingNode
 import tornadofx.*
+import dev.willcs.fantastic_engine.view.graphics.ModelRenderer
 import dev.willcs.fantastic_engine.controller.ModelProvider
+import dev.willcs.fantastic_engine.model.ModelType
 
 /*  Thanks to Pixel on StackOverflow for their solution that helped 
  *  me figure this out - https://stackoverflow.com/a/58434114 */
 
 class GraphicsView : View() {
     private val modelProvider: ModelProvider by inject()
+    private val modelType: ModelType = ModelType.ENTITY
 
     override val root = stackpane {}
 
