@@ -6,8 +6,8 @@ import dev.willcs.fantastic_engine.model.modelling.Point2DI
 import dev.willcs.fantastic_engine.model.modelling.Texture
 
 data class EntityModel(
-    val assemblies: List<Assembly>,
-    val textures:   List<Texture>
+    val assemblies: List<Assembly> = ArrayList(),
+    val textures:   List<Texture> = ArrayList()
 ) : Model()
 
 data class Assembly(

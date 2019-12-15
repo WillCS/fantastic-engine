@@ -7,14 +7,15 @@ import javafx.embed.swing.SwingNode
 import tornadofx.*
 import dev.willcs.fantastic_engine.view.graphics.ModelRenderer
 import dev.willcs.fantastic_engine.controller.ModelProvider
-import dev.willcs.fantastic_engine.model.ModelType
+import dev.willcs.fantastic_engine.controller.event.ModelChangedEvent
+import dev.willcs.fantastic_engine.model.modelling.Model
+import dev.willcs.fantastic_engine.model.ModelTypeRegistry
 
 /*  Thanks to Pixel on StackOverflow for their solution that helped 
  *  me figure this out - https://stackoverflow.com/a/58434114 */
 
 class GraphicsView : View() {
     private val modelProvider: ModelProvider by inject()
-    private val modelType: ModelType = ModelType.ENTITY
 
     override val root = stackpane {}
 
@@ -29,13 +30,29 @@ class GraphicsView : View() {
         swingNode.content = jPanel
 
         this.root.children.add(swingNode)
+
+        Renderer.setModel(this.modelProvider.getModel())
+
+        subscribe<ModelChangedEvent> { event ->
+            Renderer.setModel(this@GraphicsView.modelProvider.getModel())
+        }
     }
 }
 
 private object Renderer : GLEventListener {
+    private var renderModel: ModelRenderer? = null
+    private var model: Model? = null
+
+    fun setModel(model: Model) {
+        Renderer.renderModel = ModelTypeRegistry.getRenderer(model::class)
+        println(model::class)
+        println(Renderer.model)
+        Renderer.model = model
+    }
+
     override fun reshape(autoDrawable: GLAutoDrawable, 
             x: Int, y: Int, width: Int, height: Int) {
-        val gl2Instance = autoDrawable.getGL()?.getGL2()!!
+        val gl2Instance = autoDrawable.getGL().getGL2()
         
         gl2Instance.glMatrixMode(GL2.GL_PROJECTION)
         gl2Instance.glLoadIdentity()
@@ -54,21 +71,12 @@ private object Renderer : GLEventListener {
     override fun dispose(autoDrawable: GLAutoDrawable) {}
 
     override fun display(autoDrawable: GLAutoDrawable) {
-        val width  = 500
-        val height = 500
-
         val gl2Instance = autoDrawable.getGL().getGL2()
 
         gl2Instance.glClear(GL.GL_COLOR_BUFFER_BIT)
 
-        gl2Instance.glLoadIdentity()
-        gl2Instance.glBegin(GL.GL_TRIANGLES)
-        gl2Instance.glColor3f(1F, 0F, 0F)
-        gl2Instance.glVertex2f(0F, 0F)
-        gl2Instance.glColor3f(0F, 1F, 0F)
-        gl2Instance.glVertex2f(width.toFloat(), 0F)
-        gl2Instance.glColor3f(0F, 0F, 1F)
-        gl2Instance.glVertex2f((width / 2).toFloat(), height.toFloat())
-        gl2Instance.glEnd()
+        if (Renderer.model != null) {
+            Renderer.renderModel?.invoke(Renderer.model!!, gl2Instance)
+        }
     }
 }

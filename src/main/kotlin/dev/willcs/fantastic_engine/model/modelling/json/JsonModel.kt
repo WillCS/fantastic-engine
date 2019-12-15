@@ -7,13 +7,13 @@ import dev.willcs.fantastic_engine.model.modelling.Rect2D
 import dev.willcs.fantastic_engine.model.modelling.Texture
 
 data class JsonModel(
-    var parent:           String,
+    var parent:           String? = null,
 
     @Json(name = "display")
-    var displayTypes:     List<DisplayType>,
+    var displayTypes:     List<DisplayType> = ArrayList(),
 
-    var textures:         List<Texture>,
-    var elements:         List<Element>,
+    var textures:         List<Texture> = ArrayList(),
+    var elements:         List<Element> = ArrayList(),
 
     @Json(name = "ambientocclusion")
     var ambientOcclusion: Boolean = true

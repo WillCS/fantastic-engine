@@ -15,3 +15,5 @@ object OpenModelEvent : FXEvent()
 object ExportModelEvent : FXEvent()
 
 object ExitApplicationEvent: FXEvent()
+
+object ModelChangedEvent: FXEvent()

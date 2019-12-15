@@ -1,7 +1,6 @@
 package dev.willcs.fantastic_engine.view
 
 import tornadofx.*
-import dev.willcs.fantastic_engine.model.ModelType
 import dev.willcs.fantastic_engine.model.modelling.json.Element
 import dev.willcs.fantastic_engine.controller.UIAction
 import dev.willcs.fantastic_engine.controller.event.*
