@@ -1,6 +1,7 @@
 package dev.willcs.fantastic_engine.view
 
 import tornadofx.*
+import javafx.application.Platform
 import dev.willcs.fantastic_engine.model.modelling.json.Element
 import dev.willcs.fantastic_engine.controller.UIAction
 import dev.willcs.fantastic_engine.controller.event.*
@@ -88,7 +89,7 @@ class RootView : View() {
     }
 
     private fun handleCloseEvent() {
-        this.close()
+        System.exit(0)
     }
 
     private fun handleNewModelEvent() {

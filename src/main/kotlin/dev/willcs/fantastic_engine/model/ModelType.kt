@@ -23,11 +23,11 @@ object ModelTypeRegistry {
         modelTypes.put(type, ModelTypeData(renderer, nameKey))
     }
 
-    private fun <T: Model> get(type:KClass<T>): ModelTypeData? = ModelTypeRegistry.modelTypes.getOrDefault(type, null)
+    private fun <T: Model> get(type:KClass<T>): ModelTypeData = ModelTypeRegistry.modelTypes.get(type)!!
 
-    fun <T : Model>getRenderer(type: KClass<T>): ModelRenderer? = ModelTypeRegistry.get(type)?.renderer
+    fun <T : Model>getRenderer(type: KClass<T>): ModelRenderer = ModelTypeRegistry.get(type).renderer
 
-    fun <T : Model>getNameKey(type: KClass<T>): String? = ModelTypeRegistry.get(type)?.nameKey
+    fun <T : Model>getNameKey(type: KClass<T>): String = ModelTypeRegistry.get(type).nameKey
 
     fun allTypes(): MutableSet<KClass<out Model>> = ModelTypeRegistry.modelTypes.keys
 }

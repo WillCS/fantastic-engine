@@ -1,6 +1,15 @@
 package dev.willcs.fantastic_engine.model.modelling
 
-data class Point3D(val x: Double, val y: Double, val z: Double)
+data class Point3D(val x: Double, val y: Double, val z: Double) {
+    fun getMagnitude(): Double = Math.sqrt(
+        this.x * this.x + this.y * this.y + this.z * this.z)
+
+    fun getNormal(): Point3D = this.getMagnitude().let { magnitude ->
+        Point3D(this.x / magnitude, this.y / magnitude, this.z / magnitude)
+    }
+
+    fun negate(): Point3D = Point3D(-1 * this.x, -1 * this.y, -1 * this.z)
+}
 
 data class Point2D(val x: Double, val y: Double)
 
