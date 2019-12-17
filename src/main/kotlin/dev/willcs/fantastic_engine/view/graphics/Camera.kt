@@ -17,37 +17,24 @@ class OrbitalCamera(
         var radius: Double) {
     private val glu: GLU = GLU()
     private var aspectRatio: Double = 1.0
-    
-    fun unproject(screenPoint: Point2DI, glInstance: GL2): Point3D
-        = this.unproject(screenPoint.x, screenPoint.y, glInstance)
-    
-    fun unproject(screenX: Int, screenY: Int, glInstance: GL2): Point3D {
-        var outCoords: DoubleArray = DoubleArray(3)
-        this.glu.gluUnProject(
-                screenX.toDouble(), screenY.toDouble(), 0.0, 
-                this.getModelTransform(glInstance), 0, 
-                this.getProjection(glInstance),     0, 
-                this.getViewport(glInstance),       0, 
-                outCoords,                0)
-        return Point3D(outCoords[0], outCoords[1], outCoords[2])
-    }
+
+    private var modelTransform: DoubleArray = DoubleArray(16)
+    private var projection:     DoubleArray = DoubleArray(16)
+    private var viewport:       IntArray    = IntArray(16)
 
     fun getModelTransform(glInstance: GL2): DoubleArray {
-        var outArray: DoubleArray = DoubleArray(16)
-        glInstance.glGetDoublev(GL2.GL_MODELVIEW, outArray, 0)
-        return outArray
+        glInstance.glGetDoublev(GL2.GL_MODELVIEW, this.modelTransform, 0)
+        return this.modelTransform
     }
 
     fun getProjection(glInstance: GL2): DoubleArray {
-        var outArray: DoubleArray = DoubleArray(16)
-        glInstance.glGetDoublev(GL2.GL_PROJECTION, outArray, 0)
-        return outArray
+        glInstance.glGetDoublev(GL2.GL_PROJECTION, this.projection, 0)
+        return this.projection
     }
 
     fun getViewport(glInstance: GL2): IntArray {
-        var outArray: IntArray = IntArray(16)
-        glInstance.glGetIntegerv(GL2.GL_VIEWPORT, outArray, 0)
-        return outArray
+        glInstance.glGetIntegerv(GL2.GL_VIEWPORT, this.viewport, 0)
+        return this.viewport
     }
 
     fun getOrigin(): Point3D = this.origin
@@ -92,7 +79,7 @@ class OrbitalCamera(
         }
     }.getNormal()
 
-    fun setOrigin(origin: Point3D, glInstance: GL2) {
+    fun setOrigin(origin: Point3D) {
         this.origin = origin
     }
 
@@ -101,6 +88,8 @@ class OrbitalCamera(
         glInstance.glLoadIdentity()
 
         this.glu.gluPerspective(fov, this.aspectRatio, 1.0, 100.0)
+
+        this.getProjection(glInstance)
     }
 
     fun reshapeViewport(x: Int, y: Int, width: Int, height: Int, glInstance: GL2) {
@@ -110,9 +99,11 @@ class OrbitalCamera(
         glInstance.glLoadIdentity()
 
         glInstance.glViewport(x, y, width, height)
+
+        this.getViewport(glInstance)
     }
 
-    fun beginFrame(glInstance: GL2) {
+    fun lookAtOrigin(glInstance: GL2) {
         glInstance.glMatrixMode(GL2.GL_MODELVIEW)
         glInstance.glLoadIdentity()
 
@@ -123,5 +114,7 @@ class OrbitalCamera(
            -cameraPos.x,  -cameraPos.y,  -cameraPos.z,
             this.origin.x, this.origin.y, this.origin.z,
             upDirection.x, upDirection.y, upDirection.z)
+
+        this.getModelTransform(glInstance)
     }
 }

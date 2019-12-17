@@ -1,23 +1,21 @@
 package dev.willcs.fantastic_engine.view
 
 import tornadofx.*
+import javafx.stage.WindowEvent
+import javafx.scene.control.TitledPane
+import javafx.event.Event
 import javafx.application.Platform
 import dev.willcs.fantastic_engine.model.modelling.json.Element
 import dev.willcs.fantastic_engine.controller.UIAction
 import dev.willcs.fantastic_engine.controller.event.*
 import dev.willcs.fantastic_engine.controller.UIController
+import dev.willcs.fantastic_engine.model.ModelTypeRegistry
+import dev.willcs.fantastic_engine.controller.ModelProvider
 
 class RootView : View() {
-    private val graphicsView: GraphicsView by inject()
-    // private val componentTree = treeview<Element> {
-    //     root = TreeItem(Element(comment = "Components"))
-
-    //     cellFormat { text = it.comment }
-
-    //     populate { parent ->
-    //         parent.
-    //     }
-    // }
+    private val graphicsView:  GraphicsView by inject()
+    private val modelProvider: ModelProvider by inject()
+    private val modelPane: TitledPane = TitledPane("model", null)
 
     override val root = borderpane {
         top {
@@ -60,26 +58,28 @@ class RootView : View() {
 
         left {
             squeezebox {
-                fold("Model", expanded = true) {
-
-                }
+                add(this@RootView.modelPane)
             }
         }
 
-        center = graphicsView.root
+        center = this@RootView.graphicsView.root
     }
 
     init {
         subscribe<ExitApplicationEvent> {
-            handleCloseEvent()
+            this@RootView.handleCloseEvent()
         }
 
         subscribe<NewModelEvent> {
-            handleNewModelEvent()
+            this@RootView.handleNewModelEvent()
         }
 
         subscribe<OpenModelEvent> {
-            handleOpenModelEvent()
+            this@RootView.handleOpenModelEvent()
+        }
+
+        subscribe<ModelChangedEvent> {
+            this@RootView.handleModelChangedEvent()
         }
     }
 
@@ -89,7 +89,12 @@ class RootView : View() {
     }
 
     private fun handleCloseEvent() {
-        System.exit(0)
+        // Request that the window closes. We do it this way
+        // rather than using Platform.exit or something else
+        // because this is the only way that seems to ensure
+        // that all window-closing events are called.
+        this.currentWindow?.fireEvent(
+            WindowEvent(this.currentWindow, WindowEvent.WINDOW_CLOSE_REQUEST))
     }
 
     private fun handleNewModelEvent() {
@@ -98,5 +103,11 @@ class RootView : View() {
 
     private fun handleOpenModelEvent() {
         
+    }
+
+    private fun handleModelChangedEvent() {
+        val modelClass = this.modelProvider.getModel()::class
+        val newComponentBrowser = ModelTypeRegistry.getComponentBrowserClass(modelClass)
+        this.modelPane.add(find(newComponentBrowser))
     }
 }

@@ -6,6 +6,7 @@ import com.jogamp.opengl.glu.GLU
 import com.jogamp.opengl.util.gl2.GLUT
 import com.jogamp.opengl.util.Animator
 import javafx.scene.input.KeyEvent
+import javafx.scene.input.MouseEvent
 import javafx.scene.input.KeyCode
 import javafx.event.EventHandler
 import javafx.event.EventType
@@ -20,6 +21,7 @@ import dev.willcs.fantastic_engine.controller.event.ModelChangedEvent
 import dev.willcs.fantastic_engine.controller.event.ExitApplicationEvent
 import dev.willcs.fantastic_engine.model.modelling.Model
 import dev.willcs.fantastic_engine.model.modelling.Point3D
+import dev.willcs.fantastic_engine.model.modelling.Point2DI
 import dev.willcs.fantastic_engine.model.ModelTypeRegistry
 
 /*  Thanks to Pixel on StackOverflow for their solution that helped 
@@ -35,6 +37,13 @@ class GraphicsView : View() {
             addEventFilter(KeyEvent.KEY_PRESSED) { event ->
                 this@GraphicsView.getRenderer().doStuff(event.code)
             }
+        }
+
+        addEventFilter(MouseEvent.MOUSE_CLICKED) { event ->
+            val point = Point2DI(
+                event.pickResult.intersectedPoint.x.toInt(),
+                event.pickResult.intersectedPoint.y.toInt())
+            println(this@GraphicsView.getRenderer().findIntersection(point))
         }
     }
 
@@ -77,16 +86,28 @@ class GraphicsView : View() {
 private class Renderer(model: Model) : GLEventListener {
     private var model: Model = model
     private var renderModel: ModelRenderer = ModelTypeRegistry.getRenderer(model::class)
-    private var camera: OrbitalCamera? = null
+    private val camera: OrbitalCamera = OrbitalCamera(Point3D(0.0, 0.0, 0.0), Math.PI / 4, 3 * Math.PI / 4, 50.0)
+    private val glu:  GLU  = GLU()
+    private val glut: GLUT = GLUT()
 
+    /**
+     * Set the model to render. We want to automatically update the model
+     * renderer when this happens.
+     */
     fun setModel(model: Model) {
         this.renderModel = ModelTypeRegistry.getRenderer(model::class)
         this.model = model
     }
 
-    fun doStuff(key: KeyCode) {
-        val camera = this.camera!!
+    fun findIntersection(screenPoint: Point2DI): Point3D {
+        // RAY CASTING
+        return Point3D(0.0, 0.0, 0.0)
+    }
 
+    /**
+     * Testing!
+     */
+    fun doStuff(key: KeyCode) {
         println(key)
         
         when (key) {
@@ -98,29 +119,19 @@ private class Renderer(model: Model) : GLEventListener {
             KeyCode.MINUS  -> camera.radius      += 1
             else -> Unit
         }
-
-        this.camera = camera
     }
 
     override fun reshape(autoDrawable: GLAutoDrawable, 
             x: Int, y: Int, width: Int, height: Int) {
         val gl2Instance = autoDrawable.getGL().getGL2()
 
-        if (this.camera == null) {
-            val camera = OrbitalCamera(
-                    Point3D(0.0, 0.0, 0.0), 
-                    Math.PI / 4, 3 * Math.PI / 4, 50.0)
+        println(x)
+        println(y)
+        println(width)
+        println(height)
 
-            camera.setOrigin(Point3D(0.0, 0.0, 0.0), gl2Instance)
-            this.camera = camera
-        }
-
-        val camera = this.camera!!
-
-        camera.reshapeViewport(x, y, width, height, gl2Instance)
-        camera.setFov(Math.PI / 2, gl2Instance)
-
-        this.camera = camera
+        this.camera.reshapeViewport(x, y, width, height, gl2Instance)
+        this.camera.setFov(Math.PI / 2, gl2Instance)
     }
 
     override fun init(autoDrawable: GLAutoDrawable) {}
@@ -129,7 +140,8 @@ private class Renderer(model: Model) : GLEventListener {
 
     override fun display(autoDrawable: GLAutoDrawable) {
         val gl2Instance = autoDrawable.getGL().getGL2()
-        this.camera?.beginFrame(gl2Instance)
+        // ideally we don't want this to be called every display tick
+        this.camera.lookAtOrigin(gl2Instance)
 
         // Set the background to sky blue
         gl2Instance.glClearColor(135 / 255F, 206 / 255F, 235 / 255F, 0F)
@@ -145,16 +157,13 @@ private class Renderer(model: Model) : GLEventListener {
         gl2Instance.glEnable(GL2.GL_COLOR_MATERIAL)
 
         gl2Instance.glColor3f(1.0F, 1.0F, 1.0F)
-        GLUT().glutSolidCube(1F)
+        this.glut.glutSolidCube(1F)
 
-        // if (this.model != null) {
-        //     this.renderModel?.invoke(this.model!!, gl2Instance)
-        // }
+        this.renderModel(this.model, gl2Instance)
 
         gl2Instance.glDisable(GL2.GL_DEPTH_TEST)
         gl2Instance.glDisable(GL2.GL_LIGHTING)
         gl2Instance.glDisable(GL2.GL_LIGHT0)
         gl2Instance.glDisable(GL2.GL_COLOR_MATERIAL)
-
     }
 }
