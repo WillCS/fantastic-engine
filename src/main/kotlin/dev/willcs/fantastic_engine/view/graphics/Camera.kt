@@ -3,7 +3,8 @@ package dev.willcs.fantastic_engine.view.graphics
 import com.jogamp.opengl.glu.GLU
 import com.jogamp.opengl.GL2
 import dev.willcs.fantastic_engine.model.modelling.Point3D
-import dev.willcs.fantastic_engine.model.modelling.Point2DI
+import dev.willcs.fantastic_engine.model.modelling.Point4D
+import dev.willcs.fantastic_engine.model.modelling.invert4x4Matrix
 
 /**
  *  Simple object encapsulating the camera used for the 3D view.
@@ -18,24 +19,48 @@ class OrbitalCamera(
     private val glu: GLU = GLU()
     private var aspectRatio: Double = 1.0
 
-    private var modelTransform: DoubleArray = DoubleArray(16)
-    private var projection:     DoubleArray = DoubleArray(16)
-    private var viewport:       IntArray    = IntArray(16)
+    private var width  = 0
+    private var height = 0
 
-    fun getModelTransform(glInstance: GL2): DoubleArray {
-        glInstance.glGetDoublev(GL2.GL_MODELVIEW, this.modelTransform, 0)
-        return this.modelTransform
+    private var viewTransform:            DoubleArray = DoubleArray(16)
+    private var inverseViewTransform:     DoubleArray = DoubleArray(16)
+    private var projection:               DoubleArray = DoubleArray(16)
+    private var inverseProjection:        DoubleArray = DoubleArray(16)
+    private var viewport:                 IntArray    = IntArray(4)
+
+    fun unproject(x: Double, y: Double, z: Double): Point3D {
+        var outArray = DoubleArray(3)
+        this.glu.gluUnProject(x, y, z,
+            this.viewTransform,  0,
+            this.projection,     0,
+            this.viewport,       0,
+            outArray,            0)
+        return Point3D(outArray[0], outArray[1], outArray[2])
     }
 
-    fun getProjection(glInstance: GL2): DoubleArray {
-        glInstance.glGetDoublev(GL2.GL_PROJECTION, this.projection, 0)
+    fun getViewTransform(): DoubleArray {
+        return this.viewTransform
+    }
+
+    fun getInverseViewTransform(): DoubleArray {
+        return this.viewTransform
+    }
+
+    fun getProjection(): DoubleArray {
         return this.projection
     }
 
-    fun getViewport(glInstance: GL2): IntArray {
-        glInstance.glGetIntegerv(GL2.GL_VIEWPORT, this.viewport, 0)
+    fun getInverseProjection(): DoubleArray {
+        return this.inverseProjection
+    }
+
+    fun getViewport(): IntArray {
         return this.viewport
     }
+
+    fun getViewportWidth():  Int = this.width
+
+    fun getViewportHeight(): Int = this.height
 
     fun getOrigin(): Point3D = this.origin
 
@@ -87,20 +112,23 @@ class OrbitalCamera(
         glInstance.glMatrixMode(GL2.GL_PROJECTION)
         glInstance.glLoadIdentity()
 
-        this.glu.gluPerspective(fov, this.aspectRatio, 1.0, 100.0)
+        this.glu.gluPerspective(fov, this.aspectRatio, 1.0, 1000.0)
 
-        this.getProjection(glInstance)
+        glInstance.glGetDoublev(GL2.GL_PROJECTION_MATRIX, this.projection, 0)
+        this.inverseProjection = invert4x4Matrix(this.projection)
     }
 
     fun reshapeViewport(x: Int, y: Int, width: Int, height: Int, glInstance: GL2) {
         this.aspectRatio = width / height.toDouble()
+        this.width       = width
+        this.height      = height
 
         glInstance.glMatrixMode(GL2.GL_VIEWPORT)
         glInstance.glLoadIdentity()
 
         glInstance.glViewport(x, y, width, height)
 
-        this.getViewport(glInstance)
+        glInstance.glGetIntegerv(GL2.GL_VIEWPORT, this.viewport, 0)
     }
 
     fun lookAtOrigin(glInstance: GL2) {
@@ -115,6 +143,7 @@ class OrbitalCamera(
             this.origin.x, this.origin.y, this.origin.z,
             upDirection.x, upDirection.y, upDirection.z)
 
-        this.getModelTransform(glInstance)
+        glInstance.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, this.viewTransform, 0)
+        this.inverseViewTransform = invert4x4Matrix(this.viewTransform)
     }
 }

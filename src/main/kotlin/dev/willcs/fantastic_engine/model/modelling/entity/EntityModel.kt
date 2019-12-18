@@ -5,6 +5,7 @@ import dev.willcs.fantastic_engine.model.modelling.Point3D
 import dev.willcs.fantastic_engine.model.modelling.Point2DI
 import dev.willcs.fantastic_engine.model.modelling.Texture
 import dev.willcs.fantastic_engine.model.modelling.TextureList
+import dev.willcs.fantastic_engine.model.Ray
 
 data class EntityModel(
     val assemblies: AssemblyList = AssemblyList(ArrayList()),

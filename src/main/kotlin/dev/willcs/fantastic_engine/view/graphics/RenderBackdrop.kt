@@ -8,7 +8,7 @@ fun renderBackdrop(glInstance: GL2) {
     glInstance.glColor3f(1F, 0F, 0F)
 
     val gridExtent = 10
-    val exaggeration = 0.1F
+    val exaggeration = 1F
 
     for (xCoord in (-gridExtent .. gridExtent)) {
         glInstance.glVertex3f(xCoord * exaggeration, 0F, -gridExtent * exaggeration)

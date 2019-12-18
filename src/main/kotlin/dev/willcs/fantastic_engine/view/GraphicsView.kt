@@ -17,11 +17,14 @@ import dev.willcs.fantastic_engine.view.graphics.ModelRenderer
 import dev.willcs.fantastic_engine.view.graphics.renderBackdrop
 import dev.willcs.fantastic_engine.view.graphics.OrbitalCamera
 import dev.willcs.fantastic_engine.controller.ModelProvider
+import dev.willcs.fantastic_engine.controller.event.RayCastEvent
 import dev.willcs.fantastic_engine.controller.event.ModelChangedEvent
-import dev.willcs.fantastic_engine.controller.event.ExitApplicationEvent
+import dev.willcs.fantastic_engine.model.Ray
 import dev.willcs.fantastic_engine.model.modelling.Model
 import dev.willcs.fantastic_engine.model.modelling.Point3D
+import dev.willcs.fantastic_engine.model.modelling.Point4D
 import dev.willcs.fantastic_engine.model.modelling.Point2DI
+import dev.willcs.fantastic_engine.model.modelling.multiplyMat4ByVec4
 import dev.willcs.fantastic_engine.model.ModelTypeRegistry
 
 /*  Thanks to Pixel on StackOverflow for their solution that helped 
@@ -43,7 +46,8 @@ class GraphicsView : View() {
             val point = Point2DI(
                 event.pickResult.intersectedPoint.x.toInt(),
                 event.pickResult.intersectedPoint.y.toInt())
-            println(this@GraphicsView.getRenderer().findIntersection(point))
+            val ray = this@GraphicsView.getRenderer().castRay(point)
+            fire(RayCastEvent(ray))
         }
     }
 
@@ -86,9 +90,10 @@ class GraphicsView : View() {
 private class Renderer(model: Model) : GLEventListener {
     private var model: Model = model
     private var renderModel: ModelRenderer = ModelTypeRegistry.getRenderer(model::class)
-    private val camera: OrbitalCamera = OrbitalCamera(Point3D(0.0, 0.0, 0.0), Math.PI / 4, 3 * Math.PI / 4, 50.0)
+    private val camera: OrbitalCamera = OrbitalCamera(Point3D(0.0, 0.0, 0.0), Math.PI / 4, 3 * Math.PI / 4, 500.0)
     private val glu:  GLU  = GLU()
     private val glut: GLUT = GLUT()
+    private var cameraChanged = false
 
     /**
      * Set the model to render. We want to automatically update the model
@@ -99,9 +104,25 @@ private class Renderer(model: Model) : GLEventListener {
         this.model = model
     }
 
-    fun findIntersection(screenPoint: Point2DI): Point3D {
-        // RAY CASTING
-        return Point3D(0.0, 0.0, 0.0)
+    fun castRay(screenPoint: Point2DI): Ray {
+        val normalisedX = (2.0 * screenPoint.x) / this.camera.getViewportWidth() - 1.0
+        val normalisedY = 1.0 - (2.0 * screenPoint.y) / this.camera.getViewportHeight()
+
+        val rayClip = Point4D(normalisedX, normalisedY, -1.0, 1.0)
+
+        val inverseProjection = this.camera.getInverseProjection()
+
+        val invertedClip = multiplyMat4ByVec4(inverseProjection, rayClip)
+
+        val eye = Point4D(invertedClip.x, invertedClip.y, -1.0, 0.0)
+
+        val inverseViewTransform = this.camera.getInverseViewTransform()
+        val rayDirection = multiplyMat4ByVec4(inverseViewTransform, eye)
+        val normalisedRayDirection = Point3D(
+            rayDirection.x, rayDirection.y, rayDirection.z
+        ).getNormal()
+
+        return Ray(this.camera.getCameraLocation(), normalisedRayDirection)
     }
 
     /**
@@ -119,19 +140,17 @@ private class Renderer(model: Model) : GLEventListener {
             KeyCode.MINUS  -> camera.radius      += 1
             else -> Unit
         }
+
+        this.cameraChanged = true
     }
 
     override fun reshape(autoDrawable: GLAutoDrawable, 
             x: Int, y: Int, width: Int, height: Int) {
         val gl2Instance = autoDrawable.getGL().getGL2()
 
-        println(x)
-        println(y)
-        println(width)
-        println(height)
-
         this.camera.reshapeViewport(x, y, width, height, gl2Instance)
         this.camera.setFov(Math.PI / 2, gl2Instance)
+        this.camera.lookAtOrigin(gl2Instance)
     }
 
     override fun init(autoDrawable: GLAutoDrawable) {}
@@ -140,8 +159,10 @@ private class Renderer(model: Model) : GLEventListener {
 
     override fun display(autoDrawable: GLAutoDrawable) {
         val gl2Instance = autoDrawable.getGL().getGL2()
-        // ideally we don't want this to be called every display tick
-        this.camera.lookAtOrigin(gl2Instance)
+
+        if (this.cameraChanged) {
+            this.camera.lookAtOrigin(gl2Instance)
+        }
 
         // Set the background to sky blue
         gl2Instance.glClearColor(135 / 255F, 206 / 255F, 235 / 255F, 0F)
@@ -156,8 +177,8 @@ private class Renderer(model: Model) : GLEventListener {
         gl2Instance.glEnable(GL2.GL_LIGHT0)
         gl2Instance.glEnable(GL2.GL_COLOR_MATERIAL)
 
-        gl2Instance.glColor3f(1.0F, 1.0F, 1.0F)
-        this.glut.glutSolidCube(1F)
+        // gl2Instance.glColor3f(1.0F, 1.0F, 1.0F)
+        // this.glut.glutSolidCube(1F)
 
         this.renderModel(this.model, gl2Instance)
 
