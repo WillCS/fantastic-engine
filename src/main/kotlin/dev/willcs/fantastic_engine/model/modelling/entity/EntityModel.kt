@@ -1,8 +1,8 @@
 package dev.willcs.fantastic_engine.model.modelling.entity
 
 import dev.willcs.fantastic_engine.model.modelling.Model
-import dev.willcs.fantastic_engine.model.modelling.Point3D
-import dev.willcs.fantastic_engine.model.modelling.Point2DI
+import dev.willcs.fantastic_engine.model.Vector3
+import dev.willcs.fantastic_engine.model.Vector2I
 import dev.willcs.fantastic_engine.model.modelling.Texture
 import dev.willcs.fantastic_engine.model.modelling.TextureList
 import dev.willcs.fantastic_engine.model.Ray
@@ -18,10 +18,10 @@ data class AssemblyList(
 
 data class Assembly(
     var name:          String,
-    val rotationPoint: Point3D,
-    val rotationAngle: Point3D,
-    val offset:        Point3D,
-    val textureOffset: Point2DI,
+    val rotationPoint: Vector3,
+    val rotationAngle: Vector3,
+    val offset:        Vector3,
+    val textureOffset: Vector2I,
     val children:      SubAssemblyList,
     var mirrored:      Boolean,
     val texture:       Texture
@@ -34,8 +34,8 @@ data class SubAssemblyList(
 
 data class Box(
     var name:          String,
-    val position:      Point3D,
-    val dimensions:    Point3D,
-    val textureCoords: Point2DI,
+    val position:      Vector3,
+    val dimensions:    Vector3,
+    val textureCoords: Vector2I,
     var mirrored:      Boolean
 )

@@ -1,37 +1,70 @@
-package dev.willcs.fantastic_engine.model.modelling
+package dev.willcs.fantastic_engine.model
 
-data class Point4D(val x: Double, val y: Double, val z: Double, val w: Double)
+data class Vector4(val x: Double, val y: Double, val z: Double, val w: Double)
 
-data class Point3D(val x: Double, val y: Double, val z: Double) {
+data class Vector3(val x: Double, val y: Double, val z: Double) {
     fun getMagnitude(): Double = Math.sqrt(
         this.x * this.x + this.y * this.y + this.z * this.z)
 
-    fun getNormal(): Point3D = this.getMagnitude().let { magnitude ->
-        Point3D(this.x / magnitude, this.y / magnitude, this.z / magnitude)
+    fun getNormal(): Vector3 = this.getMagnitude().let { magnitude ->
+        Vector3(this.x / magnitude, this.y / magnitude, this.z / magnitude)
     }
 
-    fun negate(): Point3D = Point3D(-1 * this.x, -1 * this.y, -1 * this.z)
+    fun negate(): Vector3 = Vector3(-1 * this.x, -1 * this.y, -1 * this.z)
+
+    infix fun dot(that: Vector3): Double = this.x * that.x + this.y * that.y + this.z * that.z
+    
+    operator fun unaryMinus(): Vector3 = this.negate()
+
+    operator fun plus(that: Vector3): Vector3 = Vector3(
+        this.x + that.x, this.y + that.y, this.z + that.z)
+
+    operator fun minus(that: Vector3): Vector3 = this + (-that)
+
+    operator fun times(that: Double): Vector3 = Vector3(
+        that * this.x, that * this.y, that * this.z)
 }
 
-data class Point2D(val x: Double, val y: Double)
+data class Vector2(val x: Double, val y: Double) {
+    fun getMagnitude(): Double = Math.sqrt(
+        this.x * this.x + this.y * this.y)
 
-data class Rect2D(val point1: Point2D, val point2: Point2D) {
+    fun getNormal(): Vector2 = this.getMagnitude().let { magnitude ->
+        Vector2(this.x / magnitude, this.y / magnitude)
+    }
+
+    fun negate(): Vector2 = Vector2(-1 * this.x, -1 * this.y)
+
+    infix fun dot(that: Vector2): Double = this.x * that.x + this.y * that.y
+    
+    operator fun unaryMinus(): Vector2 = this.negate()
+
+    operator fun plus(that: Vector2): Vector2 = Vector2(
+        this.x + that.x, this.y + that.y)
+
+    operator fun minus(that: Vector2): Vector2 = this + (-that)
+
+    operator fun times(that: Double): Vector2 = Vector2(
+        that * this.x, that * this.y)
+}
+
+data class Rect2D(val point1: Vector2, val point2: Vector2) {
     constructor(
             x1: Double, y1: Double,
             x2: Double, y2: Double): this(
-        Point2D(x1, y1), Point2D(x2, y2))
+        Vector2(x1, y1), Vector2(x2, y2))
 }
 
-data class Volume3D(val point1: Point3D, val point2: Point3D) {
+data class Volume3D(val point1: Vector3, val point2: Vector3) {
     constructor(
             x1: Double, y1: Double, z1: Double,
             x2: Double, y2: Double, z2: Double): this(
-        Point3D(x1, y1, z1), Point3D(x2, y2, z2))
+        Vector3(x1, y1, z1), Vector3(x2, y2, z2))
 }
 
-data class Point3DI(val x: Int, val y: Int, val z: Int)
+data class Vector3I(val x: Int, val y: Int, val z: Int)
 
-data class Point2DI(val x: Int, val y: Int)
+data class Vector2I(val x: Int, val y: Int)
 
 /**
  *  Quick solution thanks to willnode's answer
@@ -84,7 +117,7 @@ fun invert4x4Matrix(m: DoubleArray): DoubleArray {
     )
 }
 
-fun multiplyMat4ByVec4(m: DoubleArray, vec: Point4D): Point4D = Point4D(
+fun multiplyMat4ByVec4(m: DoubleArray, vec: Vector4): Vector4 = Vector4(
     m[0 + 0]  * vec.x + m[0 + 1]  * vec.y + m[0 + 2]  * vec.z + m[0 + 3]  * vec.w,
     m[4 + 0]  * vec.x + m[4 + 1]  * vec.y + m[4 + 2]  * vec.z + m[4 + 3]  * vec.w,
     m[8 + 0]  * vec.x + m[8 + 1]  * vec.y + m[8 + 2]  * vec.z + m[8 + 3]  * vec.w,

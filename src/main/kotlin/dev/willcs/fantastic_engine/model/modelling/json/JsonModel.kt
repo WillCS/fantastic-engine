@@ -2,8 +2,8 @@ package dev.willcs.fantastic_engine.model.modelling.json
 
 import com.beust.klaxon.Json
 import dev.willcs.fantastic_engine.model.modelling.Model
-import dev.willcs.fantastic_engine.model.modelling.Point3D
-import dev.willcs.fantastic_engine.model.modelling.Rect2D
+import dev.willcs.fantastic_engine.model.Vector3
+import dev.willcs.fantastic_engine.model.Rect2D
 import dev.willcs.fantastic_engine.model.modelling.Texture
 
 data class JsonModel(
@@ -23,15 +23,15 @@ data class Element(
     @Json(name = "__comment")
     var comment:  String,
 
-    var from:     Point3D,
-    var to:       Point3D,
+    var from:     Vector3,
+    var to:       Vector3,
     var faces:    Map<BlockFace, ElementFace>,
     var rotation: Rotation,
     var shade:    Boolean = true
 )
 
 data class Rotation(
-    val origin:  Point3D,
+    val origin:  Vector3,
     val axis:    Axis,
     val angle:   ElementRotation,
     val rescale: Boolean = false
@@ -39,9 +39,9 @@ data class Rotation(
 
 data class DisplayType(
     val display:     DisplayPosition,
-    val rotation:    Point3D,
-    val translation: Point3D,
-    val scale:       Point3D
+    val rotation:    Vector3,
+    val translation: Vector3,
+    val scale:       Vector3
 )
 
 data class ElementFace(

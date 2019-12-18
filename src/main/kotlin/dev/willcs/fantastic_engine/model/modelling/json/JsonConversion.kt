@@ -3,30 +3,30 @@ package dev.willcs.fantastic_engine.model.modelling.json
 import com.beust.klaxon.Converter
 import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
-import dev.willcs.fantastic_engine.model.modelling.Point3D
+import dev.willcs.fantastic_engine.model.Vector3
 
 object KlaxonInstance {
     val INSTANCE: Klaxon = Klaxon()
 }
 
 fun registerJsonConversions(): Unit = arrayOf(
-        point3DConverter
+        Vector3Converter
     ).forEach { KlaxonInstance.INSTANCE.converter(it) }
 
-val point3DConverter = object : Converter {
-    override fun canConvert(cls: Class<*>): Boolean = cls == Point3D::class
+val Vector3Converter = object : Converter {
+    override fun canConvert(cls: Class<*>): Boolean = cls == Vector3::class
 
     override fun toJson(value: Any): String =
-        (value as Point3D).let {
+        (value as Vector3).let {
             "[ ${it.x}, ${it.y}, ${it.z} ]"
         }
 
     override fun fromJson(jv: JsonValue): Any? =
         if(jv.array?.size == 3) {
             jv.array?.map { it as Double }?.let {
-                Point3D(it[0], it[1], it[2])
+                Vector3(it[0], it[1], it[2])
             }
         } else {
-            Point3D(0.0, 0.0, 0.0)
+            Vector3(0.0, 0.0, 0.0)
         }
 }
