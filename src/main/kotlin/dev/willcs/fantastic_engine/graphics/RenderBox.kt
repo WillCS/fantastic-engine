@@ -26,7 +26,6 @@ class RenderBox(
         val dz = this.dimensions.z.toFloat()
         val tx = this.texCoords.x.toFloat()
         val ty = this.texCoords.y.toFloat()
-        val tz = this.texCoords.z.toFloat()
 
         val vertices = FloatBuffer.allocate(8).put(floatArrayOf(
             x,      y + dy, z + dz, // 1
