@@ -5,7 +5,7 @@ import kotlin.reflect.KClass
 import dev.willcs.fantastic_engine.model.modelling.Model
 import dev.willcs.fantastic_engine.model.modelling.entity.EntityModel
 import dev.willcs.fantastic_engine.model.modelling.json.JsonModel
-import dev.willcs.fantastic_engine.view.graphics.*
+import dev.willcs.fantastic_engine.graphics.*
 
 // enum class ModelType(val nameKey: String) {
 //     ENTITY("entity_model_type"), 
@@ -13,7 +13,7 @@ import dev.willcs.fantastic_engine.view.graphics.*
 // }
 
 private data class ModelTypeData(
-    val renderer:         ModelRenderer,
+    val renderer:         RenderModel,
     val nameKey:          String,
     val componentBrowser: KClass<out Fragment>
 )
@@ -22,7 +22,7 @@ object ModelTypeRegistry {
     private val modelTypes: MutableMap<KClass<out Model>, ModelTypeData> = HashMap()
 
     fun <T : Model>registerModelType(type: KClass<T>,
-            renderer: ModelRenderer,
+            renderer: RenderModel,
             nameKey: String,
             componentBrowser: KClass<out Fragment>) {
         modelTypes.put(type, ModelTypeData(renderer, nameKey, componentBrowser))
@@ -30,7 +30,7 @@ object ModelTypeRegistry {
 
     private fun <T: Model> get(type:KClass<T>): ModelTypeData = ModelTypeRegistry.modelTypes.get(type)!!
 
-    fun <T : Model>getRenderer(type: KClass<T>): ModelRenderer = ModelTypeRegistry.get(type).renderer
+    fun <T : Model>getRenderer(type: KClass<T>): RenderModel = ModelTypeRegistry.get(type).renderer
 
     fun <T : Model>getNameKey(type: KClass<T>): String = ModelTypeRegistry.get(type).nameKey
     

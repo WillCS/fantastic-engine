@@ -1,9 +1,9 @@
 package dev.willcs.fantastic_engine.model.modelling.json
 
 import com.beust.klaxon.Json
+import dev.willcs.fantastic_engine.math.Vector3
+import dev.willcs.fantastic_engine.math.Rect2D
 import dev.willcs.fantastic_engine.model.modelling.Model
-import dev.willcs.fantastic_engine.model.Vector3
-import dev.willcs.fantastic_engine.model.Rect2D
 import dev.willcs.fantastic_engine.model.modelling.Texture
 
 data class JsonModel(

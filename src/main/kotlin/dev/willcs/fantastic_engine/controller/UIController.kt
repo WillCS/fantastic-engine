@@ -13,8 +13,6 @@ enum class UIAction(val titleKey: String, val keyCombination: String? = null) {
 }
 
 class UIController : Controller() {
-    private val modelProvider: ModelProvider by inject()
-
     init {
         subscribe<UIInputEvent> { event ->
             fire(when (event.actionType) {

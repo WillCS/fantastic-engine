@@ -31,11 +31,10 @@ class EntityTreeFragment : Fragment() {
                 val parent = it.value
 
                 when(parent) {
-                    is EntityModel  -> listOf(parent.assemblies, parent.textures)
-                    is AssemblyList -> parent.list
-                    is TextureList  -> parent.list
-                    is Assembly     -> parent.children.assemblies + parent.children.cubes
-                    is List<*>      -> (parent as List<Any>).observable()
+                    is EntityModel  -> listOf(parent.assemblies, parent.textures).observable()
+                    is AssemblyList -> parent.list.observable()
+                    is TextureList  -> parent.list.observable()
+                    is Assembly     -> (parent.children.assemblies + parent.children.cubes).observable()
                     else            -> null
                 }
             }

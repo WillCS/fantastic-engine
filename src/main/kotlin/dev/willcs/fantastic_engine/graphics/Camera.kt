@@ -1,10 +1,10 @@
-package dev.willcs.fantastic_engine.view.graphics
+package dev.willcs.fantastic_engine.graphics
 
 import com.jogamp.opengl.glu.GLU
 import com.jogamp.opengl.GL2
-import dev.willcs.fantastic_engine.model.Vector3
-import dev.willcs.fantastic_engine.model.Vector4
-import dev.willcs.fantastic_engine.model.invert4x4Matrix
+import dev.willcs.fantastic_engine.math.Vector3
+import dev.willcs.fantastic_engine.math.Vector4
+import dev.willcs.fantastic_engine.math.invert4x4Matrix
 
 /**
  *  Simple object encapsulating the camera used for the 3D view.
@@ -102,39 +102,26 @@ class OrbitalCamera(
      *  so we transform them to get the grid coordinates that OpenGL
      *  uses.
      */
-    fun getCameraLocation(): Vector3 = Vector3(
-        this.origin.x + this.radius * Math.cos(this.azimuth) * Math.sin(this.inclination),
-        this.origin.y + this.radius * Math.cos(this.inclination),
-        this.origin.z + this.radius * Math.sin(this.azimuth) * Math.sin(this.inclination)
-    )
+    fun getCameraLocation(): Vector3 = this.origin + Vector3(
+        Math.cos(this.azimuth) * Math.sin(this.inclination),
+        Math.cos(this.inclination),
+        Math.sin(this.azimuth) * Math.sin(this.inclination)
+    ) * this.radius
 
     fun getLookDirection(): Vector3 = 
-        this.getCameraLocation().let { location ->
-            Vector3(
-                this.origin.x - location.x,
-                this.origin.y - location.y,
-                this.origin.z - location.z
-            )
-        }.getNormal()
+        (this.getCameraLocation() - this.origin).getNormal()
 
     /***
      *  Fun linear algebra - refer to
      *  https://github.com/WillCS/angular-planets/blob/master/src/app/camera.ts#L304
      *  for more details.
      */
-    fun getUpDirection(): Vector3 = this.getLookDirection().negate().let {
-        orbitNormal -> Vector3(
+    fun getUpDirection(): Vector3 = 
+        (-this.getLookDirection() cross Vector3(
             Math.cos(this.azimuth - (Math.PI / 2)),
             0.0,
             Math.sin(this.azimuth - (Math.PI / 2))
-        ).let { bisection ->
-            Vector3(
-                  orbitNormal.y * bisection.z - orbitNormal.z * bisection.y,
-                -(orbitNormal.x * bisection.z - orbitNormal.z * bisection.x),
-                  orbitNormal.x * bisection.y - orbitNormal.y * bisection.x
-            )
-        }
-    }.getNormal()
+        )).getNormal()
 
     fun setOrigin(origin: Vector3) {
         this.origin = origin
@@ -171,7 +158,7 @@ class OrbitalCamera(
         val upDirection = this.getUpDirection()
 
         this.glu.gluLookAt(
-           -cameraPos.x,  -cameraPos.y,  -cameraPos.z,
+              cameraPos.x,   cameraPos.y,   cameraPos.z,
             this.origin.x, this.origin.y, this.origin.z,
             upDirection.x, upDirection.y, upDirection.z)
 

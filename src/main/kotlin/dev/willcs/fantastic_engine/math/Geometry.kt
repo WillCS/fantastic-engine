@@ -1,4 +1,4 @@
-package dev.willcs.fantastic_engine.model
+package dev.willcs.fantastic_engine.math
 
 data class Vector4(val x: Double, val y: Double, val z: Double, val w: Double)
 
@@ -13,6 +13,13 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
     fun negate(): Vector3 = Vector3(-1 * this.x, -1 * this.y, -1 * this.z)
 
     infix fun dot(that: Vector3): Double = this.x * that.x + this.y * that.y + this.z * that.z
+
+    infix fun cross(that: Vector3): Vector3 = Vector3(
+        this.y * that.z - this.z * that.y,
+      -(this.x * that.z - this.z * that.x),
+        this.x * that.y - this.y * that.x)
+
+    infix fun x(that: Vector3): Vector3 = this cross that
     
     operator fun unaryMinus(): Vector3 = this.negate()
 
@@ -23,6 +30,8 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
 
     operator fun times(that: Double): Vector3 = Vector3(
         that * this.x, that * this.y, that * this.z)
+
+    operator fun div(that: Double): Vector3 = this * (1/that)
 }
 
 data class Vector2(val x: Double, val y: Double) {

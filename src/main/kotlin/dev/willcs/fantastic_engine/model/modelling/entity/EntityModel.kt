@@ -1,11 +1,11 @@
 package dev.willcs.fantastic_engine.model.modelling.entity
 
 import dev.willcs.fantastic_engine.model.modelling.Model
-import dev.willcs.fantastic_engine.model.Vector3
-import dev.willcs.fantastic_engine.model.Vector2I
+import dev.willcs.fantastic_engine.math.Vector3
+import dev.willcs.fantastic_engine.math.Vector2I
 import dev.willcs.fantastic_engine.model.modelling.Texture
 import dev.willcs.fantastic_engine.model.modelling.TextureList
-import dev.willcs.fantastic_engine.model.Ray
+import dev.willcs.fantastic_engine.math.Ray
 
 data class EntityModel(
     val assemblies: AssemblyList = AssemblyList(ArrayList()),

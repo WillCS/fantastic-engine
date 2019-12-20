@@ -11,6 +11,7 @@ import javafx.collections.FXCollections
 import javafx.geometry.Pos
 import javafx.beans.value.ObservableValue
 import java.lang.Math
+import dev.willcs.fantastic_engine.math.Vector3
 
 class NewModelFragment : Fragment() {
     private val modelSetup: NewModelSetup = NewModelSetup()
@@ -33,12 +34,14 @@ class NewModelFragment : Fragment() {
                 hbox(spacing = 20) {
                     field("x_size") {
                         val spinner = powerOfTwoSpinner()
+                        @Suppress("UNCHECKED_CAST")
                         spinner.bind(modelSetup.textureWidthProperty as ObservableValue<Int>)
                         add(spinner)
                     }
 
                     field("y_size") {
                         val spinner = powerOfTwoSpinner()
+                        @Suppress("UNCHECKED_CAST")
                         spinner.bind(modelSetup.textureHeightProperty as ObservableValue<Int>)
                         add(spinner)
                     }

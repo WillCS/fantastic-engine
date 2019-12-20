@@ -28,8 +28,7 @@ class JsonListFragment : Fragment() {
             // This needs to search for parent models somewhere, until then
             // we'll just list the elements and the textures
             when(parent) {
-                is JsonModel -> setOf(parent.elements, parent.textures)
-                is Set<*>    -> (parent as Set<Any>).observable()
+                is JsonModel -> listOf(parent.elements, parent.textures).observable()
                 else         -> null
             }
         }

@@ -8,15 +8,13 @@ import dev.willcs.fantastic_engine.model.ModelTypeRegistry
 import dev.willcs.fantastic_engine.view.RootView
 import dev.willcs.fantastic_engine.view.EntityTreeFragment
 import dev.willcs.fantastic_engine.view.JsonListFragment
-import dev.willcs.fantastic_engine.view.graphics.renderJsonModel
-import dev.willcs.fantastic_engine.view.graphics.renderEntityModel
+import dev.willcs.fantastic_engine.graphics.renderJsonModel
+import dev.willcs.fantastic_engine.graphics.renderEntityModel
 import dev.willcs.fantastic_engine.controller.UIController
-import dev.willcs.fantastic_engine.controller.ModelProvider
 
 class ModelApp : App(RootView::class) {
     init {
         find(UIController::class)
-        find(ModelProvider::class)
 
         ModelTypeRegistry.registerModelType(
             JsonModel::class,

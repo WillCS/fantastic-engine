@@ -1,6 +1,6 @@
 package dev.willcs.fantastic_engine.model.modelling
 
-import dev.willcs.fantastic_engine.model.Vector2
+import dev.willcs.fantastic_engine.math.Vector2
 
 data class TextureList(
     val list: List<Texture>

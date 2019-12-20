@@ -3,7 +3,7 @@ package dev.willcs.fantastic_engine.model.modelling.json
 import com.beust.klaxon.Converter
 import com.beust.klaxon.JsonValue
 import com.beust.klaxon.Klaxon
-import dev.willcs.fantastic_engine.model.Vector3
+import dev.willcs.fantastic_engine.math.Vector3
 
 object KlaxonInstance {
     val INSTANCE: Klaxon = Klaxon()
