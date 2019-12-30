@@ -1,0 +1,57 @@
+button.gearButton {
+  display: inline-block;
+  background-color: #00000000;
+  border: none;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+}
+
+span.gearSpindle {
+  display: inline-block;
+  background-color: #acabab10;
+  border-color: #585858;
+  border-style: solid;
+  width: 12px;
+  height: 12px;
+  border-width: 8px;
+  border-radius: 16px;
+  transition: border-color 0.2s;
+}
+
+span.gearSpindle > span {
+  position: absolute;
+  background-color: #585858;
+  width: 8px;
+  height: 8px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
+
+button.gearButton:hover {
+  cursor: pointer;
+}
+
+button.gearButton:active {
+  border: none;
+  outline: none;
+}
+
+button.gearButton:hover > span.gearSpindle {
+  animation: rotate 5s linear infinite;
+  border-color: #58d695;
+}
+
+button.gearButton:hover > span.gearSpindle > span {
+  background-color: #58d695;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
