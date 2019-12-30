@@ -1,0 +1,36 @@
+span.controlBar {
+    display: inline-block;
+    width: 50px;
+    height: 100vh;
+    background-color: #272727;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+div.controlBarTop {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex-flow: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    position: absolute;
+    top: 0;
+}
+
+div.controlBarBottom {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+span.detailView {
+    display: inline-block;
+    width: 250px;
+    height: 100vh;
+    background-color: #2f2f2f;
+    position: absolute;
+    left: 50px;
+}
