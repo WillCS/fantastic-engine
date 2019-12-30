@@ -1,10 +1,19 @@
-button.gearButton {
+button.controlButton {
   display: inline-block;
   background-color: #00000000;
   border: none;
   width: 50px;
   height: 50px;
   padding: 0;
+}
+
+button.controlButton:hover {
+  cursor: pointer;
+}
+
+button.controlButton:active {
+  border: none;
+  outline: none;
 }
 
 span.gearSpindle {
@@ -28,21 +37,12 @@ span.gearSpindle > span {
   transition: background-color 0.2s;
 }
 
-button.gearButton:hover {
-  cursor: pointer;
-}
-
-button.gearButton:active {
-  border: none;
-  outline: none;
-}
-
-button.gearButton:hover > span.gearSpindle {
+button.controlButton.gear:hover > span.gearSpindle {
   animation: rotate 5s linear infinite;
   border-color: #58d695;
 }
 
-button.gearButton:hover > span.gearSpindle > span {
+button.controlButton.gear:hover > span.gearSpindle > span {
   background-color: #58d695;
 }
 

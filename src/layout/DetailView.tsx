@@ -1,9 +1,10 @@
 import React from 'react';
 import { Component, ReactNode } from 'react';
 import './Layout.css';
+import { AppContext } from '../state/context';
 
 export interface DetailViewProps {
-
+  context: AppContext
 }
 
 export class DetailView extends Component<DetailViewProps> {
@@ -13,9 +14,17 @@ export class DetailView extends Component<DetailViewProps> {
 
   public render(): ReactNode {
     return (
-      <span className='detailView'>
+      <span className={this.getClassName()}>
 
       </span>
     );
+  }
+
+  private getClassName(): string {
+    if(this.props.context.shouldDisplayDetailView()) {
+      return 'detailView';
+    } else {
+      return 'detailView hidden';
+    }
   }
 }

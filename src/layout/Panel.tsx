@@ -3,10 +3,12 @@ import { Component, ReactNode } from 'react';
 import './Layout.css';
 import { ControlBar } from './ControlBar';
 import { DetailView } from './DetailView';
+import { ContextController } from '../state/contextController';
 import { AppContext } from '../state/context';
 
 export interface PanelProps {
-    context: AppContext
+    context: AppContext,
+    contextController: ContextController
 }
 
 export class Panel extends Component<PanelProps> {
@@ -17,9 +19,12 @@ export class Panel extends Component<PanelProps> {
   public render(): ReactNode {
     return (
       <div className='panel'>
-          <ControlBar />
-          { this.props.context.shouldDisplayDetailView() && <DetailView /> }
-
+          <ControlBar
+            context={this.props.context}
+            contextController={this.props.contextController}
+          />
+          <DetailView 
+            context={this.props.context}/>
       </div>
     );
   }
