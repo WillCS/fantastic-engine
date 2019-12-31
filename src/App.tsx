@@ -4,6 +4,7 @@ import './App.css';
 import { Panel } from './layout/Panel';
 import { AppContext, DefaultContext } from './state/context';
 import { ContextController } from './state/contextController';
+import { Viewport } from './viewport/Viewport';
 
 export interface AppState {
   context: AppContext;
@@ -23,10 +24,13 @@ export default class App extends Component<any, AppState, any> {
 
   public render(): ReactNode {
     return (
-      <Panel
-        context={this.state.context}
-        contextController={this.contextController}
-      />
+      <div className='appContainer'>
+        <Panel
+          context={this.state.context}
+          contextController={this.contextController}
+        />
+        <Viewport />
+      </div>
     );
   }
 }

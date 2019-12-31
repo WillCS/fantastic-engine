@@ -18,14 +18,14 @@ export class Panel extends Component<PanelProps> {
 
   public render(): ReactNode {
     return (
-      <div className='panel'>
+      <span className='panel'>
           <ControlBar
             context={this.props.context}
             contextController={this.props.contextController}
           />
           <DetailView 
             context={this.props.context}/>
-      </div>
+      </span>
     );
   }
 }

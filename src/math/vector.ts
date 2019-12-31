@@ -1,3 +1,99 @@
+export class Vec2 {
+  private _x: number;
+  private _y: number;
+
+  private lastLength: number = 0;
+  private lengthChanged: boolean = true;
+
+  public set x(value: number) {
+    this.lengthChanged = true;
+    this._x = value;
+  }
+
+  public get x(): number {
+    return this._x;
+  }
+
+  public set y(value: number) {
+    this.lengthChanged = true;
+    this._y = value;
+  }
+
+  public get y(): number {
+    return this._y;
+  }
+
+  public constructor(x: number, y: number) {
+    this._x = x;
+    this._y = y;
+  }
+
+  public multiply(n: number): Vec2 {
+    return new Vec2(this.x * n, this.y * n);
+  }
+
+  public divide(n: number): Vec2 {
+    return new Vec2(this.x / n, this.y / n);
+  }
+
+  public add(v: Vec2): Vec2 {
+    return new Vec2(this.x + v.x, this.y + v.y);
+  }
+
+  public subtract(v: Vec2): Vec2 {
+    return new Vec2(this.x - v.x, this.y - v.y);
+  }
+
+  public dot(v: Vec2): number {
+    return this.x * v.x + this.y * v.y;
+  }
+
+  public get lengthSquared(): number {
+    return this.dot(this);
+  }
+
+  public get length(): number {
+    if (this.lengthChanged) {
+      this.lastLength = Math.sqrt(this.lengthSquared);
+      this.lengthChanged = false;
+    }
+
+    return this.lastLength;
+  }
+
+  public normalize(): Vec2 {
+    return this.divide(this.length);
+  }
+
+  public negate(): Vec2 {
+    return this.multiply(-1);
+  }
+
+  public toArray(): number[] {
+    return [this.x, this.y];
+  }
+
+  public static fromArray(vec: number[]): Vec2 {
+    return new Vec2(vec[0], vec[1]);
+  }
+
+  public toVec3(z: number = 0): Vec3 {
+    return new Vec3(this.x, this.y, z);
+  }
+
+  public toVec4(z: number = 0, w: number = 0): Vec4 {
+    return new Vec4(this.x, this.y, z, w);
+  }
+
+  public static one(): Vec2 {
+    return new Vec2(1, 1);
+  }
+
+  public static zero(): Vec2 {
+    return new Vec2(0, 0);
+  }
+}
+
 export class Vec3 {
   private _x: number;
   private _y: number;

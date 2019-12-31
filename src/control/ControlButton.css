@@ -1,5 +1,6 @@
 button.controlButton {
   display: inline-block;
+  position: relative;
   background-color: #00000000;
   border: none;
   width: 50px;
@@ -15,6 +16,8 @@ button.controlButton:active {
   border: none;
   outline: none;
 }
+
+/* GEAR BUTTON */
 
 span.gearSpindle {
   display: inline-block;
@@ -54,4 +57,147 @@ button.controlButton.gear:hover > span.gearSpindle > span {
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* NEW FILE BUTTONS */
+
+button.controlButton > span.new:nth-child(1) {
+  left: 10px;
+  top: 8px;
+  width: 19px;
+  height: 2px;
+}
+
+button.controlButton > span.new:nth-child(2) {
+  left: 10px;
+  top: 8px;
+  width: 2px;
+  height: 32px;
+}
+
+button.controlButton > span.new:nth-child(3) {
+  left: 10px;
+  top: 40px;
+  width: 29px;
+  height: 2px;
+}
+
+button.controlButton > span.new:nth-child(4) {
+  left: 37px;
+  top: 18px;
+  width: 2px;
+  height: 22px;
+}
+
+button.controlButton > span.new:nth-child(5) {
+  left: 27px;
+  top: 8px;
+  width: 2px;
+  height: 12px;
+}
+
+button.controlButton > span.new:nth-child(6) {
+  left: 29px;
+  top: 18px;
+  width: 8px;
+  height: 2px;
+}
+
+button.controlButton > span.new:nth-child(7) {
+  left: 32px;
+  top: 6.5px;
+  width: 2px;
+  height: 14px;
+  transform: rotate(-45deg);
+}
+
+/* CREEPER BUTTON */
+
+button.controlButton.creeper > span {
+  position: absolute;
+  display: inline-block;
+  background-color: #585858;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+button.controlButton.creeper:hover > span {
+  background-color: #58d695;
+}
+
+button.controlButton.creeper > span.creeper:nth-child(8) {
+  left: 16px;
+  top: 21px;
+  width: 6px;
+  height: 6px;
+}
+
+button.controlButton.creeper > span.creeper:nth-child(9) {
+  left: 28px;
+  top: 21px;
+  width: 6px;
+  height: 6px;
+}
+
+button.controlButton.creeper > span.creeper:nth-child(10) {
+  left: 22px;
+  top: 27px;
+  width: 6px;
+  height: 9px;
+}
+
+button.controlButton.creeper > span.creeper:nth-child(11) {
+  left: 19px;
+  top: 30px;
+  width: 3px;
+  height: 9px;
+}
+
+button.controlButton.creeper > span.creeper:nth-child(12) {
+  left: 28px;
+  top: 30px;
+  width: 3px;
+  height: 9px;
+}
+
+/* ANVIL BUTTON */
+
+button.controlButton.anvil > span {
+  position: absolute;
+  display: inline-block;
+  background-color: #585858;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+button.controlButton.anvil:hover > span {
+  background-color: #58d695;
+}
+
+button.controlButton.anvil > span.anvil:nth-child(8) {
+  left: 16px;
+  top: 22px;
+  width:16px;
+  height: 7px;
+}
+
+button.controlButton.anvil > span.anvil:nth-child(9) {
+  left: 20px;
+  top: 29px;
+  width: 8px;
+  height: 3px;
+}
+
+button.controlButton.anvil > span.anvil:nth-child(10) {
+  left: 19px;
+  top: 32px;
+  width: 10px;
+  height: 1px;
+}
+
+button.controlButton.anvil > span.anvil:nth-child(11) {
+  left: 17px;
+  top: 33px;
+  width: 14px;
+  height: 4px;
 }

@@ -28,6 +28,10 @@ export class ControlButton extends Component<ControlButtonProps> {
     switch(this.props.type) {
       case ControlButtonType.GEAR: 
         return this.renderGearButton();
+      case ControlButtonType.ENTITY_MODEL:
+        return this.renderEntityModelButton();
+      case ControlButtonType.JSON_MODEL:
+        return this.renderJsonModelButton();
       default:
         return (
           <button
@@ -39,6 +43,8 @@ export class ControlButton extends Component<ControlButtonProps> {
         );
     }
   }
+
+  /* GEAR BUTTON */
 
   private renderGearButton(): ReactNode {
     const teeth = 8;
@@ -70,5 +76,45 @@ export class ControlButton extends Component<ControlButtonProps> {
     return {
       transform: `translate(-4px, 2px) rotate(${angle}deg) translate(0px, 15px)`
     };
+  }
+
+  /* ENTITY MODEL */
+
+  private renderEntityModelButton(): ReactNode {
+    return (
+      <button
+        title={this.props.title}
+        className='controlButton creeper'
+        onClick={this.props.onClick!}
+      >
+        { MathHelper.range(7).map(id => 
+          <span className='new' key={id} />
+        )}
+
+        { MathHelper.range(5).map(id => 
+          <span className='creeper' key={id} />
+        )}
+      </button>
+    );
+  }
+
+  /* JSON MODEL */
+
+  private renderJsonModelButton(): ReactNode {
+    return (
+      <button
+        title={this.props.title}
+        className='controlButton anvil'
+        onClick={this.props.onClick!}
+      >
+        { MathHelper.range(7).map(id => 
+          <span className='new' key={id} />
+        )}
+
+        { MathHelper.range(4).map(id => 
+          <span className='anvil' key={id} />
+        )}
+      </button>
+    );
   }
 }
