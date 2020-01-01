@@ -1,7 +1,5 @@
-declare var require: any;
-const vertexshaderSource = "";//require('raw-loader!../glsl/vertex.glsl');
-const fragmentShaderSource = "";//require('raw-loader!../glsl/fragment.glsl');
-
+const vertSource = require('./glsl/shader.vert');
+const fragSource = require('./glsl/shader.frag');
 
 export let WebGLHelper = {
 
@@ -60,9 +58,9 @@ export let WebGLHelper = {
 
     try {
       vertexShader =
-        this.compileShader(gl, gl.VERTEX_SHADER, vertexshaderSource);
+        this.compileShader(gl, gl.VERTEX_SHADER, vertSource);
       fragmentShader =
-        this.compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+        this.compileShader(gl, gl.FRAGMENT_SHADER, fragSource);
     } catch (error) {
       console.log('Shaders failed to compile.');
     }
