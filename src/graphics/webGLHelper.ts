@@ -1,6 +1,6 @@
 declare var require: any;
-const vertexshaderSource = require('raw-loader!../glsl/vertex.glsl');
-const fragmentShaderSource = require('raw-loader!../glsl/fragment.glsl');
+const vertexshaderSource = "";//require('raw-loader!../glsl/vertex.glsl');
+const fragmentShaderSource = "";//require('raw-loader!../glsl/fragment.glsl');
 
 
 export let WebGLHelper = {
@@ -78,10 +78,10 @@ export let WebGLHelper = {
     return undefined;
   },
 
-  resizeCanvasToWindowSize(canvas: HTMLCanvasElement): void {
+  resizeCanvasToProperSize(canvas: HTMLCanvasElement): void {
     let pixelRatio: number = window.devicePixelRatio;
 
-    canvas.width = Math.floor(window.innerWidth * pixelRatio);
-    canvas.height = Math.floor(window.innerHeight * pixelRatio);
+    canvas.width = Math.floor(canvas.clientWidth * pixelRatio);
+    canvas.height = Math.floor(canvas.clientHeight * pixelRatio);
   }
 }
