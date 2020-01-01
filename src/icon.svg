@@ -9,13 +9,16 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="142.56406"
-   height="163.07918"
-   viewBox="0 0 37.720073 43.148032"
+   width="188.97638"
+   height="188.97638"
+   viewBox="0 0 50 50"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.4 5da689c313, 2019-01-14"
-   sodipodi:docname="logo.svg">
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="/home/will/projects/modeller/public/favicon.png"
+   inkscape:export-xdpi="32.512001"
+   inkscape:export-ydpi="32.512001">
   <defs
      id="defs2">
     <marker
@@ -76,29 +79,33 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.48"
-     inkscape:cx="71.30783"
-     inkscape:cy="75.642742"
+     inkscape:zoom="2.4607316"
+     inkscape:cx="99.255355"
+     inkscape:cy="87.821495"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer3"
      showgrid="true"
      units="px"
      inkscape:snap-bbox="true"
-     inkscape:bbox-nodes="true"
+     inkscape:bbox-nodes="false"
      inkscape:snap-nodes="true"
      inkscape:window-width="1920"
      inkscape:window-height="1060"
      inkscape:window-x="0"
      inkscape:window-y="20"
-     inkscape:window-maximized="0">
+     inkscape:window-maximized="0"
+     inkscape:snap-global="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-others="false">
     <inkscape:grid
        type="axonomgrid"
        id="grid3747"
        units="px"
        empspacing="10"
        spacingy="2.1166666"
-       originx="-109.45605"
-       originy="-200.47229" />
+       originx="-103.31609"
+       originy="-197.24999" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -113,10 +120,15 @@
     </rdf:RDF>
   </metadata>
   <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Layer 3"
+     transform="translate(6.1399593,3.6296718)" />
+  <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-109.45605,-53.379703)">
+     transform="translate(-103.31609,-49.750032)">
     <path
        style="fill:none;stroke:#585858;stroke-width:1.05833328;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 109.98522,64.166712 v 21.166666 l 18.33087,10.58333 18.33087,-10.58333 V 64.166712"
@@ -127,7 +139,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="Layer 2"
-     transform="translate(0.39916664,0.20367535)">
+     transform="translate(6.5391259,3.8333471)">
     <path
        transform="translate(-109.85522,-53.583377)"
        style="fill:#58d695;fill-opacity:1;stroke:#58d695;stroke-width:0.35277778;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
