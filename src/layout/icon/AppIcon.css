@@ -6,61 +6,12 @@ span.appIcon {
     height: 50px;
 }
 
-span.appIcon > span {
+span.appIcon > img.appIconImg {
     display: inline-block;
     position: absolute;
-}
-
-span.appIcon > span.top {
-    background-color: #58d695;
-    left: 12.5px;
+    left: 5px;
     top: 5px;
-    width: 24px;
-    height: 24px;
-    transform: rotateX(45deg) rotateZ(45deg);
-}
-
-span.appIcon > span.side:nth-child(2) {
-    background-color: #585858;
-    left: 7px;
-    top: 14px;
-    width: 2px;
-    height: 24px;
-    transform: rotateX(45deg) rotateY(45deg);
-}
-
-span.appIcon > span.side:nth-child(3) {
-    background-color: #585858;
-    left: 40px;
-    top: 14px;
-    width: 2px;
-    height: 24px;
-    transform: rotateX(-45deg) rotateY(45deg);
-    
-}
-
-span.appIcon > span.side:nth-child(4) {
-    background-color: #585858;
-    left: 4px;
-    top: 39px;
-    width: 24px;
-    height: 2px;
-    transform: rotateX(45deg) rotateY(45deg);
-}
-
-span.appIcon > span.side:nth-child(5) {
-    background-color: #585858;
-    left: 21px;
-    top: 39px;
-    width: 24px;
-    height: 2px;
-    transform: rotateX(-45deg) rotateY(45deg);
-}
-
-span.appIcon > span.side:nth-child(6) {
-    background-color: #585858;
-    left: 23px;
-    top: 29px;
-    width: 2px;
-    height: 17px;
+    width: 40px;
+    height: 40px;
+    border: none;
 }
