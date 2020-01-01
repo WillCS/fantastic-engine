@@ -31,7 +31,6 @@ export class Viewport extends Component<ViewportProps> {
     const canvas = this.renderTargetRef.current;
 
     if(canvas) {
-
       window.removeEventListener('resize', this.handleWindowResize(canvas));
     }
   }

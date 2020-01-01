@@ -4,6 +4,7 @@ import './Layout.css';
 import { ContextController } from '../state/contextController';
 import { AppContext } from '../state/context';
 import { ControlButton, ControlButtonType } from '../control/ControlButton';
+import { AppIcon } from './icon/AppIcon';
 
 export interface ControlBarProps {
   context: AppContext,
@@ -19,6 +20,7 @@ export class ControlBar extends Component<ControlBarProps> {
     return (
       <span className='controlBar'>
         <div className='controlBarTop'>
+          <AppIcon />
           { this.props.context.populateControlBar(this.props.contextController) }
         </div>
 
