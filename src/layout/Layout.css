@@ -79,8 +79,8 @@ span.collapsibleArrow {
   height: 7px;
   border-top: none;
   border-left: none;
-  border-bottom: 1px solid white;
-  border-right: 1px solid white;
+  border-bottom: 1px solid #B6F5D5;
+  border-right: 1px solid #B6F5D5;
 }
 
 div.collapsibleContainer.open span.collapsibleArrow {

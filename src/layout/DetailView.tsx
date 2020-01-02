@@ -10,10 +10,6 @@ export interface DetailViewProps {
 }
 
 export class DetailView extends Component<DetailViewProps> {
-  constructor(props: DetailViewProps) {
-    super(props);
-  }
-
   public render(): ReactNode {
     return (
       <span className={this.getClassName()}>
@@ -23,7 +19,10 @@ export class DetailView extends Component<DetailViewProps> {
         >
           <TreeView 
             context={this.props.context} 
-            root={this.props.context.getModel()}  
+            root={this.props.context.getModel()}
+            selectionChanged={
+              this.props.context.getModelController()?.setSelection!
+            }
           />
         </Collapsible>
         <Collapsible

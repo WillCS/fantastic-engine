@@ -1,13 +1,14 @@
 import React from 'react';
 import { Component, ReactNode } from 'react';
-import './Tree.css';
 import { AppContext } from '../../state/context';
 import { TreeLayout } from './treeLayout';
 import { TreeItem } from './TreeItem';
+import './Tree.css';
 
 export interface TreeViewProps {
-  context: AppContext;
-  root:    TreeLayout | undefined;
+  selectionChanged: (item: any) => void;
+  context:          AppContext;
+  root:             TreeLayout | undefined;
 }
 
 export interface TreeViewState {
@@ -34,6 +35,8 @@ export class TreeView extends Component<TreeViewProps, TreeViewState> {
     this.setState({
       selected: item
     });
+
+    this.props.selectionChanged(item);
   }
 
   private buildTree(root: TreeLayout | undefined): ReactNode {

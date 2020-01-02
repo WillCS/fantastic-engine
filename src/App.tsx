@@ -6,6 +6,7 @@ import { ContextController } from './state/contextController';
 import { Viewport } from './layout/Viewport';
 import { DetailView } from './layout/DetailView';
 import { ControlBar } from './layout/ControlBar';
+import logo from './logo.svg';
 
 export interface AppState {
   context: AppContext;
@@ -34,6 +35,12 @@ export default class App extends Component<any, AppState, any> {
           context={this.state.context}
         />
         <Viewport />
+
+        <img
+          className='backgroundLogo'
+          src={logo}
+          alt='Mineventor'
+        />
       </div>
     );
   }

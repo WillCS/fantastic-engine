@@ -15,6 +15,7 @@ export enum ControlButtonType {
   NEW_TEXTURE,
   NEW_ASSEMBLY,
   JSON_MODEL,
+  LOAD_MODEL
 }
 
 export interface ControlButtonProps {

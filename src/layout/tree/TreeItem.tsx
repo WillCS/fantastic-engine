@@ -1,8 +1,8 @@
 import React, { CSSProperties } from 'react';
 import { Component, ReactNode } from 'react';
-import './Tree.css';
 import { TreeItemStyling } from './treeLayout';
 import { TreeView } from './TreeView';
+import './Tree.css';
 
 export interface TreeItemProps {
   root: TreeView;
