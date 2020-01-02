@@ -1,10 +1,11 @@
 import React from 'react';
 import { Component, ReactNode } from 'react';
 import './App.css';
-import { Panel } from './layout/Panel';
 import { AppContext, DefaultContext } from './state/context';
 import { ContextController } from './state/contextController';
 import { Viewport } from './layout/Viewport';
+import { DetailView } from './layout/DetailView';
+import { ControlBar } from './layout/ControlBar';
 
 export interface AppState {
   context: AppContext;
@@ -25,9 +26,12 @@ export default class App extends Component<any, AppState, any> {
   public render(): ReactNode {
     return (
       <div className='appContainer'>
-        <Panel
+        <ControlBar
           context={this.state.context}
           contextController={this.contextController}
+        />
+        <DetailView 
+          context={this.state.context}
         />
         <Viewport />
       </div>

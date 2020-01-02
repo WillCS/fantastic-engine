@@ -1,9 +1,8 @@
 span.viewport {
-  position: relative;
-  padding: 0px;
+  position: absolute;
+  left: 300px;
   right: 0px;
-  flex-grow: 1;
-  flex-basis: max-content;
+  height: 100%;
 }
 
 canvas#renderTarget {

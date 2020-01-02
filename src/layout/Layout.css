@@ -1,47 +1,101 @@
 span.controlBar {
-    display: inline-block;
-    width: 50px;
-    height: 100vh;
-    background-color: #272727;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 1;
+  display: inline-block;
+  min-width: 50px;
+  height: 100vh;
+  background-color: #272727;
+  position: relative;
+  left: 0;
+  top: 0;
+  z-index: 1;
 }
 
 div.controlBarTop {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    flex-flow: flex-start;
-    align-items: flex-start;
-    align-content: flex-start;
-    position: absolute;
-    top: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  flex-flow: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+  position: absolute;
+  top: 0;
 }
 
 div.controlBarBottom {
-    width: 100%;
-    position: absolute;
-    bottom: 0;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
 }
 
 span.detailView {
-    display: block;
-    width: 250px;
-    height: 100vh;
-    background-color: #2f2f2f;
-    transition: width 0.2s;
-    z-index: 0;
+  position: absolute;
+  display: inline-block;
+  width: 250px;
+  height: 100vh;
+  left: 50px;
+  top: 0;
+  background-color: #2f2f2f;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  overflow: hidden;
+  transition: left 0.5s;
 }
 
 span.detailView.hidden {
-    width: 0px;
+  left: -250px;
 }
 
-span.panel {
-    display: block;
-    min-width: 50px;
-    flex-basis: min-content;
+div.collapsibleContainer {
+  position: relative;
+  width: 250px;
+}
+
+div.collapsibleContent {
+  position: relative;
+  overflow: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #90A4AE #00000000;
+}
+
+div.collapsibleContainer.closed > div.collapsibleContent {
+  height: 0px;
+}
+
+div.collapsibleLabel {
+  position: relative;
+  height: 20px;
+  background-color: #585858;
+  cursor: pointer;
+}
+
+span.collapsibleArrow {
+  position: relative;
+  display: inline-block;
+  left: 5px;
+  top: -2px;
+  width: 7px;
+  height: 7px;
+  border-top: none;
+  border-left: none;
+  border-bottom: 1px solid white;
+  border-right: 1px solid white;
+}
+
+div.collapsibleContainer.open span.collapsibleArrow {
+  transform: rotate(45deg);
+}
+
+div.collapsibleContainer.closed span.collapsibleArrow {
+  transform: rotate(-45deg);
+}
+
+span.collapsibleTitle {
+  position: relative;
+  font-size: 14px;
+  left: 10px;
+  color: #B6F5D5;
+  font-weight: bold;
+  user-select: none;
 }

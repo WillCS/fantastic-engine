@@ -24,7 +24,8 @@ export class Panel extends Component<PanelProps> {
             contextController={this.props.contextController}
           />
           <DetailView 
-            context={this.props.context}/>
+            context={this.props.context}
+          />
       </span>
     );
   }

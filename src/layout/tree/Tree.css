@@ -1,0 +1,58 @@
+div.treeView {
+  position: relative;
+  overflow: hidden;
+  height: 250px;
+}
+
+div.treeItem {
+  position: relative;
+}
+
+div.treeItemDescendents {
+  position: relative;
+}
+
+div.treeItemLabel {
+  cursor: pointer;
+}
+
+span.treeItemIndentedLabel {
+  position: relative;
+}
+
+div.treeItemLabel:hover {
+  background-color: #3B88B640;
+}
+
+div.treeItemLabel.selected {
+  background-color: #FFAA8F20 !important;
+}
+
+span.treeItemTitle {
+  color: #B6F5D5;
+  font-size: 10pt;
+  position: relative;
+  user-select: none;
+  left: 10px;
+}
+
+span.treeItemArrow {
+  position: relative;
+  display: inline-block;
+  left: 5px;
+  top: -2px;
+  width: 7px;
+  height: 7px;
+  border-top: none;
+  border-left: none;
+  border-bottom: 1px solid #829c94;
+  border-right: 1px solid #829c94;
+}
+
+div.treeItem.open span.treeItemArrow {
+  transform: rotate(45deg);
+}
+
+div.treeItem.closed span.treeItemArrow {
+  transform: rotate(-45deg);
+}

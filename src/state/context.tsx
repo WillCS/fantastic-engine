@@ -2,10 +2,16 @@ import React from 'react';
 import { ReactNode } from 'react';
 import { ContextController } from './contextController';
 import { ControlButton, ControlButtonType } from '../control/ControlButton';
+import { Model } from '../model/model';
+import { EntityModel } from '../model/entityModel';
 
 export abstract class AppContext {
   public shouldDisplayDetailView(): boolean {
     return true;
+  }
+
+  public getModel(): Model | undefined {
+    return undefined;
   }
 
   public abstract populateControlBar(contextController: ContextController): ReactNode[];
@@ -45,11 +51,18 @@ export class DefaultContext extends AppContext {
 }
 
 export class EntityContext extends AppContext {
+  private model: EntityModel;
+
   constructor() {
     super();
+    this.model = new EntityModel();
   }
 
   public populateControlBar(contextController: ContextController): ReactNode[] {
     return [];
+  }
+
+  public getModel(): Model | undefined {
+    return this.model;
   }
 }
