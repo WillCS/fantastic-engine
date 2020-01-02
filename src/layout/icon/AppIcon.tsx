@@ -1,16 +1,14 @@
 import React from 'react';
 import { Component, ReactNode } from 'react';
 import './AppIcon.css';
+import logo from '../../logo.svg';
 import { MathHelper } from '../../math/mathHelper';
 
 export class AppIcon extends Component {
   public render(): ReactNode {
     return (
       <span className='appIcon'>
-        <span className='top'></span>
-          { MathHelper.range(5).map(id => 
-            <span className='side' key={id} />
-          )}
+        <img src={logo} className='appIconImg' alt='logo' title='Mineventor' />
       </span>
     );
   }
