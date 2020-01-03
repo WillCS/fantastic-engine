@@ -34,7 +34,9 @@ export default class App extends Component<any, AppState, any> {
         <DetailView 
           context={this.state.context}
         />
-        <Viewport />
+        <Viewport 
+          context={this.state.context}
+        />
 
         <img
           className='backgroundLogo'

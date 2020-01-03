@@ -201,3 +201,71 @@ button.controlButton.anvil > span.anvil:nth-child(11) {
   width: 14px;
   height: 4px;
 }
+
+/* TRASH BUTTON */
+
+button.controlButton.trash > span {
+  position: absolute;
+  display: inline-block;
+  background-color: #585858;
+  transition: background-color 0.2s, border-color 0.2s;
+  border: 1px #585858 solid;
+  border-radius: 5px;
+}
+
+button.controlButton.trash:hover > span {
+  background-color: #FF7448;
+  border-color: #FF7448;
+}
+
+button.controlButton.trash > span:nth-child(1) {
+  width: 8px;
+  height: 12px;
+  left: 20px;
+  top: 6px;
+}
+
+button.controlButton.trash > span:nth-child(2) {
+  width: 32px;
+  height: 4px;
+  left: 8px;
+  top: 10px;
+}
+
+button.controlButton.trash > span:nth-child(3) {
+  width: 24px;
+  height: 32px;
+  left: 12px;
+  top: 10px;
+}
+
+/* EXIT BUTTON */
+
+button.controlButton.exit > span {
+  position: absolute;
+  display: inline-block;
+  background-color: #585858;
+  transition: background-color 0.2s, border-color 0.2s;
+  border: 0px solid;
+  border-radius: 5px;
+}
+
+button.controlButton.exit:hover > span {
+  background-color: #FF7448;
+}
+
+button.controlButton.exit > span:nth-child(1) {
+  width: 40px;
+  height: 6px;
+  left: 5px;
+  top: 22px;
+  transform: rotate(45deg);
+}
+
+button.controlButton.exit > span:nth-child(2) {
+  width: 40px;
+  height: 6px;
+  left: 5px;
+  top: 22px;
+  transform: rotate(-45deg);
+}

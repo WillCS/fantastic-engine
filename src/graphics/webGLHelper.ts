@@ -58,9 +58,9 @@ export let WebGLHelper = {
 
     try {
       vertexShader =
-        this.compileShader(gl, gl.VERTEX_SHADER, vertSource);
+        this.compileShader(gl, gl.VERTEX_SHADER, vertSource.default);
       fragmentShader =
-        this.compileShader(gl, gl.FRAGMENT_SHADER, fragSource);
+        this.compileShader(gl, gl.FRAGMENT_SHADER, fragSource.default);
     } catch (error) {
       console.log('Shaders failed to compile.');
     }

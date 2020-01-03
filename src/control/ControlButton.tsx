@@ -33,6 +33,10 @@ export class ControlButton extends Component<ControlButtonProps> {
         return this.renderEntityModelButton();
       case ControlButtonType.JSON_MODEL:
         return this.renderJsonModelButton();
+      case ControlButtonType.TRASH:
+        return this.renderTrashButton();
+      case ControlButtonType.EXIT:
+        return this.renderExitButton();
       default:
         return (
           <button
@@ -117,5 +121,37 @@ export class ControlButton extends Component<ControlButtonProps> {
         )}
       </button>
     );
+  }
+
+  /* TRASH */
+
+  private renderTrashButton(): ReactNode {
+    return (
+      <button
+        title={this.props.title}
+        className='controlButton trash'
+        onClick={this.props.onClick!}
+      >
+        { MathHelper.range(3).map(id =>
+          <span key={id} />
+        )}
+      </button>
+    )
+  }
+
+  /* EXIT */
+
+  private renderExitButton(): ReactNode {
+    return (
+      <button
+        title={this.props.title}
+        className='controlButton exit'
+        onClick={this.props.onClick!}
+      >
+        { MathHelper.range(2).map(id =>
+          <span key={id} />
+        )}
+      </button>
+    )
   }
 }

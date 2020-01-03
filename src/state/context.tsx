@@ -88,6 +88,10 @@ export class EntityContext extends AppContext {
       <ControlButton key={'trash'}
         type={ControlButtonType.TRASH}
         title='Delete an object'
+      />,
+      <ControlButton key={'exit'}
+        type={ControlButtonType.EXIT}
+        title='Exit'
       />
     ];
   }
