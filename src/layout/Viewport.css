@@ -1,15 +1,8 @@
 span.viewport {
   position: absolute;
+  left: 300px;
   right: 0px;
   height: 100%;
-}
-
-span.viewport.open {
-  left: 300px;
-}
-
-span.viewport.closed {
-  left: 100%;
 }
 
 canvas#renderTarget {
