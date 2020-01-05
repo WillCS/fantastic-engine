@@ -2,6 +2,11 @@ import { Mat4 } from '../math/matrix';
 import { Vec3 } from '../math/vector';
 import { MathHelper } from '../math/mathHelper';
 
+export enum ProjectionType {
+  PERSPECTIVE,
+  ORTHOGRAPHIC
+}
+
 export abstract class Camera {
   public abstract get location():      Vec3;
   public abstract getProjection():     Mat4;
@@ -17,6 +22,9 @@ export abstract class Camera {
   protected fov:                  number;
   protected aspectRatio:          number;
 
+  public projectionType: ProjectionType;
+
+
   constructor(
       protected width:         number,
       protected height:        number,
@@ -28,6 +36,8 @@ export abstract class Camera {
 
     this.projectionMatrix     = Mat4.identity();
     this.viewTransformMatrix  = Mat4.identity();
+
+    this.projectionType = ProjectionType.PERSPECTIVE;
 
     this.updateProjectionMatrix();
   }
@@ -134,11 +144,23 @@ export class OrbitalCamera extends Camera {
   }
 
   protected updateProjectionMatrix(): void {
-    this.projectionMatrix = Mat4.perspectiveProjection(
-      this.fov,
-      this.aspectRatio,
-      this.nearPlaneDist,
-      this.farPlaneDist);
+    switch(this.projectionType) {
+      case ProjectionType.PERSPECTIVE:
+        this.projectionMatrix = Mat4.perspectiveProjection(
+          this.fov,
+          this.aspectRatio,
+          this.nearPlaneDist,
+          this.farPlaneDist);
+        break;
+      case ProjectionType.ORTHOGRAPHIC:
+        this.projectionMatrix = Mat4.orthographicProjection(
+          this.width,
+          this.height,
+          this.nearPlaneDist,
+          this.farPlaneDist
+        );
+        break;
+    }
   }
 
   protected updateViewTransformMatrix(): void {

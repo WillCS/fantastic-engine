@@ -2,7 +2,7 @@ import { Component, ReactNode, RefObject } from "react";
 import React from "react";
 import './Viewport.css';
 import { WebGLHelper } from "../graphics/webGLHelper";
-import { Renderer, DefaultRenderer } from "../graphics/renderer";
+import { Scene, DefaultScene } from "../graphics/scene";
 import { AppContext } from "../state/context";
 import ReactResizeDetector from 'react-resize-detector';
 
@@ -13,14 +13,13 @@ export interface ViewportProps {
 export class Viewport extends Component<ViewportProps> {
   private renderTargetRef: RefObject<HTMLCanvasElement>;
   private webGL!: WebGLRenderingContext;
-  private shaderProgram!: WebGLProgram;
-  private renderer: Renderer;
+  private scene!: Scene;
+  private rendering: boolean = false;
 
   public constructor(props: ViewportProps) {
     super(props);
 
     this.renderTargetRef = React.createRef();
-    this.renderer = new DefaultRenderer();
 
     this.doLoop = this.doLoop.bind(this);
     this.handleResize = this.handleResize.bind(this);
@@ -31,13 +30,19 @@ export class Viewport extends Component<ViewportProps> {
 
     if(canvas) {
       this.webGL = WebGLHelper.setupCanvas(canvas);
+      this.scene = new DefaultScene(this.webGL);
+
       WebGLHelper.resizeCanvasToProperSize(canvas);
-      this.renderer.setViewportSize(canvas.clientWidth, canvas.clientHeight);
+      this.scene.setViewportSize(canvas.clientWidth, canvas.clientHeight);
 
-      this.shaderProgram = WebGLHelper.buildShaderProgram(this.webGL)!;
-
+      this.rendering = true;
       window.requestAnimationFrame(this.doLoop);
     }
+  }
+
+  public componentWillUnmount(): void {
+    this.rendering = false;
+    this.scene.dispose(this.webGL);
   }
 
   public render(): ReactNode {
@@ -52,8 +57,10 @@ export class Viewport extends Component<ViewportProps> {
   }
 
   private doLoop(t: number): void {
-    this.renderer.render(this.webGL);
-    window.requestAnimationFrame(this.doLoop);
+    if(this.rendering) {
+      this.scene.render(this.webGL, t);
+      window.requestAnimationFrame(this.doLoop);
+    }
   }
 
   private handleResize(width: number, height: number): void {
@@ -63,6 +70,6 @@ export class Viewport extends Component<ViewportProps> {
       WebGLHelper.resizeCanvasToProperSize(canvas as HTMLCanvasElement);
     }
 
-    this.renderer.setViewportSize(width, height);
+    this.scene.setViewportSize(width, height);
   }
 }
