@@ -10,36 +10,46 @@ export interface DetailViewProps {
 }
 
 export class DetailView extends Component<DetailViewProps> {
+  public constructor(props: DetailViewProps) {
+    super(props);
+    this.setSelection = this.setSelection.bind(this);
+  }
+
   public render(): ReactNode {
     return (
       <span className={this.getClassName()}>
-        <Collapsible
-          title='COMPONENTS'
-          open={true}
-        >
-          <TreeView 
-            context={this.props.context} 
-            root={this.props.context.getModel()}
-            selectionChanged={
-              this.props.context.getModelController()?.setSelection!
-            }
-          />
-        </Collapsible>
-        <Collapsible
-          title='PROPERTIES'
-          open={false}
-        >
-
-        </Collapsible>
+        <div className='detailView'>
+          <Collapsible
+            title='COMPONENTS'
+            open={true}
+          >
+            <TreeView 
+              context={this.props.context} 
+              root={this.props.context.getModel()}
+              selectionChanged={this.setSelection}
+            />
+          </Collapsible>
+          <Collapsible
+            title='PROPERTIES'
+            open={false}
+          >
+          </Collapsible>
+        </div>
       </span>
     );
   }
 
   private getClassName(): string {
     if(this.props.context.shouldDisplayDetailView()) {
-      return 'detailView';
+      return 'detailContainer';
     } else {
-      return 'detailView hidden';
+      return 'detailContainer hidden';
+    }
+  }
+
+  private setSelection(selection: any): void {
+    if(this.props.context.hasModel()) {
+      this.props.context.getModelController()!.setSelection(selection);
     }
   }
 }

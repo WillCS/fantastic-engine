@@ -20,6 +20,7 @@ button.controlButton:active {
 /* GEAR BUTTON */
 
 span.gearSpindle {
+  position: absolute;
   display: inline-block;
   background-color: #acabab10;
   border-color: #585858;
@@ -29,6 +30,8 @@ span.gearSpindle {
   border-width: 8px;
   border-radius: 16px;
   transition: border-color 0.2s;
+  left: 11px;
+  top: 11px;
 }
 
 span.gearSpindle > span {

@@ -27,24 +27,29 @@ div.controlBarBottom {
   bottom: 0;
 }
 
-span.detailView {
-  position: absolute;
+span.detailContainer {
+  position: relative;
   display: inline-block;
+  top: 0px;
+  left: 0px;
   width: 250px;
   height: 100vh;
-  left: 50px;
-  top: 0;
+  transition: width 0.5s;
+}
+
+div.detailView {
+  position: relative;
+  float: right;
   background-color: #2f2f2f;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: stretch;
   overflow: hidden;
-  transition: left 0.5s;
 }
 
-span.detailView.hidden {
-  left: -250px;
+span.detailContainer.hidden {
+  width: 0px;
 }
 
 div.collapsibleContainer {

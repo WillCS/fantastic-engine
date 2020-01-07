@@ -13,192 +13,172 @@ const lightGreyG = 88 / 255;
 const lightGreyB = 88 / 255;
 
 export function getCubeTop(webGL: WebGLRenderingContext): StaticMesh {
-  return new StaticMesh(webGL, webGL.TRIANGLE_STRIP, [
-    1, 0, 2, 3
-  ], [
-     1.05, 1,  1.05,
-    -1.05, 1,  1.05,
-    -1.05, 1, -1.05,
-     1.05, 1, -1.05
-  ], [
-    0, 1, 0,
-    0, 1, 0,
-    0, 1, 0,
-    0, 1, 0
-  ], [
-    greenR, greenG, greenB,
-    greenR, greenG, greenB,
-    greenR, greenG, greenB,
-    greenR, greenG, greenB
-  ]);
+  return new StaticMesh(webGL, {
+    defaultDrawMode: webGL.TRIANGLE_STRIP,
+    indices: [
+      1, 0, 2, 3
+    ], 
+    vertices: [
+       1, 1,  1,
+      -1, 1,  1,
+      -1, 1, -1,
+       1, 1, -1
+    ],
+      decoration: [
+      greenR, greenG, greenB,
+      greenR, greenG, greenB,
+      greenR, greenG, greenB,
+      greenR, greenG, greenB
+    ],
+    normals: undefined,
+    texture: undefined
+  });
 }
 
 export function getCubeBase(webGL: WebGLRenderingContext): StaticMesh {
-  return new StaticMesh(webGL, webGL.TRIANGLES, [
-    0,  1,  2,
-    2,  1,  3,
+  return new StaticMesh(webGL, {
+    defaultDrawMode: webGL.TRIANGLES, 
+    indices: [
+      0,  1,  2,
+      2,  1,  3,
 
-    4,  5,  6,
-    6,  5,  7,
+      4,  5,  6,
+      6,  5,  7,
 
-    8,   9, 10,
-    10,  9, 11,
+      8,   9, 10,
+      10,  9, 11,
 
-    12, 13, 14,
-    14, 13, 15
-  ], [
-     1, -1,  1, // NORTH
-     1,  1,  1, // EAST
-    -1, -1,  1, // NORTH
-    -1,  1,  1, // WEST
+      12, 13, 14,
+      14, 13, 15
+    ],
+    vertices: [
+       0.97, -1,  0.97, // NORTH
+       0.97,  1,  0.97, // EAST
+      -0.97, -1,  0.97, // NORTH
+      -0.97,  1,  0.97, // WEST
 
-    -1, -1,  1, // NORTH
-    -1,  1,  1, // WEST
-    -1, -1, -1, // SOUTH
-    -1,  1, -1, // WEST
-    
-    -1, -1, -1, // SOUTH
-    -1,  1, -1, // WEST
-     1, -1, -1, // SOUTH
-     1,  1, -1, // EAST
+      -0.97, -1,  0.97, // NORTH
+      -0.97,  1,  0.97, // WEST
+      -0.97, -1, -0.97, // SOUTH
+      -0.97,  1, -0.97, // WEST
+      
+      -0.97, -1, -0.97, // SOUTH
+      -0.97,  1, -0.97, // WEST
+       0.97, -1, -0.97, // SOUTH
+       0.97,  1, -0.97, // EAST
 
-     1, -1, -1, // SOUTH
-     1,  1, -1, // EAST
-     1, -1,  1, // NORTH
-     1,  1,  1, // EAST
-
-  ], [
-     0, 0,  1,
-     0, 0,  1, // +ve Z
-     0, 0,  1, // NORTH
-     0, 0,  1,
-    -1, 0,  0,
-    -1, 0,  0, // -ve X
-    -1, 0,  0, // WEST
-    -1, 0,  0,
-     0, 0, -1,
-     0, 0, -1, // -ve Z
-     0, 0, -1, // SOUTH
-     0, 0, -1,
-     1, 0,  0,
-     1, 0,  0, // +ve X
-     1, 0,  0, // EAST
-     1, 0,  0
-  ], [
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-    darkGreyR, darkGreyG, darkGreyB,
-  ]);
+       0.97, -1, -0.97, // SOUTH
+       0.97,  1, -0.97, // EAST
+       0.97, -1,  0.97, // NORTH
+       0.97,  1,  0.97, // EAST
+    ],
+    decoration: [
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+      darkGreyR, darkGreyG, darkGreyB,
+    ],
+    normals: undefined,
+    texture: undefined
+  });
 }
 
 export function getCubeBaseOutline(webGL: WebGLRenderingContext): StaticMesh {
-  return new StaticMesh(webGL, webGL.TRIANGLES, [
-    0,  1,  2,
-    2,  1,  3,
+  return new StaticMesh(webGL, {
+    defaultDrawMode: webGL.TRIANGLES, 
+    indices: [
+      0,  1,  2,
+      2,  1,  3,
 
-    4,  5,  6,
-    6,  5,  7,
+      4,  5,  6,
+      6,  5,  7,
 
-    8,   9, 10,
-    10,  9, 11,
+      8,   9, 10,
+      10,  9, 11,
 
-    12, 13, 14,
-    14, 13, 15
-  ], [
-     1.05, -1.05,  1.05, // NORTH
-     1.05,  1,     1.05, // EAST
-    -1.05, -1.05,  1.05, // NORTH
-    -1.05,  1,     1.05, // WEST
+      12, 13, 14,
+      14, 13, 15
+    ],
+    vertices: [
+       1, -1,  1, // NORTH
+       1,  1,  1, // EAST
+      -1, -1,  1, // NORTH
+      -1,  1,  1, // WEST
 
-    -1.05, -1.05,  1.05, // NORTH
-    -1.05,  1,     1.05, // WEST
-    -1.05, -1.05, -1.05, // SOUTH
-    -1.05,  1,    -1.05, // WEST
-    
-    -1.05, -1.05, -1.05, // SOUTH
-    -1.05,  1,    -1.05, // WEST
-     1.05, -1.05, -1.05, // SOUTH
-     1.05,  1,    -1.05, // EAST
+      -1, -1,  1, // NORTH
+      -1,  1,  1, // WEST
+      -1, -1, -1, // SOUTH
+      -1,  1, -1, // WEST
+      
+      -1, -1, -1, // SOUTH
+      -1,  1, -1, // WEST
+       1, -1, -1, // SOUTH
+       1,  1, -1, // EAST
 
-     1.05, -1.05, -1.05, // SOUTH
-     1.05,  1,     -1.05, // EAST
-     1.05, -1.05,  1.05, // NORTH
-     1.05,  1,     1.05, // EAST
-
-  ], [
-     0, 0,  1,
-     0, 0,  1, // +ve Z
-     0, 0,  1, // NORTH
-     0, 0,  1,
-    -1, 0,  0,
-    -1, 0,  0, // -ve X
-    -1, 0,  0, // WEST
-    -1, 0,  0,
-     0, 0, -1,
-     0, 0, -1, // -ve Z
-     0, 0, -1, // SOUTH
-     0, 0, -1,
-     1, 0,  0,
-     1, 0,  0, // +ve X
-     1, 0,  0, // EAST
-     1, 0,  0
-  ], [
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-    lightGreyR, lightGreyG, lightGreyB,
-  ]);
+       1, -1, -1, // SOUTH
+       1,  1, -1, // EAST
+       1, -1,  1, // NORTH
+       1,  1,  1, // EAST
+    ], 
+    decoration: [
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+      lightGreyR, lightGreyG, lightGreyB,
+    ],
+    normals: undefined,
+    texture: undefined
+  });
 }
 
 export function getAxes(webGL: WebGLRenderingContext): StaticMesh {
-  return new StaticMesh(webGL, webGL.LINES, [
-    0, 1, 2, 3, 4, 5
-  ], [
-     100,    0,    0,
-    -100,    0,    0,
-       0,  100,    0,
-       0, -100,    0,
-       0,    0,  100,
-       0,    0, -100
-  ], [
-    1, 1, 1,
-    1, 1, 1,
-    1, 1, 1,
-    1, 1, 1,
-    1, 1, 1,
-    1, 1, 1
-  ], [
-    1, 0, 0,
-    1, 0, 0,
-    0, 1, 0,
-    0, 1, 0,
-    0, 0, 1,
-    0, 0, 1
-  ]);
+  return new StaticMesh(webGL, {
+    defaultDrawMode: webGL.LINES, 
+    indices: [
+      0, 1, 2, 3, 4, 5
+    ],
+    vertices: [
+       100,    0,    0,
+      -100,    0,    0,
+         0,  100,    0,
+         0, -100,    0,
+         0,    0,  100,
+         0,    0, -100
+    ],
+    decoration: [
+      1, 0, 0,
+      1, 0, 0,
+      0, 1, 0,
+      0, 1, 0,
+      0, 0, 1,
+      0, 0, 1
+    ],
+    normals: undefined,
+    texture: undefined
+  });
 }

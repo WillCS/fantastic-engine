@@ -47,6 +47,7 @@ div.appContainer {
   height: 100%;
   white-space: nowrap;
   background-color: #2f2f2f;
+  display: flex;
 }
 
 img.backgroundLogo {

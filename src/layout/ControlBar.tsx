@@ -12,10 +12,6 @@ export interface ControlBarProps {
 }
 
 export class ControlBar extends Component<ControlBarProps> {
-  constructor(props: ControlBarProps) {
-    super(props);
-  }
-
   public render(): ReactNode {
     return (
       <span className='controlBar'>

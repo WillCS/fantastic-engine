@@ -65,6 +65,7 @@ export class Viewport extends Component<ViewportProps> {
 
   private handleResize(width: number, height: number): void {
     const canvas = this.renderTargetRef.current;
+    console.log('hmmm');
 
     if(canvas) {
       WebGLHelper.resizeCanvasToProperSize(canvas as HTMLCanvasElement);

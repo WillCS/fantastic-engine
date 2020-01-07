@@ -1,13 +1,13 @@
 import { WebGLHelper } from './webGLHelper';
 import { Camera, OrbitalCamera, ProjectionType } from './camera';
-import { Vec3, Vec4 } from '../math/vector';
+import { Vec3 } from '../math/vector';
 import { ShaderProgram } from './shaderProgram';
 import { StaticMesh } from './mesh';
-import { getCubeBase, getCubeTop, getAxes, getCubeBaseOutline} from './defaultScene';
+import { getCubeBase, getCubeTop, getCubeBaseOutline} from './defaultScene';
 import { Mat4 } from '../math/matrix';
 
-const colourVertSource = require('./glsl/colourShader.vert');
-const colourFragSource = require('./glsl/colourShader.frag');
+const colourVertSource = require('./glsl/colourShaderNoNormal.vert');
+const colourFragSource = require('./glsl/colourShaderNoNormal.frag');
 
 export abstract class Scene {
   protected viewportWidth:  number = 0;
@@ -38,10 +38,12 @@ export class DefaultScene extends Scene {
   private camera: Camera;
   private modelTransform: Mat4 = Mat4.identity().scale(100, 100, 100);
 
+  private readonly isometricInclination = ((Math.PI / 2) - Math.atan(1 / Math.sqrt(2)));
+
   public constructor(webGL: WebGLRenderingContext) {
     super();
     
-    this.camera = new OrbitalCamera(Vec3.zero(), Math.PI / 4, ((Math.PI / 2) - Math.atan(1 / Math.sqrt(2))), 200);
+    this.camera = new OrbitalCamera(Vec3.zero(), Math.PI / 4, this.isometricInclination, 200);
     this.camera.viewportWidth  =
     this.camera.viewportHeight = this.viewportHeight;
     this.camera.projectionType = ProjectionType.ORTHOGRAPHIC;
@@ -67,7 +69,7 @@ export class DefaultScene extends Scene {
 
     this.shaderProgram.setUniforms(webGL);
 
-    (this.camera as OrbitalCamera).azimuth = time / 10000;
+    (this.camera as OrbitalCamera).azimuth = Math.PI / 4 + time / 10000;
   }
 
   public render(webGL: WebGLRenderingContext, time: number): void {

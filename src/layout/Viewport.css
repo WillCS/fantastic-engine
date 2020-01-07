@@ -1,8 +1,12 @@
 span.viewport {
-  position: absolute;
-  left: 300px;
+  position: relative;
+  display: inline-block;
+  top: 0px;
   right: 0px;
   height: 100%;
+  min-width: calc(100% - 250px);
+  max-width: calc(100% - 50px);
+  flex-grow: 1;
 }
 
 canvas#renderTarget {

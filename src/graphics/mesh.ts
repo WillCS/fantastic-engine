@@ -1,6 +1,15 @@
-import { Mat4 } from "../math/matrix";
-import { ShaderProgram } from "./shaderProgram";
-import { MathHelper } from "../math/mathHelper";
+import { Mat4 } from '../math/matrix';
+import { ShaderProgram } from './shaderProgram';
+import { MathHelper } from '../math/mathHelper';
+
+export interface MeshData {
+  defaultDrawMode: number;
+  vertices: number[];
+  indices: number[];
+  normals: number[] | undefined;
+  decoration: number [];
+  texture: TexImageSource | undefined;
+}
 
 export class StaticMesh {
   private vertexBuffer: WebGLBuffer;
@@ -11,39 +20,32 @@ export class StaticMesh {
   private textured: boolean = false;
   private texture: WebGLTexture | undefined = undefined;
 
-  private normalBuffer: WebGLBuffer;
+  private normalBuffer: WebGLBuffer | undefined;
 
   private numIndices: number = 0;
   private defaultDrawMode: number;
 
-  public constructor(webGL: WebGLRenderingContext, defaultDrawMode: number, indices: number[], vertices: number[], normals: number[], colours: number[]);
-  public constructor(webGL: WebGLRenderingContext, defaultDrawMode: number, indices: number[], vertices: number[], normals: number[], texCoords: number[], texture: TexImageSource);
 
-  public constructor(webGL: WebGLRenderingContext,
-      defaultDrawMode: number,
-      indices: number[],
-      vertices: number[],
-      normals: number[],
-      decoration: number[],
-      texture: TexImageSource | undefined = undefined) {
+  public constructor(webGL: WebGLRenderingContext, data: MeshData) {
 
-    this.defaultDrawMode = defaultDrawMode;
+    this.defaultDrawMode = data.defaultDrawMode;
 
     this.vertexBuffer = webGL.createBuffer()!;
-    this.setVertices(webGL, vertices);
+    this.setVertices(webGL, data.vertices);
 
     this.indexBuffer = webGL.createBuffer()!;
-    this.setIndices(webGL, indices);
+    this.setIndices(webGL, data.indices);
     
-    this.normalBuffer = webGL.createBuffer()!;
-    this.setNormals(webGL, normals);
-
+    if(data.normals) {
+      this.normalBuffer = webGL.createBuffer()!;
+      this.setNormals(webGL, data.normals);
+    }
     this.decorationBuffer = webGL.createBuffer()!;
 
-    if(texture) {
-      this.setTexture(webGL, decoration, texture);
+    if(data.texture) {
+      this.setTexture(webGL, data.decoration, data.texture);
     } else {
-      this.setColours(webGL, decoration);
+      this.setColours(webGL, data.decoration);
     }
   }
 
@@ -59,7 +61,7 @@ export class StaticMesh {
   }
 
   private setNormals(webGL: WebGLRenderingContext, normals: number[]): void {
-    webGL.bindBuffer(webGL.ARRAY_BUFFER, this.normalBuffer);
+    webGL.bindBuffer(webGL.ARRAY_BUFFER, this.normalBuffer!);
     webGL.bufferData(webGL.ARRAY_BUFFER, new Float32Array(normals), webGL.STATIC_DRAW);
   }
 
@@ -134,13 +136,15 @@ export class StaticMesh {
         colourNormalize);
     }
 
-    let normalSize: number = 3;
-    let normalType: number = webGL.FLOAT;
-    shaderProgram.setAttributeArray(webGL,
-      'vertexNorm',
-      this.normalBuffer,
-      normalSize,
-      normalType);
+    if(this.normalBuffer) {
+      let normalSize: number = 3;
+      let normalType: number = webGL.FLOAT;
+      shaderProgram.setAttributeArray(webGL,
+        'vertexNorm',
+        this.normalBuffer,
+        normalSize,
+        normalType);
+    }
 
     shaderProgram.setModelMatrix(webGL, modelMatrix);
 
