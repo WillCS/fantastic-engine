@@ -1,8 +1,4 @@
-const vertSource = require('./glsl/shader.vert');
-const fragSource = require('./glsl/shader.frag');
-
 export let WebGLHelper = {
-
   setupCanvas(canvas: HTMLCanvasElement): WebGLRenderingContext {
     let gl: WebGLRenderingContext | null = canvas.getContext('webgl');
 
@@ -52,15 +48,15 @@ export let WebGLHelper = {
     }
   },
 
-  buildShaderProgram(gl: WebGLRenderingContext): WebGLProgram | undefined {
+  buildShaderProgram(gl: WebGLRenderingContext, vertexShaderSource: string, fragmentShaderSource: string): WebGLProgram | undefined {
     let vertexShader: WebGLShader | undefined = undefined;
     let fragmentShader: WebGLShader | undefined = undefined;
 
     try {
       vertexShader =
-        this.compileShader(gl, gl.VERTEX_SHADER, vertSource.default);
+        this.compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
       fragmentShader =
-        this.compileShader(gl, gl.FRAGMENT_SHADER, fragSource.default);
+        this.compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
     } catch (error) {
       console.log('Shaders failed to compile.');
     }

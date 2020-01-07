@@ -38,11 +38,11 @@ export default class App extends Component<any, AppState, any> {
           context={this.state.context}
         />
 
-        <img
+        {/* <img
           className='backgroundLogo'
           src={logo}
           alt='Mineventor'
-        />
+        /> */}
       </div>
     );
   }

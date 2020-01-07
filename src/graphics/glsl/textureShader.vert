@@ -1,14 +1,13 @@
 attribute vec4 vertexPos;
-attribute vec4 vertexColour;
+attribute vec2 texCoord;
  
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-varying vec4 fragColour;
+varying highp vec2 fragTexCoord;
  
 void main() {
   gl_Position = projection * view * model * vertexPos;
- 
-  fragColour = vertexColour;
+  fragTexCoord = texCoord;
 }

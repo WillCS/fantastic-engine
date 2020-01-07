@@ -30,5 +30,9 @@ export let MathHelper = {
 
   range(n: number): number[] {
     return Array.from(Array(n).keys());
+  },
+
+  isPowerOfTwo(n: number): boolean {
+    return (n & (n - 1)) === 0;
   }
 };

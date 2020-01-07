@@ -77,6 +77,8 @@ export class OrbitalCamera extends Camera {
       private inclinationAngle: number,
       private radiusDistance:   number) {
     super(0, 0, 1, 100);
+
+    this.updateViewTransformMatrix();
   }
 
   public get origin(): Vec3 {
@@ -134,13 +136,13 @@ export class OrbitalCamera extends Camera {
   public getUpVector(): Vec3 {
     return (this.getLookVector().negate().cross(new Vec3(
       Math.cos(this.azimuth - (MathHelper.TWO_PI / 4)),
-      0.0,
+      0,
       Math.sin(this.azimuth - (MathHelper.TWO_PI / 4))
     ))).normalize();
   }
 
   public getLookVector(): Vec3 {
-    return (this.location.subtract(this.origin)).normalize();
+    return this.origin.subtract(this.location).normalize();
   }
 
   protected updateProjectionMatrix(): void {
@@ -157,15 +159,14 @@ export class OrbitalCamera extends Camera {
           this.width,
           this.height,
           this.nearPlaneDist,
-          this.farPlaneDist
-        );
+          this.farPlaneDist);
         break;
     }
   }
 
   protected updateViewTransformMatrix(): void {
     let newMatrix = Mat4.identity();
-    newMatrix = newMatrix.rotateZ(Math.PI / 2);
+    // newMatrix = newMatrix.rotateZ(Math.PI / 2);
     newMatrix = newMatrix.rotateX(Math.PI / 2 - this.inclination);
     newMatrix = newMatrix.rotateY(this.azimuth - Math.PI / 2);
     newMatrix = newMatrix.translate(-this.location.x, -this.location.y, -this.location.z);

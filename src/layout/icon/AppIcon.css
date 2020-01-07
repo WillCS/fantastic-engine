@@ -9,9 +9,9 @@ span.appIcon {
 span.appIcon > img.appIconImg {
     display: inline-block;
     position: absolute;
-    left: 5px;
-    top: 5px;
-    width: 40px;
-    height: 40px;
+    left: 10px;
+    top: 10px;
+    width: 30px;
+    height: 30px;
     border: none;
 }
