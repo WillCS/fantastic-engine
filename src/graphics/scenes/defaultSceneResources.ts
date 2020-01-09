@@ -1,4 +1,4 @@
-import { StaticMesh } from "./mesh";
+import { StaticMesh } from "../mesh";
 
 const greenR = 88 / 255;
 const greenG = 214 / 255;
@@ -11,6 +11,12 @@ const darkGreyB = 47 / 255;
 const lightGreyR = 88 / 255;
 const lightGreyG = 88 / 255;
 const lightGreyB = 88 / 255;
+
+export const colourVertSource = require('../glsl/colourShaderNoNormal.vert');
+export const colourFragSource = require('../glsl/colourShaderNoNormal.frag');
+
+export const texVertSource = require('../glsl/2DtextureShader.vert');
+export const texFragSource = require('../glsl/2DtextureShader.frag');
 
 export function getCubeTop(webGL: WebGLRenderingContext): StaticMesh {
   return new StaticMesh(webGL, {

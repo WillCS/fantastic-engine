@@ -25,9 +25,7 @@ export class StaticMesh {
   private numIndices: number = 0;
   private defaultDrawMode: number;
 
-
   public constructor(webGL: WebGLRenderingContext, data: MeshData) {
-
     this.defaultDrawMode = data.defaultDrawMode;
 
     this.vertexBuffer = webGL.createBuffer()!;

@@ -1,6 +1,6 @@
 export let WebGLHelper = {
   setupCanvas(canvas: HTMLCanvasElement): WebGLRenderingContext {
-    let gl: WebGLRenderingContext | null = canvas.getContext('webgl');
+    let gl: WebGLRenderingContext | null = canvas.getContext('webgl', { stencil: true });
 
     if (gl) {
       return gl;

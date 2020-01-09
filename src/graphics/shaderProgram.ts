@@ -99,7 +99,7 @@ export class ShaderProgram {
     let location: WebGLUniformLocation = this.getUniformLocation(webGL, uniform);
     webGL.activeTexture(textureUnit);
     webGL.bindTexture(webGL.TEXTURE_2D, texture);
-    webGL.uniform1i(location, textureUnit);
+    webGL.uniform1i(location, textureUnit - webGL.TEXTURE0);
   }
 
   public isAttributeEnabled(attribute: string): boolean {

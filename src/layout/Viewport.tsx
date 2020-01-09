@@ -2,18 +2,18 @@ import { Component, ReactNode, RefObject } from "react";
 import React from "react";
 import './Viewport.css';
 import { WebGLHelper } from "../graphics/webGLHelper";
-import { Scene, DefaultScene } from "../graphics/scene";
 import { AppContext } from "../state/context";
 import ReactResizeDetector from 'react-resize-detector';
+import { RenderManager } from "../graphics/renderManager";
 
 export interface ViewportProps {
   context: AppContext;
+  renderManager: RenderManager;
 }
 
 export class Viewport extends Component<ViewportProps> {
   private renderTargetRef: RefObject<HTMLCanvasElement>;
   private webGL!: WebGLRenderingContext;
-  private scene!: Scene;
   private rendering: boolean = false;
 
   public constructor(props: ViewportProps) {
@@ -30,10 +30,17 @@ export class Viewport extends Component<ViewportProps> {
 
     if(canvas) {
       this.webGL = WebGLHelper.setupCanvas(canvas);
-      this.scene = new DefaultScene(this.webGL);
+      
+      if(!this.props.renderManager.isInitialised()) {
+        if(!this.props.context.getScene()) {
+          this.props.context.createScene(this.webGL);
+        }
+
+        this.props.renderManager.init(this.props.context.getScene()!);
+      }
 
       WebGLHelper.resizeCanvasToProperSize(canvas);
-      this.scene.setViewportSize(canvas.clientWidth, canvas.clientHeight);
+      this.props.renderManager.updateViewportSize(canvas.clientWidth, canvas.clientHeight);
 
       this.rendering = true;
       window.requestAnimationFrame(this.doLoop);
@@ -42,7 +49,7 @@ export class Viewport extends Component<ViewportProps> {
 
   public componentWillUnmount(): void {
     this.rendering = false;
-    this.scene.dispose(this.webGL);
+    this.props.renderManager.dispose(this.webGL);
   }
 
   public render(): ReactNode {
@@ -51,26 +58,25 @@ export class Viewport extends Component<ViewportProps> {
         <canvas id='renderTarget' ref={this.renderTargetRef}>
       
         </canvas>
-        <ReactResizeDetector handleWidth handleHeight onResize={this.handleResize}/>
+        <ReactResizeDetector handleWidth handleHeight onResize={this.handleResize} />
       </span>
     )
   }
 
   private doLoop(t: number): void {
     if(this.rendering) {
-      this.scene.render(this.webGL, t);
+      this.props.renderManager.render(this.webGL, t);
       window.requestAnimationFrame(this.doLoop);
     }
   }
 
   private handleResize(width: number, height: number): void {
     const canvas = this.renderTargetRef.current;
-    console.log('hmmm');
 
     if(canvas) {
       WebGLHelper.resizeCanvasToProperSize(canvas as HTMLCanvasElement);
     }
 
-    this.scene.setViewportSize(width, height);
+    this.props.renderManager.updateViewportSize(width, height);
   }
 }
