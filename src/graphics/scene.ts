@@ -74,12 +74,9 @@ export class DefaultScene extends Scene {
 
   public render(webGL: WebGLRenderingContext, time: number): void {
     super.render(webGL, time);
-
-    webGL.lineWidth(10);
-
+    
     this.cubeBaseOutline.draw(webGL, this.shaderProgram, this.modelTransform);
     this.cubeBase.draw(webGL, this.shaderProgram, this.modelTransform);
-
     this.cubeTop.draw(webGL, this.shaderProgram, this.modelTransform);
   }
 
