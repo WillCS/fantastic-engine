@@ -1,11 +1,12 @@
 import { AppContext } from "../context";
 import { ModelController } from "../modelController";
-import { EntityModel } from "../../model/entityModel";
+import { EntityModel, AssemblyList, Assembly } from "../../model/entityModel";
 import { ContextController } from "../contextController";
 import React, { ReactNode } from "react";
 import { ControlButton, ControlButtonType } from "../../control/ControlButton";
 import { Model } from "../../model/model";
-import { EntityScene, Scene } from "../../graphics/scene";
+import { Scene } from "../../graphics/scene";
+import { EntityScene } from "../../graphics/scenes/entityScene";
 
 export class EntityContext extends AppContext {
   private modelController: ModelController;
@@ -14,6 +15,8 @@ export class EntityContext extends AppContext {
   constructor() {
     super();
     this.modelController = new ModelController(new EntityModel());
+    
+    this.addAssembly = this.addAssembly.bind(this);
   }
 
   public populateControlBar(contextController: ContextController): ReactNode[] {
@@ -21,6 +24,7 @@ export class EntityContext extends AppContext {
       <ControlButton key={'assembly'}
         type={ControlButtonType.NEW_ASSEMBLY}
         title='Add a new Assembly'
+        onClick={this.addAssembly}
       />,
       <ControlButton key={'component'}
         type={ControlButtonType.NEW_COMPONENT}
@@ -61,5 +65,28 @@ export class EntityContext extends AppContext {
 
   public getScene(): Scene | undefined {
     return this.scene;
+  }
+
+  private addAssembly(): void {
+    const currentSelection = this.modelController.getSelection();
+    let parentList: AssemblyList | undefined = undefined;
+
+    if(currentSelection !== undefined) {
+      if(currentSelection instanceof Assembly) {
+        parentList = currentSelection.children;
+      } else if(currentSelection instanceof AssemblyList) {
+        parentList = currentSelection;
+      }
+    } 
+
+    if(parentList === undefined) {
+      const model = (this.modelController.getModel()) as EntityModel;
+      parentList = model.assemblies;
+    }
+
+    let newAssembly = new Assembly();
+
+    parentList.assemblies.push(newAssembly);
+    this.modelController.setSelection(newAssembly);
   }
 }

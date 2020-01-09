@@ -85,6 +85,10 @@ export class Vec2 {
     return new Vec4(this.x, this.y, z, w);
   }
 
+  public copy(): Vec2 {
+    return new Vec2(this.x, this.y);
+  }
+
   public static one(): Vec2 {
     return new Vec2(1, 1);
   }
@@ -200,6 +204,10 @@ export class Vec3 {
     return new Vec4(this.x, this.y, this.z, w);
   }
 
+  public copy(): Vec3 {
+    return new Vec3(this.x, this.y, this.z);
+  }
+
   public static one(): Vec3 {
     return new Vec3(1, 1, 1);
   }
@@ -312,6 +320,10 @@ export class Vec4 {
 
   public toVec3(): Vec3 {
     return new Vec3(this.x, this.y, this.z);
+  }
+
+  public copy(): Vec4 {
+    return new Vec4(this.x, this.y, this.z, this.w);
   }
 
   public static one(): Vec4 {

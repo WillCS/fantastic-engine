@@ -9,10 +9,27 @@ export interface DetailViewProps {
   context: AppContext;
 }
 
-export class DetailView extends Component<DetailViewProps> {
+export interface DetailViewState {
+  selection: any | undefined;
+}
+
+export class DetailView extends Component<DetailViewProps, DetailViewState> {
   public constructor(props: DetailViewProps) {
     super(props);
-    this.setSelection = this.setSelection.bind(this);
+
+    this.state = {
+      selection: undefined
+    };
+
+    this.handleInternalSelectionChange = this.handleInternalSelectionChange.bind(this);
+    this.handleExternalSelectionChange = this.handleExternalSelectionChange.bind(this);
+  }
+
+  public componentDidUpdate(): void {
+    if(this.props.context.hasModel()) {
+      this.props.context.getModelController()!
+        .registerSelectionChangeListener(this.handleExternalSelectionChange);
+    }
   }
 
   public render(): ReactNode {
@@ -23,10 +40,10 @@ export class DetailView extends Component<DetailViewProps> {
             title='COMPONENTS'
             open={true}
           >
-            <TreeView 
-              context={this.props.context} 
+            <TreeView
+              selection={this.getSelection()}
               root={this.props.context.getModel()}
-              selectionChanged={this.setSelection}
+              selectionChanged={this.handleInternalSelectionChange}
             />
           </Collapsible>
           <Collapsible
@@ -47,9 +64,17 @@ export class DetailView extends Component<DetailViewProps> {
     }
   }
 
-  private setSelection(selection: any): void {
-    if(this.props.context.hasModel()) {
-      this.props.context.getModelController()!.setSelection(selection);
-    }
+  private handleInternalSelectionChange(newSelection: any): void {
+    this.props.context.getModelController()!.setSelection(newSelection);
+  }
+
+  private handleExternalSelectionChange(newSelection: any): void {
+    this.setState({
+      selection: newSelection
+    });
+  }
+
+  private getSelection(): any | undefined {
+    return this.state.selection;
   }
 }

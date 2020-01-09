@@ -41,28 +41,91 @@ export class EntityModel implements Model {
 
 export class AssemblyList {
   public constructor(public assemblies: Assembly[]) { }
+
+  public copy(): AssemblyList {
+    return new AssemblyList(
+      this.assemblies.map(assembly => assembly.copy())
+    );
+  }
+}
+
+export class BoxList {
+  public constructor(public boxes: BoxList[]) { }
+
+  public copy(): BoxList {
+    return new BoxList(
+      this.boxes.map(box => box.copy())
+    );
+  }
 }
 
 export class TextureList {
   public constructor(public textures: Texture[]) { }
 }
 
-export interface Assembly {
-  name:          string,
-  rotationPoint: Vec3,
-  rotationAngle: Vec3,
-  offset:        Vec3,
-  textureOffset: Vec2,
-  children:      Assembly[],
-  cubes:         Box[],
-  mirrored:      boolean,
-  texture:       Texture
+export class Assembly {
+  public name:          string;
+  public rotationPoint: Vec3;
+  public rotationAngle: Vec3;
+  public offset:        Vec3;
+  public textureOffset: Vec2;
+  public children:      AssemblyList;
+  public cubes:         BoxList;
+  public mirrored:      boolean;
+  public texture:       Texture | undefined;
+
+  public constructor() {
+    this.name          = 'Assembly';
+    this.rotationPoint = Vec3.zero();
+    this.rotationAngle = Vec3.zero();
+    this.offset        = Vec3.zero();
+    this.textureOffset = Vec2.zero();
+    this.children      = new AssemblyList([]);
+    this.cubes         = new BoxList([]);
+    this.mirrored      = false;
+  }
+
+  public copy(): Assembly {
+    let newAssembly = new Assembly();
+
+    newAssembly.name          = this.name;
+    newAssembly.rotationPoint = this.rotationPoint.copy();
+    newAssembly.rotationAngle = this.rotationAngle.copy();
+    newAssembly.offset        = this.offset.copy();
+    newAssembly.textureOffset = this.textureOffset.copy();
+    newAssembly.children      = this.children.copy();
+    newAssembly.cubes         = this.cubes.copy();
+    newAssembly.mirrored      = this.mirrored;
+    newAssembly.texture       = this.texture;
+
+    return newAssembly;
+  }
 }
 
-export interface Box {
-  name:          string,
-  position:      Vec3,
-  dimensions:    Vec3,
-  textureCoords: Vec2,
-  mirrored:      boolean
+export class Box {
+  public name:          string;
+  public position:      Vec3;
+  public dimensions:    Vec3;
+  public textureCoords: Vec2;
+  public mirrored:      boolean;
+
+  public constructor() {
+    this.name          = 'Assembly';
+    this.position      = Vec3.zero();
+    this.dimensions    = Vec3.zero();
+    this.textureCoords = Vec2.zero();
+    this.mirrored      = false;
+  }
+
+  public copy(): Box {
+    let newBox = new Box();
+    
+    newBox.name          = this.name;
+    newBox.position      = this.position.copy();
+    newBox.dimensions    = this.dimensions.copy();
+    newBox.textureCoords = this.textureCoords.copy();
+    newBox.mirrored      = this.mirrored;
+
+    return newBox;
+  }
 }

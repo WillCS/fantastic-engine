@@ -1,14 +1,13 @@
 import React from 'react';
 import { Component, ReactNode } from 'react';
-import { AppContext } from '../../state/context';
 import { TreeLayout } from './treeLayout';
 import { TreeItem } from './TreeItem';
 import './Tree.css';
 
 export interface TreeViewProps {
   selectionChanged: (item: any) => void;
-  context:          AppContext;
   root:             TreeLayout | undefined;
+  selection:        any | undefined;
 }
 
 export interface TreeViewState {
@@ -19,7 +18,7 @@ export class TreeView extends Component<TreeViewProps, TreeViewState> {
   public constructor(props: TreeViewProps) {
     super(props);
     this.state = {
-      selected: undefined
+      selected: this.props.selection
     };
   }
 
