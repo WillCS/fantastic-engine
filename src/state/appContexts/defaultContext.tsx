@@ -1,29 +1,31 @@
-import { ContextController } from "../contextController";
 import React, { ReactNode } from "react";
 import { ControlButton, ControlButtonType } from "../../control/ControlButton";
 import { AppContext } from "../context";
 import { EntityContext } from "./entityContext";
 import { Scene } from "../../graphics/scene";
 import { DefaultScene } from "../../graphics/scenes/defaultScene";
+import { StateMutator } from "../stateMutator";
+import { Model } from "../../model/model";
 
 export class DefaultContext extends AppContext {
-  public static readonly DEFAULT_CONTEXT = new DefaultContext();
   private scene: Scene | undefined;
 
-  private constructor() {
+  public constructor(private stateMutator: StateMutator) {
     super();
+
+    this.handleEntityButtonClicked = this.handleEntityButtonClicked.bind(this);
   }
 
   public shouldDisplayDetailView(): boolean {
     return false;
   }
 
-  public populateControlBar(contextController: ContextController): ReactNode[] {
+  public populateControlBar(): ReactNode[] {
     return [
       <ControlButton key={'entity'}
         type={ControlButtonType.ENTITY_MODEL}
         title='Create new Entity Model'
-        onClick={this.createEntityContext(contextController)}
+        onClick={this.handleEntityButtonClicked}
       />,
       <ControlButton key={'json'}
         type={ControlButtonType.JSON_MODEL}
@@ -44,10 +46,11 @@ export class DefaultContext extends AppContext {
     return this.scene;
   }
 
-  private createEntityContext(contextController: ContextController): 
-      (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void {
-    return (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      contextController.setContext(new EntityContext())
-    };
+  public createModel(): Model | undefined {
+    return undefined;
+  }
+
+  private handleEntityButtonClicked() {
+      this.stateMutator.setContext(new EntityContext(this.stateMutator));
   }
 }

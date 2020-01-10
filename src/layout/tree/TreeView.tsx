@@ -10,57 +10,33 @@ export interface TreeViewProps {
   selection:        any | undefined;
 }
 
-export interface TreeViewState {
-  selected: any | undefined;
-}
-
-export class TreeView extends Component<TreeViewProps, TreeViewState> {
+export class TreeView extends Component<TreeViewProps> {
   public constructor(props: TreeViewProps) {
     super(props);
-    this.state = {
-      selected: this.props.selection
-    };
+
+    this.setSelection = this.setSelection.bind(this);
   }
 
   public render(): ReactNode {
     return (
       <div className='treeView'>
-        { this.buildTree(this.props.root) }
+        { this.props.root !== undefined && 
+          <TreeItem
+            item         = {this.props.root}
+            depth        = {0}
+            rootItem     = {this.props.root}
+            styling      = {this.props.root.decorate(this.props.root)}
+            selection    = {this.props.selection}
+            setSelection = {this.setSelection}
+            childItems   = {this.props.root.populate(this.props.root)}
+            openParent   = {() => {}}
+          />
+        }
       </div>
     );
   }
 
-  public setSelected(item: any): void {
-    this.setState({
-      selected: item
-    });
-
+  public setSelection(item: any): void {
     this.props.selectionChanged(item);
-  }
-
-  private buildTree(root: TreeLayout | undefined): ReactNode {
-    if(!root) {
-      return <span></span>
-    } else {
-      return this.buildSubTree(root, root, 0, { key: 0 });
-    }
-  }
-
-  private buildSubTree(root: TreeLayout, item: any, depth: number, index: { key: number }): ReactNode {
-    const children = root.populate(item);
-
-    return (
-      <TreeItem
-        key={index.key++}
-        root={this}
-        item={item}
-        depth={depth++}
-        styling={root.decorate(item)}
-      >
-        { children instanceof Array && children.map(child => {
-          return this.buildSubTree(root, child, depth, index);
-        })}
-      </TreeItem>
-    )
   }
 }

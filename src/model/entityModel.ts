@@ -1,5 +1,5 @@
 import { Vec3, Vec2 } from "../math/vector";
-import { Texture } from "./texture";
+import { TextureList, TexturePointer } from "./texture";
 import { Model } from "./model";
 import { TreeItemStyling } from "../layout/tree/treeLayout";
 
@@ -10,8 +10,8 @@ export class EntityModel implements Model {
 
   public constructor() {
     this.name       = "Entity Model";
-    this.assemblies = new AssemblyList([]);
-    this.textures   = new TextureList([]);
+    this.assemblies = new AssemblyList([], this);
+    this.textures   = new TextureList([], this);
   }
 
   public populate(parent: any): any {
@@ -21,6 +21,10 @@ export class EntityModel implements Model {
       return parent.assemblies;
     } else if(parent instanceof TextureList) {
       return parent.textures;
+    } else if(parent instanceof BoxList) {
+      return parent.boxes;
+    } else if(parent instanceof Assembly) {
+      return [parent.children, parent.cubes];
     } else {
       return parent;
     }
@@ -33,34 +37,44 @@ export class EntityModel implements Model {
       return { name: 'Assemblies' };
     } else if(treeObject instanceof TextureList) {
       return { name: 'Textures' };
+    } else if(treeObject instanceof BoxList) {
+      return { name: 'Boxes' };
+    } else if(treeObject instanceof Assembly) {
+      return { name: treeObject.name }
+    } else if(treeObject instanceof Box) {
+      return { name: treeObject.name };
     } else {
-      return { name: 'object hehehe' };
+      return { name: 'something else' };
     }
   }
 }
 
 export class AssemblyList {
-  public constructor(public assemblies: Assembly[]) { }
+  public constructor(public assemblies: Assembly[], public readonly parent: any) { }
 
-  public copy(): AssemblyList {
-    return new AssemblyList(
-      this.assemblies.map(assembly => assembly.copy())
-    );
+  public copyTo(parent: any): AssemblyList {
+    const newList: AssemblyList = new AssemblyList([], parent);
+    this.assemblies.forEach(assembly => {
+      assembly.copyTo(newList)
+      newList.assemblies.push(assembly);
+    });
+
+    return newList;
   }
 }
 
 export class BoxList {
-  public constructor(public boxes: BoxList[]) { }
+  public constructor(public boxes: Box[], public readonly parent: any) { }
 
-  public copy(): BoxList {
-    return new BoxList(
-      this.boxes.map(box => box.copy())
-    );
+  public copyTo(parent: any): BoxList {
+    const newList: BoxList = new BoxList([], parent);
+    this.boxes.forEach(box => {
+      box.copyTo(newList)
+      newList.boxes.push(box);
+    });
+
+    return newList;
   }
-}
-
-export class TextureList {
-  public constructor(public textures: Texture[]) { }
 }
 
 export class Assembly {
@@ -72,29 +86,29 @@ export class Assembly {
   public children:      AssemblyList;
   public cubes:         BoxList;
   public mirrored:      boolean;
-  public texture:       Texture | undefined;
+  public texture:       TexturePointer | undefined;
 
-  public constructor() {
+  public constructor(public readonly parent: any) {
     this.name          = 'Assembly';
     this.rotationPoint = Vec3.zero();
     this.rotationAngle = Vec3.zero();
     this.offset        = Vec3.zero();
     this.textureOffset = Vec2.zero();
-    this.children      = new AssemblyList([]);
-    this.cubes         = new BoxList([]);
+    this.children      = new AssemblyList([], this);
+    this.cubes         = new BoxList([], this);
     this.mirrored      = false;
   }
 
-  public copy(): Assembly {
-    let newAssembly = new Assembly();
+  public copyTo(parent: any): Assembly {
+    let newAssembly = new Assembly(parent);
 
     newAssembly.name          = this.name;
     newAssembly.rotationPoint = this.rotationPoint.copy();
     newAssembly.rotationAngle = this.rotationAngle.copy();
     newAssembly.offset        = this.offset.copy();
     newAssembly.textureOffset = this.textureOffset.copy();
-    newAssembly.children      = this.children.copy();
-    newAssembly.cubes         = this.cubes.copy();
+    newAssembly.children      = this.children.copyTo(newAssembly);
+    newAssembly.cubes         = this.cubes.copyTo(newAssembly);
     newAssembly.mirrored      = this.mirrored;
     newAssembly.texture       = this.texture;
 
@@ -109,16 +123,16 @@ export class Box {
   public textureCoords: Vec2;
   public mirrored:      boolean;
 
-  public constructor() {
-    this.name          = 'Assembly';
+  public constructor(public readonly parent: any) {
+    this.name          = 'Box';
     this.position      = Vec3.zero();
     this.dimensions    = Vec3.zero();
     this.textureCoords = Vec2.zero();
     this.mirrored      = false;
   }
 
-  public copy(): Box {
-    let newBox = new Box();
+  public copyTo(parent: any): Box {
+    let newBox = new Box(parent);
     
     newBox.name          = this.name;
     newBox.position      = this.position.copy();

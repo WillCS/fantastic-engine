@@ -1,55 +1,78 @@
 import React from 'react';
 import { Component, ReactNode } from 'react';
 import './App.css';
-import { ContextController } from './state/contextController';
-import { ContextRegistry } from './state/contextRegistry';
 import { Viewport } from './layout/Viewport';
 import { DetailView } from './layout/DetailView';
 import { ControlBar } from './layout/ControlBar';
 import { AppContext } from './state/context';
 import { RenderManager } from './graphics/renderManager';
+import { Model } from './model/model';
+import { StateMutator } from './state/stateMutator';
+import { DefaultContext } from './state/appContexts/defaultContext';
 
 export interface AppState {
-  context: AppContext;
+  context:   AppContext;
+  selection: any | undefined;
+  model:     Model | undefined;
 }
 
 export default class App extends Component<any, AppState, any> {
-  private contextController: ContextController;
+  private stateMutator:  StateMutator;
   private renderManager: RenderManager;
 
   public constructor(props: any) {
     super(props);
+
+    this.renderManager = new RenderManager();
+    this.stateMutator  = new StateMutator(this);
+
     this.state = {
-      context: ContextRegistry.DEFAULT_CONTEXT
+      context:   new DefaultContext(this.stateMutator),
+      selection: undefined,
+      model:     undefined
     };
 
-    this.contextController = new ContextController(this);
-    this.renderManager = new RenderManager();
+    this.createNewModel = this.createNewModel.bind(this);
   }
 
   public componentDidMount(): void {
-    this.contextController.registerContextChangeListener(this.renderManager.contextChanged);
+    this.stateMutator.registerContextChangeListener(this.renderManager.contextChanged);
+    this.stateMutator.registerContextChangeListener(this.createNewModel)
   }
 
   public componentWillUnmount(): void {
-    this.contextController.deregisterContextChangeListener(this.renderManager.contextChanged);
+    this.stateMutator.deregisterContextChangeListener(this.renderManager.contextChanged);
+    this.stateMutator.deregisterContextChangeListener(this.createNewModel)
   }
 
   public render(): ReactNode {
     return (
       <div className='appContainer'>
-        <ControlBar
-          context={this.state.context}
-          contextController={this.contextController}
-        />
+        <ControlBar>
+          { this.state.context.populateControlBar() }
+        </ControlBar>
+
         <DetailView 
-          context={this.state.context}
+          show={this.state.context.shouldDisplayDetailView()}
+          model={this.state.model}
+          updateModel={this.stateMutator.setModel}
+          selection={this.state.selection}
+          setSelection={this.stateMutator.setSelection}
         />
+
         <Viewport 
           context={this.state.context}
           renderManager={this.renderManager}
         />
       </div>
     );
+  }
+
+  private createNewModel(context: AppContext): void {
+    this.setState({
+      context:   context,
+      model:     context.createModel(),
+      selection: this.state.selection
+    });
   }
 }

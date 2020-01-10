@@ -1,25 +1,23 @@
 import { AppContext } from "../context";
-import { ModelController } from "../modelController";
-import { EntityModel, AssemblyList, Assembly } from "../../model/entityModel";
-import { ContextController } from "../contextController";
+import { EntityModel, AssemblyList, Assembly, BoxList, Box } from "../../model/entityModel";
 import React, { ReactNode } from "react";
 import { ControlButton, ControlButtonType } from "../../control/ControlButton";
-import { Model } from "../../model/model";
 import { Scene } from "../../graphics/scene";
 import { EntityScene } from "../../graphics/scenes/entityScene";
+import { StateMutator } from "../stateMutator";
+import { Model } from "../../model/model";
 
 export class EntityContext extends AppContext {
-  private modelController: ModelController;
   private scene: Scene | undefined;
 
-  constructor() {
+  public constructor(private stateMutator: StateMutator) {
     super();
-    this.modelController = new ModelController(new EntityModel());
     
     this.addAssembly = this.addAssembly.bind(this);
+    this.addBox      = this.addBox.bind(this);
   }
 
-  public populateControlBar(contextController: ContextController): ReactNode[] {
+  public populateControlBar(): ReactNode[] {
     return [
       <ControlButton key={'assembly'}
         type={ControlButtonType.NEW_ASSEMBLY}
@@ -29,6 +27,7 @@ export class EntityContext extends AppContext {
       <ControlButton key={'component'}
         type={ControlButtonType.NEW_COMPONENT}
         title='Add a new Box'
+        onClick={this.addBox}
       />,
       <ControlButton key={'texture'}
         type={ControlButtonType.NEW_TEXTURE}
@@ -45,16 +44,6 @@ export class EntityContext extends AppContext {
     ];
   }
 
-  public getModel(): Model | undefined {
-    return this.hasModel()
-      ? this.getModelController()!.getModel()
-      : undefined;
-  }
-
-  public getModelController(): ModelController | undefined {
-    return this.modelController;
-  }
-
   public hasModel(): boolean {
     return true;
   }
@@ -67,8 +56,12 @@ export class EntityContext extends AppContext {
     return this.scene;
   }
 
+  public createModel(): Model | undefined {
+    return new EntityModel();
+  }
+
   private addAssembly(): void {
-    const currentSelection = this.modelController.getSelection();
+    const currentSelection = this.stateMutator.getSelection();
     let parentList: AssemblyList | undefined = undefined;
 
     if(currentSelection !== undefined) {
@@ -76,17 +69,51 @@ export class EntityContext extends AppContext {
         parentList = currentSelection.children;
       } else if(currentSelection instanceof AssemblyList) {
         parentList = currentSelection;
+      } else if(currentSelection instanceof Box) {
+        parentList = ((currentSelection.parent as BoxList).parent as Assembly).children;
+      } else if(currentSelection.parent) {
+        if(currentSelection.parent instanceof Assembly) {
+          parentList = (currentSelection.parent as Assembly).children;
+        }
       }
     } 
 
     if(parentList === undefined) {
-      const model = (this.modelController.getModel()) as EntityModel;
+      const model = (this.stateMutator.getModel()) as EntityModel;
       parentList = model.assemblies;
     }
 
-    let newAssembly = new Assembly();
+    let newAssembly = new Assembly(parentList);
 
     parentList.assemblies.push(newAssembly);
-    this.modelController.setSelection(newAssembly);
+    this.stateMutator.setSelection(newAssembly);
+  }
+
+  private addBox(): void {
+    const currentSelection = this.stateMutator.getSelection();
+    let parentList: BoxList | undefined = undefined;
+
+    if(currentSelection !== undefined) {
+      if(currentSelection instanceof Assembly) {
+        parentList = currentSelection.cubes;
+      } else if(currentSelection instanceof BoxList) {
+        parentList = currentSelection;
+      } else if(currentSelection instanceof Box) {
+        parentList = currentSelection.parent as BoxList;
+      } else if(currentSelection.parent) {
+        if(currentSelection.parent instanceof Assembly) {
+          parentList = (currentSelection.parent as Assembly).cubes;
+        }
+      }
+    } 
+
+    if(parentList === undefined) {
+      return;
+    }
+
+    let newBox = new Box(parentList);
+
+    parentList.boxes.push(newBox);
+    this.stateMutator.setSelection(newBox);
   }
 }

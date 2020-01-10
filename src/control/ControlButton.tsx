@@ -44,7 +44,6 @@ export class ControlButton extends Component<ControlButtonProps> {
             className='controlButton'
             onClick={this.props.onClick!}
           >
-            { this.props.title }
           </button>
         );
     }

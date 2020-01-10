@@ -59,9 +59,9 @@ div.collapsibleContainer {
 
 div.collapsibleContent {
   position: relative;
-  overflow: scroll;
+  overflow-y: scroll;
   scrollbar-width: thin;
-  scrollbar-color: #90A4AE #00000000;
+  scrollbar-color: #585858 #00000000;
 }
 
 div.collapsibleContainer.closed > div.collapsibleContent {

@@ -1,23 +1,16 @@
 import React from 'react';
 import { Component, ReactNode } from 'react';
 import './Layout.css';
-import { ContextController } from '../state/contextController';
-import { AppContext } from '../state/context';
 import { ControlButton, ControlButtonType } from '../control/ControlButton';
 import { AppIcon } from './icon/AppIcon';
 
-export interface ControlBarProps {
-  context: AppContext,
-  contextController: ContextController
-}
-
-export class ControlBar extends Component<ControlBarProps> {
+export class ControlBar extends Component {
   public render(): ReactNode {
     return (
       <span className='controlBar'>
         <div className='controlBarTop'>
           <AppIcon />
-          { this.props.context.populateControlBar(this.props.contextController) }
+          { this.props.children }
         </div>
 
         <div className='controlBarBottom'>
@@ -32,6 +25,6 @@ export class ControlBar extends Component<ControlBarProps> {
   }
 
   private handleClick(): void {
-    console.log('ree');
+    
   }
 }

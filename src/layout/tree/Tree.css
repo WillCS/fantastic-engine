@@ -1,7 +1,6 @@
 div.treeView {
   position: relative;
   overflow: hidden;
-  height: 250px;
 }
 
 div.treeItem {
@@ -55,4 +54,8 @@ div.treeItem.open span.treeItemArrow {
 
 div.treeItem.closed span.treeItemArrow {
   transform: rotate(-45deg);
+}
+
+div.treeItem.closed > div.treeItemDescendents {
+  display: none;
 }
