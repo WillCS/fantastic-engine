@@ -46,6 +46,7 @@ div.detailView {
   flex-wrap: nowrap;
   align-items: stretch;
   overflow: hidden;
+  height: 100%;
 }
 
 span.detailContainer.hidden {
@@ -55,6 +56,7 @@ span.detailContainer.hidden {
 div.collapsibleContainer {
   position: relative;
   width: 250px;
+  /* transition: flex-grow 0.5s; */
 }
 
 div.collapsibleContent {
@@ -62,6 +64,11 @@ div.collapsibleContent {
   overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: #585858 #00000000;
+  /* transition: height 0.5s; */
+}
+
+div.collapsibleContainer.open.fixed {
+  flex-grow: 1;
 }
 
 div.collapsibleContainer.closed > div.collapsibleContent {
@@ -103,4 +110,9 @@ span.collapsibleTitle {
   color: #B6F5D5;
   font-weight: bold;
   user-select: none;
+}
+
+div.collapsibleResizeBar {
+  cursor: ns-resize;
+  height: 5px;
 }

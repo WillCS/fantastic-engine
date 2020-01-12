@@ -1,7 +1,7 @@
 import { Component, ReactNode, CSSProperties } from 'react';
 import React from 'react';
 import './ControlButton.css';
-import { MathHelper } from '../math/mathHelper';
+import { MathHelper } from '../../math/mathHelper';
 
 export enum ControlButtonType {
   GEAR,

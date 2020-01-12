@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { ControlButton, ControlButtonType } from "../../control/ControlButton";
+import { ControlButton, ControlButtonType } from "../../layout/control/ControlButton";
 import { AppContext } from "../context";
 import { EntityContext } from "./entityContext";
 import { Scene } from "../../graphics/scene";

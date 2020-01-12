@@ -1,7 +1,7 @@
 import React from 'react';
 import { Component, ReactNode } from 'react';
 import './Layout.css';
-import { ControlButton, ControlButtonType } from '../control/ControlButton';
+import { ControlButton, ControlButtonType } from '../layout/control/ControlButton';
 import { AppIcon } from './icon/AppIcon';
 
 export class ControlBar extends Component {

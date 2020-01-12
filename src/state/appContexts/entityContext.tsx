@@ -1,7 +1,7 @@
 import { AppContext } from "../context";
 import { EntityModel, AssemblyList, Assembly, BoxList, Box } from "../../model/entityModel";
 import React, { ReactNode } from "react";
-import { ControlButton, ControlButtonType } from "../../control/ControlButton";
+import { ControlButton, ControlButtonType } from "../../layout/control/ControlButton";
 import { Scene } from "../../graphics/scene";
 import { EntityScene } from "../../graphics/scenes/entityScene";
 import { StateMutator } from "../stateMutator";
