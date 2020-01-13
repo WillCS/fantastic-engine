@@ -4,6 +4,7 @@ import './Layout.css';
 import { TreeView } from './tree/TreeView';
 import { Collapsible } from './Collapsible';
 import { Model } from '../model/model';
+import { PropertyView } from './properties/PropertyView';
 
 export interface DetailViewProps {
   show:         boolean;
@@ -27,8 +28,9 @@ export class DetailView extends Component<DetailViewProps, DetailVewState> {
       childExpandedStates: [true, false, false]
     };
 
-    this.handleChildOpened = this.handleChildOpened.bind(this);
-    this.handleChildClosed = this.handleChildClosed.bind(this);
+    this.handleChildOpened     = this.handleChildOpened.bind(this);
+    this.handleChildClosed     = this.handleChildClosed.bind(this);
+    this.handlePropertyChanged = this.handlePropertyChanged.bind(this);
   }
 
   public render(): ReactNode {
@@ -57,16 +59,11 @@ export class DetailView extends Component<DetailViewProps, DetailVewState> {
             onClose   = {this.handleChildClosed}
             resizable = {this.isChildResizable(1)}
           >
+            <PropertyView
+              item            = {this.props.selection}
+              propertyChanged = {this.handlePropertyChanged}
+            />
           </Collapsible>
-          {/* <Collapsible
-            title     = 'THIRD ONE LOL'
-            index     = {2}
-            startOpen = {this.state.childExpandedStates[2]}
-            onOpen    = {this.handleChildOpened}
-            onClose   = {this.handleChildClosed}
-            resizable = {this.isChildResizable(2)}
-          >
-          </Collapsible> */}
         </div>
       </span>
     );
@@ -110,5 +107,11 @@ export class DetailView extends Component<DetailViewProps, DetailVewState> {
     }
     
     return this.state.childExpandedStates[index];
+  }
+
+  private handlePropertyChanged(): void {
+    if(this.props.model) {
+      this.props.updateModel(this.props.model);
+    }
   }
 }

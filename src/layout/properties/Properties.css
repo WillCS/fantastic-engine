@@ -1,0 +1,18 @@
+div.propertyContainer {
+  color: #B6F5D5;
+  font-size: 10pt;
+  margin-inline: 5px;
+  margin-block: 10px;
+}
+
+div.propertyContainer > p {
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+input.stringInputProperty {
+    padding: 0px;
+    border: none;
+    margin-inline: 10px;
+    padding: 5px;
+}

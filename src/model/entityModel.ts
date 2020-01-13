@@ -2,10 +2,15 @@ import { Vec3, Vec2 } from "../math/vector";
 import { TextureList, TexturePointer } from "./texture";
 import { Model } from "./model";
 import { TreeItemStyling } from "../layout/tree/treeLayout";
+import { hasProperties, property, PropertyType, Readability } from "../properties/properties";
 
+@hasProperties
 export class EntityModel implements Model {
+  @property(PropertyType.STRING, Readability.EDITABLE, 'Name')
   public name:       string;
+
   public assemblies: AssemblyList;
+  
   public textures:   TextureList;
 
   public constructor() {
@@ -77,15 +82,30 @@ export class BoxList {
   }
 }
 
+@hasProperties
 export class Assembly {
+  @property(PropertyType.STRING, Readability.EDITABLE, 'Name')
   public name:          string;
+  
+  @property(PropertyType.VEC3, Readability.EDITABLE, 'Origin')
   public rotationPoint: Vec3;
+
+  @property(PropertyType.VEC3, Readability.EDITABLE, 'Rotation')
   public rotationAngle: Vec3;
+
+  @property(PropertyType.VEC3, Readability.EDITABLE, 'Offset')
   public offset:        Vec3;
+
+  @property(PropertyType.VEC2I, Readability.EDITABLE, 'Texture Offset')
   public textureOffset: Vec2;
+
   public children:      AssemblyList;
   public cubes:         BoxList;
+
+  @property(PropertyType.BOOLEAN, Readability.EDITABLE, 'Mirrored')
   public mirrored:      boolean;
+
+  @property(PropertyType.TEXTURE, Readability.EDITABLE, 'Texture')
   public texture:       TexturePointer | undefined;
 
   public constructor(public readonly parent: any) {
@@ -116,11 +136,21 @@ export class Assembly {
   }
 }
 
+@hasProperties
 export class Box {
+  @property(PropertyType.STRING, Readability.EDITABLE, 'Name')
   public name:          string;
+
+  @property(PropertyType.VEC3, Readability.EDITABLE, 'Position')
   public position:      Vec3;
+
+  @property(PropertyType.VEC3I, Readability.EDITABLE, 'Size')
   public dimensions:    Vec3;
+
+  @property(PropertyType.VEC2I, Readability.EDITABLE, 'Texture Coordinates')
   public textureCoords: Vec2;
+
+  @property(PropertyType.BOOLEAN, Readability.EDITABLE, 'Mirrored')
   public mirrored:      boolean;
 
   public constructor(public readonly parent: any) {
