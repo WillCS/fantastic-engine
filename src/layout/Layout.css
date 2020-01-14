@@ -67,6 +67,10 @@ div.collapsibleContent {
   /* transition: height 0.5s; */
 }
 
+div.collapsibleContent::-webkit-scrollbar {
+  display: none;
+}
+
 div.collapsibleContainer.open.fixed {
   flex-grow: 1;
 }

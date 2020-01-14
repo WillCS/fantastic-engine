@@ -5,14 +5,47 @@ div.propertyContainer {
   margin-block: 10px;
 }
 
-div.propertyContainer > p {
+div.propertyContainer > label {
     margin: 0;
     margin-bottom: 5px;
 }
 
+span.propertyName {
+  user-select: none;
+}
+
+div.inputContainer {
+  margin: 0px auto;
+  margin-top: 5px;
+  width: 90%;
+  padding: 5px;
+}
+
+div.inputContainer > input {
+  border: none;
+}
+
+div.inputContainer > input[type=number] {
+  appearance: textfield;
+}
+
+div.inputContainer > input[type=number]::-webkit-inner-spin-button, 
+div.inputContainer > input[type=number]::-webkit-outer-spin-button { 
+  appearance: none;
+  display: none;
+  margin: 0;
+}
+
 input.stringInputProperty {
-    padding: 0px;
-    border: none;
-    margin-inline: 10px;
-    padding: 5px;
+  width: 100%;
+}
+
+input.vec2InputProperty {
+  width: 45%;
+  margin-left: 3%
+}
+
+input.vec3InputProperty {
+  width: 30%;
+  margin-left: 2.5%
 }

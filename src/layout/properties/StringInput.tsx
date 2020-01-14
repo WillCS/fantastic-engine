@@ -3,7 +3,8 @@ import { Component, ReactNode } from 'react';
 import './Properties.css';
 
 export interface StringInputProps {
-  input: string;
+  name:           string;
+  input:          string;
   outputCallback: (output: string) => void;
 }
 
@@ -46,12 +47,15 @@ export class StringInput extends Component<StringInputProps, StringInputState> {
 
   public render(): ReactNode {
     return (
-      <input
-        className = 'stringInputProperty'
-        type      = 'text'
-        value     = { this.state.value }
-        onChange  = { this.handleValueChanged }
-      />
+      <div className = 'inputContainer'>
+        <input
+          className = 'stringInputProperty'
+          type      = 'text'
+          name      = { this.props.name }
+          value     = { this.state.value }
+          onChange  = { this.handleValueChanged }
+        />
+      </div>
     );
   }
 
