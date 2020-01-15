@@ -4,6 +4,7 @@ import { getProperties, PropertyType, PropertyDescription } from '../../properti
 import './Properties.css';
 import { StringInput } from './StringInput';
 import { VectorInput } from './VectorInput';
+import { BooleanInput } from './BooleanInput';
 
 export interface PropertyViewProps {
   item:            any | undefined;
@@ -12,16 +13,24 @@ export interface PropertyViewProps {
 
 export class PropertyView extends Component<PropertyViewProps> {
   public render(): ReactNode {
-    return getProperties(this.props.item).map((prop, index) =>
-      <div 
-        key       = {prop.key}
-        className = 'propertyContainer'
-      >
-        <label>
-          <span className = 'propertyName'>{ prop.name }</span>
-          { this.getInputComponent(prop) }
-        </label>
-      </div>
+    return (
+      <table className='propertyTable'>
+        <tbody>
+          { getProperties(this.props.item).map((prop, index) =>
+            <tr 
+              key       = {prop.key}
+              className = 'propertyRow'
+            >
+              <td className = 'propertyNameCol'>
+                <span className = 'propertyName'>{ prop.name }</span>
+              </td>
+              <td className = 'propertyInputCol'>
+                { this.getInputComponent(prop) }
+              </td>
+            </tr>
+          ) }
+        </tbody>
+      </table>
     );
   }
 
@@ -55,6 +64,14 @@ export class PropertyView extends Component<PropertyViewProps> {
             outputCallback = {this.getOutputCallback(property)}
           />
         );
+      case PropertyType.BOOLEAN:
+        return (
+          <BooleanInput
+            name           = {property.key}
+            input          = {this.getItemPropertyValue(property)}
+            outputCallback = {this.getOutputCallback(property)}
+          />
+        )
     }
   }
 

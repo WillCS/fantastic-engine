@@ -52,6 +52,7 @@ export class VectorInput extends Component<VectorInputProps, VectorInputState> {
         { MathHelper.range(this.getNumDimensions()).map(component =>
           <input
             className = { this.getInputClassName() }
+            key       = { component }
             type      = 'number'
             step      = { this.props.integral ? '1' : undefined }
             name      = { `this.props.name${component}` }

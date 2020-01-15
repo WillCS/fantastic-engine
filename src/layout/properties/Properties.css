@@ -1,24 +1,35 @@
-div.propertyContainer {
+table.propertyTable {
+  width: 100%;
+  border: none;
+}
+
+tr.propertyRow {
   color: #B6F5D5;
   font-size: 10pt;
   margin-inline: 5px;
   margin-block: 10px;
 }
 
-div.propertyContainer > label {
+tr.propertyRow > label {
     margin: 0;
     margin-bottom: 5px;
 }
 
+td.propertyNameCol {
+  width: 100px;
+}
+
 span.propertyName {
+  color: #B6F5D5;
+  font-size: 10pt;
   user-select: none;
+  align-self: center;
 }
 
 div.inputContainer {
-  margin: 0px auto;
-  margin-top: 5px;
-  width: 90%;
-  padding: 5px;
+  display: inline;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 div.inputContainer > input {
@@ -36,16 +47,88 @@ div.inputContainer > input[type=number]::-webkit-outer-spin-button {
   margin: 0;
 }
 
+div.inputContainer > input[type=number]:first-child {
+  margin-left: 0 !important;
+}
+
 input.stringInputProperty {
   width: 100%;
 }
 
 input.vec2InputProperty {
-  width: 45%;
-  margin-left: 3%
+  width: 47.5%;
+  margin-left: 3.5%
 }
 
 input.vec3InputProperty {
   width: 30%;
-  margin-left: 2.5%
+  margin-left: 3.5%
+}
+
+input.booleanInputProperty {
+  position: absolute;
+  left: -100vw;
+}
+
+span.booleanSwitch {
+  width: 60px;
+  height: 20px;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  color: black;
+  background-color: white;
+  cursor: pointer;
+}
+
+div.booleanSwitchContainer {
+  top: 0px;
+  left: 0px;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+span.booleanSwitchThumb {
+  height: 100%;
+  width: 10px;
+  left: 50px;
+  position: relative;
+  background-color: #585858;
+  display: inline-block;
+  transition: left 0.1s;
+}
+
+span.booleanSwitchActive {
+  background-color: #58d695;
+  position: relative;
+  width: 50px;
+  left: 10px;
+  height: 100%;
+  display: inline-block;
+  text-align: center;
+  font-weight: bold;
+  user-select: none;
+}
+
+span.booleanSwitchInactive {
+  position: absolute;
+  width: 50px;
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  user-select: none;
+}
+
+input.booleanInputProperty:checked ~ span.booleanSwitch span.booleanSwitchThumb {
+  left: 0px;
+}
+
+input.booleanInputProperty:checked ~ span.booleanSwitch span.booleanSwitchActive {
+  left: 10px;
 }
