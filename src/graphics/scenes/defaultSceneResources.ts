@@ -1,4 +1,4 @@
-import { StaticMesh } from "../mesh";
+import { StaticMesh } from "../staticMesh";
 
 const greenR = 88 / 255;
 const greenG = 214 / 255;
@@ -11,9 +11,6 @@ const darkGreyB = 47 / 255;
 const lightGreyR = 88 / 255;
 const lightGreyG = 88 / 255;
 const lightGreyB = 88 / 255;
-
-export const colourVertSource = require('../glsl/colourShaderNoNormal.vert');
-export const colourFragSource = require('../glsl/colourShaderNoNormal.frag');
 
 export const texVertSource = require('../glsl/2DtextureShader.vert');
 export const texFragSource = require('../glsl/2DtextureShader.frag');
@@ -156,33 +153,6 @@ export function getCubeBaseOutline(webGL: WebGLRenderingContext): StaticMesh {
       lightGreyR, lightGreyG, lightGreyB,
       lightGreyR, lightGreyG, lightGreyB,
       lightGreyR, lightGreyG, lightGreyB,
-    ],
-    normals: undefined,
-    texture: undefined
-  });
-}
-
-export function getAxes(webGL: WebGLRenderingContext): StaticMesh {
-  return new StaticMesh(webGL, {
-    defaultDrawMode: webGL.LINES, 
-    indices: [
-      0, 1, 2, 3, 4, 5
-    ],
-    vertices: [
-       100,    0,    0,
-      -100,    0,    0,
-         0,  100,    0,
-         0, -100,    0,
-         0,    0,  100,
-         0,    0, -100
-    ],
-    decoration: [
-      1, 0, 0,
-      1, 0, 0,
-      0, 1, 0,
-      0, 1, 0,
-      0, 0, 1,
-      0, 0, 1
     ],
     normals: undefined,
     texture: undefined

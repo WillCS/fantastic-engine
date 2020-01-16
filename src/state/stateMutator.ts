@@ -19,6 +19,14 @@ export class StateMutator {
     this.getSelection = this.getSelection.bind(this);
     this.getContext   = this.getContext.bind(this);
     this.getModel     = this.getModel.bind(this);
+
+    this.registerSelectionChangeListener = this.registerSelectionChangeListener.bind(this);
+    this.registerContextChangeListener   = this.registerContextChangeListener.bind(this);
+    this.registerModelChangeListener     = this.registerModelChangeListener.bind(this);
+
+    this.deregisterSelectionChangeListener = this.deregisterSelectionChangeListener.bind(this);
+    this.deregisterContextChangeListener   = this.deregisterContextChangeListener.bind(this);
+    this.deregisterModelChangeListener     = this.deregisterModelChangeListener.bind(this);
   }
 
   public setSelection(newSelection: any | undefined): void {

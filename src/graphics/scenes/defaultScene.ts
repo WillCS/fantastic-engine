@@ -1,13 +1,11 @@
 import { Scene } from "../scene";
 import { ShaderProgram } from "../shaderProgram";
-import { StaticMesh } from "../mesh";
+import { StaticMesh } from "../staticMesh";
 import { Camera, OrbitalCamera, ProjectionType } from "../camera";
 import { Mat4 } from "../../math/matrix";
 import { Vec3 } from "../../math/vector";
 import { WebGLHelper } from "../webGLHelper";
 import { 
-  colourVertSource, 
-  colourFragSource,
   texVertSource,
   texFragSource,
   getCubeTop, 
@@ -15,6 +13,7 @@ import {
   getCubeBaseOutline
 } from "./defaultSceneResources";
 import { Texture2D } from "../2DTexture";
+import { colourVertSource, colourFragSource } from "./commonSceneResources";
 
 export class DefaultScene extends Scene {
   private shaderProgram:        ShaderProgram;
@@ -42,9 +41,9 @@ export class DefaultScene extends Scene {
     super();
     
     this.camera = new OrbitalCamera(Vec3.zero(), Math.PI / 4, this.isometricInclination, 200);
-    this.camera.viewportWidth  =
-    this.camera.viewportHeight = this.viewportHeight;
-    this.camera.projectionType = ProjectionType.ORTHOGRAPHIC;
+    this.camera.viewportWidth    =
+    this.camera.viewportHeight   = this.viewportHeight;
+    this.camera.projectionType   = ProjectionType.ORTHOGRAPHIC;
     this.camera.farPlaneDistance = 500;
     (this.camera as OrbitalCamera).azimuth = (Math.PI / 4)
 
@@ -52,7 +51,7 @@ export class DefaultScene extends Scene {
         WebGLHelper.buildShaderProgram(webGL, colourVertSource.default, colourFragSource.default)!);
 
     this.textureShaderProgram = new ShaderProgram(
-      WebGLHelper.buildShaderProgram(webGL, texVertSource.default, texFragSource.default)!);
+        WebGLHelper.buildShaderProgram(webGL, texVertSource.default, texFragSource.default)!);
 
     this.shaderProgram.setCamera(this.camera);
 
@@ -61,7 +60,7 @@ export class DefaultScene extends Scene {
     this.cubeBaseOutline = getCubeBaseOutline(webGL);
 
     this.transitionTexture = webGL.createTexture()!;
-    this.transitionBuffer = webGL.createFramebuffer()!;
+    this.transitionBuffer  = webGL.createFramebuffer()!;
     
     this.transitionTextureContainer = new Texture2D(webGL,
       this.transitionTexture,

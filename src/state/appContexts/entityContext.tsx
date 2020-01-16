@@ -49,7 +49,11 @@ export class EntityContext extends AppContext {
   }
 
   public createScene(webGL: WebGLRenderingContext): void {
-    this.scene = new EntityScene();
+    this.scene = new EntityScene(webGL,
+      this.stateMutator.getModel()!,
+      this.stateMutator.registerModelChangeListener,
+      this.stateMutator.deregisterModelChangeListener
+    );
   }
 
   public getScene(): Scene | undefined {
