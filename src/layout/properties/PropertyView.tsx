@@ -22,7 +22,9 @@ export class PropertyView extends Component<PropertyViewProps> {
               className = 'propertyRow'
             >
               <td className = 'propertyNameCol'>
-                <span className = 'propertyName'>{ prop.name }</span>
+                <span className = 'propertyName'>
+                  { prop.name }
+                </span>
               </td>
               <td className = 'propertyInputCol'>
                 { this.getInputComponent(prop) }
@@ -40,7 +42,7 @@ export class PropertyView extends Component<PropertyViewProps> {
         return (
           <StringInput
             name           = {property.key}
-            input          = {this.getItemPropertyValue(property)}
+            value          = {this.getItemPropertyValue(property)}
             outputCallback = {this.getOutputCallback(property)}
           />
         );
@@ -50,7 +52,7 @@ export class PropertyView extends Component<PropertyViewProps> {
           <VectorInput
             name           = {property.key}
             integral       = {false}
-            input          = {this.getItemPropertyValue(property)}
+            value          = {this.getItemPropertyValue(property)}
             outputCallback = {this.getOutputCallback(property)}
           />
         );
@@ -60,7 +62,7 @@ export class PropertyView extends Component<PropertyViewProps> {
           <VectorInput
             name           = {property.key}
             integral       = {true}
-            input          = {this.getItemPropertyValue(property)}
+            value          = {this.getItemPropertyValue(property)}
             outputCallback = {this.getOutputCallback(property)}
           />
         );
@@ -68,7 +70,7 @@ export class PropertyView extends Component<PropertyViewProps> {
         return (
           <BooleanInput
             name           = {property.key}
-            input          = {this.getItemPropertyValue(property)}
+            value          = {this.getItemPropertyValue(property)}
             outputCallback = {this.getOutputCallback(property)}
           />
         )

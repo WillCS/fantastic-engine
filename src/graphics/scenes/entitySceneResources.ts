@@ -40,16 +40,14 @@ export function buildBoxMesh(webGL: WebGLRenderingContext, box: Box): DynamicMes
 
 export function updateBoxMesh(webGL: WebGLRenderingContext, box: Box, mesh: DynamicMesh): DynamicMesh {
   const vertices:   number[] = getBoxVertices(box);
-
   mesh.setVertices(webGL, vertices);
-
   return mesh;
 }
 
 function getBoxVertices(box: Box): number[] {
-  const x = box.dimensions.x;
-  const y = box.dimensions.y;
-  const z = box.dimensions.z;
+  const x = box.dimensions.x || 0;
+  const y = box.dimensions.y || 0;
+  const z = box.dimensions.z || 0;
 
   return [
     x, y, z, // 0

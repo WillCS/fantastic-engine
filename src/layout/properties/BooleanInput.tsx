@@ -1,30 +1,19 @@
-import React from 'react';
-import { Component, ReactNode } from 'react';
+import React, { ReactNode, PureComponent } from 'react';
 import './Properties.css';
 
 export interface BooleanInputProps {
   name:           string;
-  input:          boolean;
+  value:          boolean;
   outputCallback: (output: boolean) => void;
 }
 
-export interface BooleanInputState {
-  value: boolean;
-}
-
-export class BooleanInput extends Component<BooleanInputProps, BooleanInputState> {
+export class BooleanInput extends PureComponent<BooleanInputProps> {
   private previousInput: boolean;
 
   public constructor(props: BooleanInputProps) {
     super(props);
 
-    this.previousInput = this.props.input;
-    
-    this.state = {
-      value: this.props.input
-    };
-
-    this.handleValueChanged = this.handleValueChanged.bind(this);
+    this.previousInput = this.props.value;
   }
 
   /**
@@ -36,12 +25,8 @@ export class BooleanInput extends Component<BooleanInputProps, BooleanInputState
    *  componentDidUpdate are there in order to update the value of the input tag
    *  whenever this happens. */
   public componentDidUpdate(): void {
-    if(this.props.input !== this.previousInput) {
-      this.previousInput = this.props.input;
-
-      this.setState({
-        value: this.props.input
-      });
+    if(this.props.value !== this.previousInput) {
+      this.previousInput = this.props.value;
     }
   }
 
@@ -53,7 +38,7 @@ export class BooleanInput extends Component<BooleanInputProps, BooleanInputState
             className = 'booleanInputProperty'
             type      = 'checkbox'
             name      = { this.props.name }
-            checked   = { this.state.value }
+            checked   = { this.props.value }
             onChange  = { this.handleValueChanged }
           />
           <span className='booleanSwitch'>
@@ -73,11 +58,9 @@ export class BooleanInput extends Component<BooleanInputProps, BooleanInputState
     );
   }
 
-  private handleValueChanged(event: React.ChangeEvent<HTMLInputElement>): void {
-    this.setState({
-      value: event.currentTarget.checked
-    });
-
-    this.props.outputCallback(event.currentTarget.checked);
+  private handleValueChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if(typeof this.props.outputCallback === 'function') {
+      this.props.outputCallback(event.currentTarget.checked);
+    }
   }
 }

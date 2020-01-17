@@ -1,15 +1,15 @@
-import { Scene } from "../scene";
-import { Camera, OrbitalCamera, ProjectionType } from "../camera";
-import { Vec3 } from "../../math/vector";
-import { ShaderProgram } from "../shaderProgram";
-import { WebGLHelper } from "../webGLHelper";
-import { colourVertSource, colourFragSource, getAxes } from "./commonSceneResources";
-import { StaticMesh } from "../staticMesh";
-import { Mat4 } from "../../math/matrix";
-import { Model } from "../../model/model";
-import { DynamicMesh } from "../dynamicMesh";
-import { Box, Assembly, EntityModel } from "../../model/entityModel";
-import { buildBoxMesh, updateBoxMesh } from "./entitySceneResources";
+import { Scene } from '../scene';
+import { Camera, OrbitalCamera, ProjectionType } from '../camera';
+import { Vec3 } from '../../math/vector';
+import { ShaderProgram } from '../shaderProgram';
+import { WebGLHelper } from '../webGLHelper';
+import { getAxes, modelFragSource, modelVertSource } from './commonSceneResources';
+import { StaticMesh } from '../staticMesh';
+import { Mat4 } from '../../math/matrix';
+import { Model } from '../../model/model';
+import { DynamicMesh } from '../dynamicMesh';
+import { Box, Assembly, EntityModel } from '../../model/entityModel';
+import { buildBoxMesh, updateBoxMesh } from './entitySceneResources';
 
 export class EntityScene extends Scene {
   private camera: Camera;
@@ -24,20 +24,20 @@ export class EntityScene extends Scene {
   public constructor(
       webGL: WebGLRenderingContext,
       model: Model,
-      modelChangedEventRegister:           (listener: (model: Model | undefined) => void) => void,
+      modelChangedEventRegister:           (listener:  (model: Model | undefined) => void) => void,
       private modelChangedEventDeregister: (liestener: (model: Model | undefined) => void) => void
     ) {
     super();
     
     this.camera = new OrbitalCamera(Vec3.zero(), Math.PI / 4, Math.PI / 4, 100);
-    this.camera.viewportWidth    =
+    this.camera.viewportWidth    = this.viewportWidth;
     this.camera.viewportHeight   = this.viewportHeight;
     this.camera.projectionType   = ProjectionType.PERSPECTIVE;
     this.camera.farPlaneDistance = 200;
     (this.camera as OrbitalCamera).azimuth = (Math.PI / 4)
 
     this.shaderProgram = new ShaderProgram(
-        WebGLHelper.buildShaderProgram(webGL, colourVertSource.default, colourFragSource.default)!);
+        WebGLHelper.buildShaderProgram(webGL, modelVertSource.default, modelFragSource.default)!);
 
     this.shaderProgram.setCamera(this.camera);
 
@@ -45,11 +45,9 @@ export class EntityScene extends Scene {
 
     this.geometryMap = new Map<Box, DynamicMesh>();
 
-    this.handleModelChanged = this.handleModelChanged.bind(this);
-
     modelChangedEventRegister(this.handleModelChanged);
 
-    this.model = model;
+    this.model        = model;
     this.modelChanged = true;
   }
 
@@ -91,17 +89,20 @@ export class EntityScene extends Scene {
     const translation: Vec3 = assembly.offset;
     const rotateOffset: Vec3 = assembly.rotationPoint;
 
-    let modelMat: Mat4 = modelTransformMatrix
-        .translate(translation.x, translation.y, translation.z)
-        .translate(rotateOffset.x, rotateOffset.y, rotateOffset.z)
-        .rotateX(assembly.rotationAngle.x)
-        .rotateY(assembly.rotationAngle.y)
-        .rotateZ(assembly.rotationAngle.z)
-        .translate(-rotateOffset.x, -rotateOffset.y, -rotateOffset.z);
+    const x    = translation.x  || 0;
+    const y    = translation.y  || 0;
+    const z    = translation.z  || 0;
+    const xRot = rotateOffset.x || 0;
+    const yRot = rotateOffset.y || 0;
+    const zRot = rotateOffset.z || 0;
 
-    if(assembly.mirrored) {
-      modelMat = modelMat.scale(-1, 1, 1);
-    }
+    let modelMat: Mat4 = modelTransformMatrix
+        .translate(x, y, z)
+        .translate(xRot, yRot, zRot)
+        .rotateX(assembly.rotationAngle.x || 0)
+        .rotateY(assembly.rotationAngle.y || 0)
+        .rotateZ(assembly.rotationAngle.z || 0)
+        .translate(-xRot, -yRot, -zRot);
 
     assembly.cubes.boxes.forEach(
         box => this.renderBox(webGL, box, time, modelMat));
@@ -117,11 +118,11 @@ export class EntityScene extends Scene {
     ): void {
     const mesh = this.geometryMap.get(box);
     const pos  = box.position;
-    let modelMat: Mat4 = modelTransformMatrix.translate(pos.x, pos.y, pos.z);
-
-    if(box.mirrored) {
-      modelMat = modelMat.scale(-1, 1, 1);
-    }
+    const x = pos.x || 0;
+    const y = pos.y || 0;
+    const z = pos.z || 0;
+    
+    let modelMat: Mat4 = modelTransformMatrix.translate(x, y, z);
 
     if(mesh) {
       mesh.draw(webGL, this.shaderProgram, modelMat);
@@ -132,6 +133,7 @@ export class EntityScene extends Scene {
     this.modelChangedEventDeregister(this.handleModelChanged);
     this.shaderProgram.dispose(webGL);
     this.axes.dispose(webGL);
+    Array.from(this.geometryMap.values()).forEach(mesh => mesh.dispose(webGL));
   }
 
   public setViewportSize(width: number, height: number): void {
@@ -140,7 +142,7 @@ export class EntityScene extends Scene {
     this.camera.viewportHeight = height;
   }
 
-  private handleModelChanged(model: Model | undefined): void {
+  private handleModelChanged = (model: Model | undefined) => {
     this.model = model;
     this.modelChanged = true;
   }
@@ -149,7 +151,7 @@ export class EntityScene extends Scene {
     if(this.model && this.model instanceof EntityModel) {
       this.model.assemblies.assemblies.forEach(assembly => this.updateGeometryForAssembly(webGL, assembly));
     } else {
-      this.geometryMap.clear();
+      Array.from(this.geometryMap.values()).forEach(mesh => mesh.dispose(webGL));
     }
   }
 

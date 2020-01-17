@@ -1,31 +1,22 @@
-import React from 'react';
-import { Component, ReactNode } from 'react';
+import React, { ReactNode, PureComponent } from 'react';
 import './Properties.css';
 import { Vec2, Vec3, Vec4 } from '../../math/vector';
 import { MathHelper } from '../../math/mathHelper';
 
 export interface VectorInputProps {
   name:           string;
-  input:          Vec2 | Vec3 | Vec4;
+  value:          Vec2 | Vec3 | Vec4;
   integral:       boolean;
   outputCallback: (output: Vec2 | Vec3 | Vec4) => void;
 }
 
-export interface VectorInputState {
-  value: Vec2 | Vec3 | Vec4;
-}
-
-export class VectorInput extends Component<VectorInputProps, VectorInputState> {
+export class VectorInput extends PureComponent<VectorInputProps> {
   private previousInput: Vec2 | Vec3 | Vec4;
 
   public constructor(props: VectorInputProps) {
     super(props);
 
-    this.previousInput = this.props.input;
-    
-    this.state = {
-      value: this.props.input
-    };
+    this.previousInput = this.props.value;
   }
 
   /**
@@ -37,11 +28,11 @@ export class VectorInput extends Component<VectorInputProps, VectorInputState> {
    *  componentDidUpdate are there in order to update the value of the input tag
    *  whenever this happens. */
   public componentDidUpdate(): void {
-    if(this.props.input !== this.previousInput) {
-      this.previousInput = this.props.input;
+    if(this.props.value !== this.previousInput) {
+      this.previousInput = this.props.value;
 
       this.setState({
-        value: this.props.input
+        value: this.props.value
       });
     }
   }
@@ -54,7 +45,7 @@ export class VectorInput extends Component<VectorInputProps, VectorInputState> {
             className = { this.getInputClassName() }
             key       = { component }
             type      = 'number'
-            step      = { this.props.integral ? '1' : undefined }
+            step      = { this.props.integral ? 1 : 0.1 }
             name      = { `this.props.name${component}` }
             value     = { this.getValueOfVectorComponent(component) }
             onChange  = { this.getValueHandler(component) }
@@ -65,25 +56,40 @@ export class VectorInput extends Component<VectorInputProps, VectorInputState> {
   }
 
   private getNumDimensions(): number {
-    if(this.props.input instanceof Vec2) {
+    if(this.props.value instanceof Vec2) {
       return 2;
-    } else if(this.props.input instanceof Vec3) {
+    } else if(this.props.value instanceof Vec3) {
       return 3;
-    } else if(this.props.input instanceof Vec4) {
+    } else if(this.props.value instanceof Vec4) {
       return 4;
     } else {
       return NaN;
     }
   }
 
-  private getValueOfVectorComponent(componentIndex: number): number {
+  private getValueOfVectorComponent(componentIndex: number): number | string {
+    let val: number;
     switch(componentIndex) {
-      case 0:  return this.state.value.x;
-      case 1:  return this.state.value.y;
-      case 2:  return (this.state.value as Vec3).z;
-      case 3:  return (this.state.value as Vec4).w;
-      default: return NaN;
+      case 0:
+        val = this.props.value.x;
+        break;
+      case 1: 
+        val = this.props.value.y;
+        break;
+      case 2: 
+        val = (this.props.value as Vec3).z;
+        break;
+      case 3: 
+        val = (this.props.value as Vec4).w;
+        break;
+      default: 
+        val = NaN;
+        break;
     }
+
+    return isNaN(val)
+      ? ''
+      : val;
   }
 
   private getInputClassName(): string {
@@ -93,7 +99,7 @@ export class VectorInput extends Component<VectorInputProps, VectorInputState> {
   private getValueHandler(componentIndex: number): (event: React.ChangeEvent<HTMLInputElement>) => void {
     const component = this;
     return function(event: React.ChangeEvent<HTMLInputElement>): void {
-      const newValue: Vec2 | Vec3 | Vec4 = component.state.value.copy();
+      const newValue: Vec2 | Vec3 | Vec4 = component.props.value.copy();
       const parseFunc = component.props.integral ? parseInt : parseFloat;
 
       switch(componentIndex) {
@@ -110,10 +116,6 @@ export class VectorInput extends Component<VectorInputProps, VectorInputState> {
           (newValue as Vec4).w = parseFunc(event.currentTarget.value);
           break;
       }
-
-      component.setState({
-        value: newValue
-      });
 
       component.props.outputCallback(newValue);
     }

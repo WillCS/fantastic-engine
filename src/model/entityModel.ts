@@ -102,9 +102,6 @@ export class Assembly {
   public children:      AssemblyList;
   public cubes:         BoxList;
 
-  @property(PropertyType.BOOLEAN, Readability.EDITABLE, 'Mirrored')
-  public mirrored:      boolean;
-
   @property(PropertyType.TEXTURE, Readability.EDITABLE, 'Texture')
   public texture:       TexturePointer | undefined;
 
@@ -116,7 +113,6 @@ export class Assembly {
     this.textureOffset = Vec2.zero();
     this.children      = new AssemblyList([], this);
     this.cubes         = new BoxList([], this);
-    this.mirrored      = false;
   }
 
   public copyTo(parent: any): Assembly {
@@ -129,7 +125,6 @@ export class Assembly {
     newAssembly.textureOffset = this.textureOffset.copy();
     newAssembly.children      = this.children.copyTo(newAssembly);
     newAssembly.cubes         = this.cubes.copyTo(newAssembly);
-    newAssembly.mirrored      = this.mirrored;
     newAssembly.texture       = this.texture;
 
     return newAssembly;
@@ -147,7 +142,7 @@ export class Box {
   @property(PropertyType.VEC3I, Readability.EDITABLE, 'Size')
   public dimensions:    Vec3;
 
-  @property(PropertyType.VEC2I, Readability.EDITABLE, 'Texture Coordinates')
+  @property(PropertyType.VEC2I, Readability.EDITABLE, 'Texture Offset')
   public textureCoords: Vec2;
 
   @property(PropertyType.BOOLEAN, Readability.EDITABLE, 'Mirrored')
