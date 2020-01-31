@@ -136,9 +136,11 @@ export class DefaultScene extends Scene {
     (this.camera as OrbitalCamera).radius = zoomScale * 1000;
     (this.camera as OrbitalCamera).inclination = this.isometricInclination - this.isometricInclination * (deltaT / this.transitionLength);
 
-
     this.cubeBaseOutline.draw(webGL, this.shaderProgram, newModelTransform);
+
+    webGL.disable(webGL.DEPTH_TEST);
     this.cubeBase.draw(webGL, this.shaderProgram, newModelTransform);
+    webGL.enable(webGL.DEPTH_TEST);
 
     webGL.enable(webGL.STENCIL_TEST);
     webGL.stencilFunc(webGL.ALWAYS, 1, 0xFF);
