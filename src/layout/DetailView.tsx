@@ -3,15 +3,14 @@ import { Component, ReactNode } from 'react';
 import './Layout.css';
 import { TreeView } from './tree/TreeView';
 import { Collapsible } from './Collapsible';
-import { Model } from '../model/model';
 import { PropertyView } from './properties/PropertyView';
+import { observer } from 'mobx-react';
+import { AppContext } from '../state/context';
+import { EditorContext } from '../state/editorContext';
 
 export interface DetailViewProps {
-  show:         boolean;
-  model:        Model | undefined;
-  updateModel:  (updatedModel: Model) => void;
-  selection:    any | undefined;
-  setSelection: (newSelection: any) => void;
+  show:    boolean;
+  context: AppContext
 }
 
 export interface DetailVewState {
@@ -19,52 +18,50 @@ export interface DetailVewState {
   childExpandedStates: boolean[];
 }
 
+@observer
 export class DetailView extends Component<DetailViewProps, DetailVewState> {
   public constructor(props: DetailViewProps) {
     super(props);
 
     this.state = {
       expandedChildren:    0,
-      childExpandedStates: [true, false, false]
+      childExpandedStates: [true, true]
     };
-
-    this.handleChildOpened     = this.handleChildOpened.bind(this);
-    this.handleChildClosed     = this.handleChildClosed.bind(this);
-    this.handlePropertyChanged = this.handlePropertyChanged.bind(this);
   }
 
   public render(): ReactNode {
     return (
-      <span className={this.getClassName()}>
-        <div className='detailView'>
-          <Collapsible
-            title     = 'COMPONENTS'
-            index     = {0}
-            startOpen = {this.state.childExpandedStates[0]}
-            onOpen    = {this.handleChildOpened}
-            onClose   = {this.handleChildClosed}
-            resizable = {this.isChildResizable(0)}
-          >
-            <TreeView
-              selection={this.props.selection}
-              root={this.props.model}
-              selectionChanged={this.props.setSelection}
-            />
-          </Collapsible>
-          <Collapsible
-            title     = 'PROPERTIES'
-            index     = {1}
-            startOpen = {this.state.childExpandedStates[1]}
-            onOpen    = {this.handleChildOpened}
-            onClose   = {this.handleChildClosed}
-            resizable = {this.isChildResizable(1)}
-          >
-            <PropertyView
-              item            = {this.props.selection}
-              propertyChanged = {this.handlePropertyChanged}
-            />
-          </Collapsible>
-        </div>
+      <span className = {this.getClassName()}>
+        { this.props.context instanceof EditorContext &&
+          <div className = 'detailView'>
+            <Collapsible
+              title     = 'COMPONENTS'
+              index     = {0}
+              startOpen = {this.state.childExpandedStates[0]}
+              onOpen    = {this.handleChildOpened}
+              onClose   = {this.handleChildClosed}
+              resizable = {this.isChildResizable(0)}
+            >
+              <TreeView
+                selection        = {this.getContext().selection}
+                root             = {this.getContext().model}
+                selectionChanged = {this.handleSelectionChanged}
+              />
+            </Collapsible>
+            <Collapsible
+              title     = 'PROPERTIES'
+              index     = {1}
+              startOpen = {this.state.childExpandedStates[1]}
+              onOpen    = {this.handleChildOpened}
+              onClose   = {this.handleChildClosed}
+              resizable = {this.isChildResizable(1)}
+            >
+              <PropertyView
+                item = {this.getContext().selection}
+              />
+            </Collapsible>
+          </div>
+        }
       </span>
     );
   }
@@ -75,26 +72,28 @@ export class DetailView extends Component<DetailViewProps, DetailVewState> {
       : 'detailContainer hidden';
   }
 
-  private handleChildOpened(collapsible: Collapsible): void {
+  private handleChildOpened = (collapsible: Collapsible) => {
     this.setState({
       expandedChildren:    this.state.expandedChildren + 1,
-      childExpandedStates: this.state.childExpandedStates.map((v, i, a) => 
-        i === collapsible.props.index
-         ? true
-         : v
-        )
-    });
+      childExpandedStates: this.state.childExpandedStates.map(
+        (v, i, a) => i === collapsible.props.index
+          ? true
+          : v
+      )});
   }
 
-  private handleChildClosed(collapsible: Collapsible): void {
+  private handleChildClosed = (collapsible: Collapsible) => {
     this.setState({
       expandedChildren: this.state.expandedChildren - 1,
-      childExpandedStates: this.state.childExpandedStates.map((v, i, a) => 
-        i === collapsible.props.index
-         ? false
-         : v
-        )
-    });
+      childExpandedStates: this.state.childExpandedStates.map(
+        (v, i, a) => i === collapsible.props.index
+          ? false
+          : v
+      )});
+  }
+
+  private handleSelectionChanged = (newSelection: any) => {
+    this.getContext().selection = newSelection;
   }
 
   private isChildResizable(index: number): boolean {
@@ -109,9 +108,7 @@ export class DetailView extends Component<DetailViewProps, DetailVewState> {
     return this.state.childExpandedStates[index];
   }
 
-  private handlePropertyChanged(): void {
-    if(this.props.model) {
-      this.props.updateModel(this.props.model);
-    }
+  private getContext(): EditorContext {
+    return this.props.context as EditorContext;
   }
 }

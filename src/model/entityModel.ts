@@ -3,14 +3,18 @@ import { TextureList, TexturePointer } from "./texture";
 import { Model } from "./model";
 import { TreeItemStyling } from "../layout/tree/treeLayout";
 import { hasProperties, property, PropertyType, Readability } from "../properties/properties";
+import { observable } from "mobx";
 
 @hasProperties
 export class EntityModel implements Model {
+  @observable
   @property(PropertyType.STRING, Readability.EDITABLE, 'Name')
   public name:       string;
 
+  @observable
   public assemblies: AssemblyList;
   
+  @observable
   public textures:   TextureList;
 
   public constructor() {
@@ -55,7 +59,16 @@ export class EntityModel implements Model {
 }
 
 export class AssemblyList {
-  public constructor(public assemblies: Assembly[], public readonly parent: any) { }
+  @observable
+  public assemblies: Assembly[];
+
+  @observable
+  public readonly parent: any;
+
+  public constructor(assemblies: Assembly[], parent: any) { 
+    this.assemblies = assemblies;
+    this.parent     = parent;
+  }
 
   public copyTo(parent: any): AssemblyList {
     const newList: AssemblyList = new AssemblyList([], parent);
@@ -69,7 +82,16 @@ export class AssemblyList {
 }
 
 export class BoxList {
-  public constructor(public boxes: Box[], public readonly parent: any) { }
+  @observable
+  public boxes: Box[]; 
+
+  @observable
+  public readonly parent: any;
+  
+  public constructor(boxes: Box[], parent: any) {
+    this.boxes  = boxes;
+    this.parent = parent;
+  }
 
   public copyTo(parent: any): BoxList {
     const newList: BoxList = new BoxList([], parent);
@@ -84,24 +106,33 @@ export class BoxList {
 
 @hasProperties
 export class Assembly {
+  @observable
   @property(PropertyType.STRING, Readability.EDITABLE, 'Name')
   public name:          string;
   
+  @observable
   @property(PropertyType.VEC3, Readability.EDITABLE, 'Origin')
   public rotationPoint: Vec3;
 
+  @observable
   @property(PropertyType.VEC3, Readability.EDITABLE, 'Rotation')
   public rotationAngle: Vec3;
 
+  @observable
   @property(PropertyType.VEC3, Readability.EDITABLE, 'Offset')
   public offset:        Vec3;
 
+  @observable
   @property(PropertyType.VEC2I, Readability.EDITABLE, 'Texture Offset')
   public textureOffset: Vec2;
 
+  @observable
   public children:      AssemblyList;
+
+  @observable
   public cubes:         BoxList;
 
+  @observable
   @property(PropertyType.TEXTURE, Readability.EDITABLE, 'Texture')
   public texture:       TexturePointer | undefined;
 
@@ -133,18 +164,23 @@ export class Assembly {
 
 @hasProperties
 export class Box {
+  @observable
   @property(PropertyType.STRING, Readability.EDITABLE, 'Name')
   public name:          string;
 
+  @observable
   @property(PropertyType.VEC3, Readability.EDITABLE, 'Position')
   public position:      Vec3;
 
+  @observable
   @property(PropertyType.VEC3I, Readability.EDITABLE, 'Size')
   public dimensions:    Vec3;
 
+  @observable
   @property(PropertyType.VEC2I, Readability.EDITABLE, 'Texture Offset')
   public textureCoords: Vec2;
 
+  @observable
   @property(PropertyType.BOOLEAN, Readability.EDITABLE, 'Mirrored')
   public mirrored:      boolean;
 

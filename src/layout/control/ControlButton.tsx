@@ -19,9 +19,16 @@ export enum ControlButtonType {
 }
 
 export interface ControlButtonProps {
-  title: string,
-  type: ControlButtonType,
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  title:    string;
+  type:     ControlButtonType;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+}
+
+export interface ControlButtonDescriptor {
+  key:      string;
+  type:     ControlButtonType;
+  title:    string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 export class ControlButton extends Component<ControlButtonProps> {

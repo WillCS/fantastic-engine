@@ -7,8 +7,7 @@ import { VectorInput } from './VectorInput';
 import { BooleanInput } from './BooleanInput';
 
 export interface PropertyViewProps {
-  item:            any | undefined;
-  propertyChanged: () => void;
+  item: any | undefined;
 }
 
 export class PropertyView extends Component<PropertyViewProps> {
@@ -85,8 +84,6 @@ export class PropertyView extends Component<PropertyViewProps> {
     const component = this;
     return function(output: any): void {
       component.props.item[property.key] = output;
-
-      component.props.propertyChanged();
     }
   }
 }
