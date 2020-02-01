@@ -1,14 +1,14 @@
 import { EntityModel, AssemblyList, Assembly, BoxList, Box } from '../../model/entityModel';
 import { ControlButtonType, ControlButtonDescriptor } from '../../layout/control/ControlButton';
-import { Scene } from '../../graphics/scene';
 import { EditorContext } from '../editorContext';
+import { EntityScene } from '../../graphics/scenes/entityScene';
 
 export class EntityContext extends EditorContext {
-  public constructor(scene: Scene);
-  public constructor(scene: Scene, model: EntityModel);
+  public constructor();
+  public constructor(model: EntityModel);
 
-  public constructor(scene: Scene, model?: EntityModel) {
-    super(scene, model || new EntityModel());
+  public constructor(model?: EntityModel) {
+    super(new EntityScene(), model || new EntityModel());
   }
 
   public populateControlBar(): ControlButtonDescriptor[] {

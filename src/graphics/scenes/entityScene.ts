@@ -6,58 +6,43 @@ import { WebGLHelper } from '../webGLHelper';
 import { getAxes, modelFragSource, modelVertSource } from './commonSceneResources';
 import { StaticMesh } from '../staticMesh';
 import { Mat4 } from '../../math/matrix';
-import { Model } from '../../model/model';
 import { DynamicMesh } from '../dynamicMesh';
 import { Box, Assembly, EntityModel } from '../../model/entityModel';
 import { buildBoxMesh, updateBoxMesh } from './entitySceneResources';
 
 export class EntityScene extends Scene {
-  private camera: Camera;
-  private shaderProgram: ShaderProgram;
-  private axes: StaticMesh;
+  private camera:         Camera;
+  private shaderProgram?: ShaderProgram;
+  private axes?:          StaticMesh;
 
-  private geometryMap: Map<Box, DynamicMesh>;
-
-  private modelChanged: boolean = false;
-  private model:        Model | undefined;
-
-  public constructor(
-      webGL: WebGLRenderingContext,
-      model: Model,
-      modelChangedEventRegister:           (listener:  (model: Model | undefined) => void) => void,
-      private modelChangedEventDeregister: (liestener: (model: Model | undefined) => void) => void
-    ) {
+  public constructor() {
     super();
-    
+
     this.camera = new OrbitalCamera(Vec3.zero(), Math.PI / 4, Math.PI / 4, 100);
     this.camera.viewportWidth    = this.viewportWidth;
     this.camera.viewportHeight   = this.viewportHeight;
     this.camera.projectionType   = ProjectionType.PERSPECTIVE;
     this.camera.farPlaneDistance = 200;
     (this.camera as OrbitalCamera).azimuth = (Math.PI / 4)
+  }
 
+  public init(webGL: WebGLRenderingContext): void {
     this.shaderProgram = new ShaderProgram(
-        WebGLHelper.buildShaderProgram(webGL, modelVertSource.default, modelFragSource.default)!);
+      WebGLHelper.buildShaderProgram(webGL, modelVertSource.default, modelFragSource.default)!);
 
     this.shaderProgram.setCamera(this.camera);
 
     this.axes = getAxes(webGL);
-
-    this.geometryMap = new Map<Box, DynamicMesh>();
-
-    modelChangedEventRegister(this.handleModelChanged);
-
-    this.model        = model;
-    this.modelChanged = true;
   }
 
   public preRender(webGL: WebGLRenderingContext, time: number): void {
-    this.shaderProgram.enable(webGL);
+    this.shaderProgram!.enable(webGL);
     
-    if(this.modelChanged) {
-      this.updateGeometry(webGL);
-      this.modelChanged = false;
-    }
+    // if(this.modelChanged) {
+    //   this.updateGeometry(webGL);
+    //   this.modelChanged = false;
+    // }
+
     webGL.clearColor(132 / 255, 191 / 255, 225 / 255, 1.0);
     webGL.lineWidth(2);
 
@@ -67,25 +52,25 @@ export class EntityScene extends Scene {
 
     webGL.enable(webGL.DEPTH_TEST);
 
-    this.shaderProgram.setUniforms(webGL);
+    this.shaderProgram!.setUniforms(webGL);
   }
 
   public render(webGL: WebGLRenderingContext, time: number): void {
     super.render(webGL, time);
-    this.axes.draw(webGL, this.shaderProgram, Mat4.identity());
+    this.axes!.draw(webGL, this.shaderProgram!, Mat4.identity());
 
-    if(this.model) {
-      (this.model as EntityModel).assemblies.assemblies.forEach(
-          subAssembly => this.renderAssembly(webGL, subAssembly, time, Mat4.identity()));
-    }
+    // if(this.model) {
+    //   (this.model as EntityModel).assemblies.assemblies.forEach(
+    //       subAssembly => this.renderAssembly(webGL, subAssembly, time, Mat4.identity()));
+    // }
   }
 
   private renderAssembly(
-      webGL: WebGLRenderingContext,
-      assembly: Assembly,
-      time: number,
-      modelTransformMatrix: Mat4
-    ): void {
+    webGL: WebGLRenderingContext,
+    assembly: Assembly,
+    time: number,
+    modelTransformMatrix: Mat4
+  ): void {
     const translation: Vec3 = assembly.offset;
     const rotateOffset: Vec3 = assembly.rotationPoint;
 
@@ -106,16 +91,17 @@ export class EntityScene extends Scene {
 
     assembly.cubes.boxes.forEach(
         box => this.renderBox(webGL, box, time, modelMat));
+
     assembly.children.assemblies.forEach(
         subAssembly => this.renderAssembly(webGL, subAssembly, time, modelMat));
   }
 
   private renderBox(
-      webGL: WebGLRenderingContext,
-      box: Box,
-      time: number,
-      modelTransformMatrix: Mat4
-    ): void {
+    webGL: WebGLRenderingContext,
+    box: Box,
+    time: number,
+    modelTransformMatrix: Mat4
+  ): void {
     const mesh = this.geometryMap.get(box);
     const pos  = box.position;
     const x = pos.x || 0;
@@ -125,14 +111,13 @@ export class EntityScene extends Scene {
     let modelMat: Mat4 = modelTransformMatrix.translate(x, y, z);
 
     if(mesh) {
-      mesh.draw(webGL, this.shaderProgram, modelMat);
+      mesh.draw(webGL, this.shaderProgram!, modelMat);
     }
   }
 
   public dispose(webGL: WebGLRenderingContext): void {
-    this.modelChangedEventDeregister(this.handleModelChanged);
-    this.shaderProgram.dispose(webGL);
-    this.axes.dispose(webGL);
+    this.shaderProgram!.dispose(webGL);
+    this.axes!.dispose(webGL);
     Array.from(this.geometryMap.values()).forEach(mesh => mesh.dispose(webGL));
   }
 
@@ -140,19 +125,6 @@ export class EntityScene extends Scene {
     super.setViewportSize(width, height);
     this.camera.viewportWidth  = width;
     this.camera.viewportHeight = height;
-  }
-
-  private handleModelChanged = (model: Model | undefined) => {
-    this.model = model;
-    this.modelChanged = true;
-  }
-
-  private updateGeometry(webGL: WebGLRenderingContext): void {
-    if(this.model && this.model instanceof EntityModel) {
-      this.model.assemblies.assemblies.forEach(assembly => this.updateGeometryForAssembly(webGL, assembly));
-    } else {
-      Array.from(this.geometryMap.values()).forEach(mesh => mesh.dispose(webGL));
-    }
   }
 
   private updateGeometryForAssembly(webGL: WebGLRenderingContext, assembly: Assembly): void {

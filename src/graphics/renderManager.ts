@@ -1,18 +1,16 @@
-import { Scene } from "./scene";
-import { AppContext } from "../state/context";
+import { Scene } from './scene';
+import { ContextStore } from '../state/contextStore';
 
 export class RenderManager {
-  private previousScene: Scene | undefined;
-  private scene:         Scene | undefined;
-
-  private transitioningContext: AppContext | undefined;
+  private previousScene?: Scene;
+  private scene?:         Scene;
 
   private initialised:   boolean = false;
   private transitioning: boolean = false;
 
-  public constructor() {
-    this.contextChanged = this.contextChanged.bind(this);
-  }
+  public constructor(
+    private contextStore: ContextStore
+  ) { }
 
   public isInitialised(): boolean {
     return this.initialised;
@@ -34,13 +32,19 @@ export class RenderManager {
   }
 
   public render(webGL: WebGLRenderingContext, time: number): void {
-    if(this.transitioning) {
-      if(this.transitioningContext) {
-        this.transitioningContext.createScene(webGL);
-        this.transitionTo(this.transitioningContext.getScene()!);
-        this.transitioningContext = undefined;
+    if(this.contextStore.contextChanged) {
+      this.contextStore.getContext().scene.init(webGL);
+
+      if(this.scene) {
+        this.previousScene = this.scene;
+        this.scene = this.contextStore.getContext().scene;
+        this.transitioning = true;
       }
 
+      this.contextStore.contextChanged = false;
+    }
+
+    if(this.transitioning) {
       let finished = this.previousScene!.transitionTo(this.scene!, webGL, time);
 
       if(finished) {
@@ -51,18 +55,6 @@ export class RenderManager {
     } else {
       this.scene!.render(webGL, time);
     }
-  }
-
-  public contextChanged(context: AppContext): void {
-    this.transitioningContext = context;
-    this.transitioning = true;
-  }
-
-  public transitionTo(scene: Scene): void {
-    this.previousScene = this.scene;
-    this.scene         = scene;
-
-    this.transitioning = true;
   }
 
   public dispose(webGL: WebGLRenderingContext): void {

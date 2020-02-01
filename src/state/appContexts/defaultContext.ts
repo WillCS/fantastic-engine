@@ -1,12 +1,12 @@
 import { ControlButtonType, ControlButtonDescriptor } from '../../layout/control/ControlButton';
 import { AppContext } from '../context';
 import { EntityContext } from './entityContext';
-import { Scene } from '../../graphics/scene';
 import { ContextStore } from '../contextStore';
+import { DefaultScene } from '../../graphics/scenes/defaultScene';
 
 export class DefaultContext extends AppContext {
-  public constructor(private contextStore: ContextStore, scene: Scene) {
-    super(scene);
+  public constructor(private contextStore: ContextStore) {
+    super(new DefaultScene());
   }
 
   public populateControlBar(): ControlButtonDescriptor[] {
@@ -31,6 +31,6 @@ export class DefaultContext extends AppContext {
   }
 
   private handleEntityButtonClicked: (() => void) = () => {
-      this.contextStore.context = new EntityContext();
+      this.contextStore.updateContext(new EntityContext());
   }
 }

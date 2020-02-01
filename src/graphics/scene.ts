@@ -4,6 +4,8 @@ export abstract class Scene {
 
   protected transitionBeginTime: number = 0;
 
+  public abstract init(webGL: WebGLRenderingContext): void;
+
   public abstract preRender(webGL: WebGLRenderingContext, time: number): void;
   public abstract dispose(webGL: WebGLRenderingContext): void;
 

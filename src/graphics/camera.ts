@@ -26,11 +26,11 @@ export abstract class Camera {
 
 
   constructor(
-      protected width:         number,
-      protected height:        number,
-      protected nearPlaneDist: number,
-      protected farPlaneDist:  number) {
-
+    protected width:         number,
+    protected height:        number,
+    protected nearPlaneDist: number,
+    protected farPlaneDist:  number
+  ) {
     this.aspectRatio = this.width / this.height;
     this.fov         = MathHelper.TWO_PI / 4;
 
