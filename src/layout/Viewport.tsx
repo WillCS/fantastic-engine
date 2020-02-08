@@ -5,12 +5,14 @@ import { WebGLHelper } from "../graphics/webGLHelper";
 import { AppContext } from "../state/context";
 import ReactResizeDetector from 'react-resize-detector';
 import { RenderManager } from "../graphics/renderManager";
+import { observer } from "mobx-react";
 
 export interface ViewportProps {
   context: AppContext;
   renderManager: RenderManager;
 }
 
+@observer
 export class Viewport extends Component<ViewportProps> {
   private renderTargetRef: RefObject<HTMLCanvasElement>;
   private webGL!: WebGLRenderingContext;
@@ -32,11 +34,7 @@ export class Viewport extends Component<ViewportProps> {
       this.webGL = WebGLHelper.setupCanvas(canvas);
       
       if(!this.props.renderManager.isInitialised()) {
-        if(!this.props.context.getScene()) {
-          this.props.context.createScene(this.webGL);
-        }
-
-        this.props.renderManager.init(this.props.context.getScene()!);
+        this.props.renderManager.init(this.props.context.scene);
       }
 
       WebGLHelper.resizeCanvasToProperSize(canvas);

@@ -1,14 +1,14 @@
-import { ReactNode } from 'react';
-import { Model } from '../model/model';
 import { Scene } from '../graphics/scene';
+import { observable } from 'mobx';
+import { ControlButtonDescriptor } from '../layout/control/ControlButton';
 
 export abstract class AppContext {
-  public abstract populateControlBar(): ReactNode[];
-  public abstract getScene(): Scene | undefined;
-  public abstract createScene(webGL: WebGLRenderingContext): void;
-  public abstract createModel(): Model | undefined;
+  @observable
+  public scene: Scene;
 
-  public shouldDisplayDetailView(): boolean { return true; }
+  protected constructor(scene: Scene) {
+    this.scene = scene;
+  }
 
-  public hasModel(): boolean { return false; }
+  public abstract populateControlBar(): ControlButtonDescriptor[];
 }

@@ -2,6 +2,7 @@ import React, { CSSProperties } from 'react';
 import { Component, ReactNode } from 'react';
 import { TreeItemStyling, TreeLayout } from './treeLayout';
 import './Tree.css';
+import { observer } from 'mobx-react';
 
 export interface TreeItemProps {
   item:         any;
@@ -18,6 +19,7 @@ export interface TreeItemState {
   open: boolean;
 }
 
+@observer
 export class TreeItem extends Component<TreeItemProps, TreeItemState> {
   private lastSelection: any | undefined;
   public constructor(props: TreeItemProps) {

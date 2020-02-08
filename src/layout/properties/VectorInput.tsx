@@ -2,6 +2,7 @@ import React, { ReactNode, PureComponent } from 'react';
 import './Properties.css';
 import { Vec2, Vec3, Vec4 } from '../../math/vector';
 import { MathHelper } from '../../math/mathHelper';
+import { observer } from 'mobx-react';
 
 export interface VectorInputProps {
   name:           string;
@@ -10,31 +11,10 @@ export interface VectorInputProps {
   outputCallback: (output: Vec2 | Vec3 | Vec4) => void;
 }
 
+@observer
 export class VectorInput extends PureComponent<VectorInputProps> {
-  private previousInput: Vec2 | Vec3 | Vec4;
-
   public constructor(props: VectorInputProps) {
     super(props);
-
-    this.previousInput = this.props.value;
-  }
-
-  /**
-   *  When the selected object changes, and the parent PropertyView replaces
-   *  this component with a different one, if the new component is of the same
-   *  type as this one, all it really does is change the props passed to this
-   *  component. Without intervention, this leads to the value of the input tag
-   *  persisting across selection changes. The check and state update in
-   *  componentDidUpdate are there in order to update the value of the input tag
-   *  whenever this happens. */
-  public componentDidUpdate(): void {
-    if(this.props.value !== this.previousInput) {
-      this.previousInput = this.props.value;
-
-      this.setState({
-        value: this.props.value
-      });
-    }
   }
 
   public render(): ReactNode {

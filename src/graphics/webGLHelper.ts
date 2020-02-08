@@ -48,7 +48,7 @@ export let WebGLHelper = {
     }
   },
 
-  buildShaderProgram(gl: WebGLRenderingContext, vertexShaderSource: string, fragmentShaderSource: string): WebGLProgram | undefined {
+  buildShaderProgram(gl: WebGLRenderingContext, vertexShaderSource: string, fragmentShaderSource: string): WebGLProgram {
     let vertexShader: WebGLShader | undefined = undefined;
     let fragmentShader: WebGLShader | undefined = undefined;
 
@@ -58,18 +58,14 @@ export let WebGLHelper = {
       fragmentShader =
         this.compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
     } catch (error) {
-      console.log('Shaders failed to compile.');
+      throw new Error('Shaders failed to compile.');
     }
 
-    if (vertexShader && fragmentShader) {
-      try {
-        return this.createShaderProgram(gl, vertexShader, fragmentShader);
-      } catch (error) {
-        console.log('Shaders compiled but failed to link.');
-      }
+    try {
+      return this.createShaderProgram(gl, vertexShader, fragmentShader);
+    } catch (error) {
+      throw new Error('Shaders compiled but failed to link.');
     }
-
-    return undefined;
   },
 
   resizeCanvasToProperSize(canvas: HTMLCanvasElement): void {

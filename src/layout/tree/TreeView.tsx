@@ -3,6 +3,7 @@ import { Component, ReactNode } from 'react';
 import { TreeLayout } from './treeLayout';
 import { TreeItem } from './TreeItem';
 import './Tree.css';
+import { observer } from 'mobx-react';
 
 export interface TreeViewProps {
   selectionChanged: (item: any) => void;
@@ -10,6 +11,7 @@ export interface TreeViewProps {
   selection:        any | undefined;
 }
 
+@observer
 export class TreeView extends Component<TreeViewProps> {
   public constructor(props: TreeViewProps) {
     super(props);

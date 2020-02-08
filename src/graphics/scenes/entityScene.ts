@@ -6,58 +6,63 @@ import { WebGLHelper } from '../webGLHelper';
 import { getAxes, modelFragSource, modelVertSource } from './commonSceneResources';
 import { StaticMesh } from '../staticMesh';
 import { Mat4 } from '../../math/matrix';
-import { Model } from '../../model/model';
 import { DynamicMesh } from '../dynamicMesh';
 import { Box, Assembly, EntityModel } from '../../model/entityModel';
 import { buildBoxMesh, updateBoxMesh } from './entitySceneResources';
+import { deepObserve } from 'mobx-utils';
+import { EntityContext } from '../../state/appContexts/entityContext';
+import { AppContext } from '../../state/context';
 
 export class EntityScene extends Scene {
-  private camera: Camera;
-  private shaderProgram: ShaderProgram;
-  private axes: StaticMesh;
+  private camera:          Camera;
+  private shaderProgram?:  ShaderProgram;
+  private axes?:           StaticMesh;
 
-  private geometryMap: Map<Box, DynamicMesh>;
+  private modelChanged:    boolean;
+  private geometryMap:     Map<Box, DynamicMesh>;
+  private persistanceMap:  Map<Box, boolean>;
+  private disposeListener: () => void;
 
-  private modelChanged: boolean = false;
-  private model:        Model | undefined;
-
-  public constructor(
-      webGL: WebGLRenderingContext,
-      model: Model,
-      modelChangedEventRegister:           (listener:  (model: Model | undefined) => void) => void,
-      private modelChangedEventDeregister: (liestener: (model: Model | undefined) => void) => void
-    ) {
+  public constructor() {
     super();
-    
+
+    this.disposeListener = () => {};
+    this.modelChanged    = false;
+    this.geometryMap     = new Map<Box, DynamicMesh>();
+    this.persistanceMap  = new Map<Box, boolean>();
+
     this.camera = new OrbitalCamera(Vec3.zero(), Math.PI / 4, Math.PI / 4, 100);
     this.camera.viewportWidth    = this.viewportWidth;
     this.camera.viewportHeight   = this.viewportHeight;
     this.camera.projectionType   = ProjectionType.PERSPECTIVE;
     this.camera.farPlaneDistance = 200;
     (this.camera as OrbitalCamera).azimuth = (Math.PI / 4)
+  }
 
+  public setContext(context: AppContext): void {
+    super.setContext(context);
+
+    this.disposeListener = deepObserve(this.getContext().model, change => this.modelChanged = true);
+    this.modelChanged    = true;
+  }
+
+  public init(webGL: WebGLRenderingContext): void {
     this.shaderProgram = new ShaderProgram(
-        WebGLHelper.buildShaderProgram(webGL, modelVertSource.default, modelFragSource.default)!);
+      WebGLHelper.buildShaderProgram(webGL, modelVertSource.default, modelFragSource.default));
 
     this.shaderProgram.setCamera(this.camera);
 
     this.axes = getAxes(webGL);
-
-    this.geometryMap = new Map<Box, DynamicMesh>();
-
-    modelChangedEventRegister(this.handleModelChanged);
-
-    this.model        = model;
-    this.modelChanged = true;
   }
 
   public preRender(webGL: WebGLRenderingContext, time: number): void {
-    this.shaderProgram.enable(webGL);
+    this.getShaderProgram().enable(webGL);
     
     if(this.modelChanged) {
       this.updateGeometry(webGL);
       this.modelChanged = false;
     }
+
     webGL.clearColor(132 / 255, 191 / 255, 225 / 255, 1.0);
     webGL.lineWidth(2);
 
@@ -67,25 +72,23 @@ export class EntityScene extends Scene {
 
     webGL.enable(webGL.DEPTH_TEST);
 
-    this.shaderProgram.setUniforms(webGL);
+    this.getShaderProgram().setUniforms(webGL);
   }
 
   public render(webGL: WebGLRenderingContext, time: number): void {
     super.render(webGL, time);
-    this.axes.draw(webGL, this.shaderProgram, Mat4.identity());
+    this.axes?.draw(webGL, this.getShaderProgram(), Mat4.identity());
 
-    if(this.model) {
-      (this.model as EntityModel).assemblies.assemblies.forEach(
-          subAssembly => this.renderAssembly(webGL, subAssembly, time, Mat4.identity()));
-    }
+    (this.getContext().model as EntityModel).assemblies.assemblies.forEach(
+      subAssembly => this.renderAssembly(webGL, subAssembly, time, Mat4.identity()));
   }
 
   private renderAssembly(
-      webGL: WebGLRenderingContext,
-      assembly: Assembly,
-      time: number,
-      modelTransformMatrix: Mat4
-    ): void {
+    webGL: WebGLRenderingContext,
+    assembly: Assembly,
+    time: number,
+    modelTransformMatrix: Mat4
+  ): void {
     const translation: Vec3 = assembly.offset;
     const rotateOffset: Vec3 = assembly.rotationPoint;
 
@@ -97,25 +100,26 @@ export class EntityScene extends Scene {
     const zRot = rotateOffset.z || 0;
 
     let modelMat: Mat4 = modelTransformMatrix
-        .translate(x, y, z)
-        .translate(xRot, yRot, zRot)
-        .rotateX(assembly.rotationAngle.x || 0)
-        .rotateY(assembly.rotationAngle.y || 0)
-        .rotateZ(assembly.rotationAngle.z || 0)
-        .translate(-xRot, -yRot, -zRot);
+      .translate(x, y, z)
+      .translate(xRot, yRot, zRot)
+      .rotateX(assembly.rotationAngle.x || 0)
+      .rotateY(assembly.rotationAngle.y || 0)
+      .rotateZ(assembly.rotationAngle.z || 0)
+      .translate(-xRot, -yRot, -zRot);
 
     assembly.cubes.boxes.forEach(
-        box => this.renderBox(webGL, box, time, modelMat));
+      box => this.renderBox(webGL, box, time, modelMat));
+
     assembly.children.assemblies.forEach(
-        subAssembly => this.renderAssembly(webGL, subAssembly, time, modelMat));
+      subAssembly => this.renderAssembly(webGL, subAssembly, time, modelMat));
   }
 
   private renderBox(
-      webGL: WebGLRenderingContext,
-      box: Box,
-      time: number,
-      modelTransformMatrix: Mat4
-    ): void {
+    webGL: WebGLRenderingContext,
+    box: Box,
+    time: number,
+    modelTransformMatrix: Mat4
+  ): void {
     const mesh = this.geometryMap.get(box);
     const pos  = box.position;
     const x = pos.x || 0;
@@ -125,14 +129,14 @@ export class EntityScene extends Scene {
     let modelMat: Mat4 = modelTransformMatrix.translate(x, y, z);
 
     if(mesh) {
-      mesh.draw(webGL, this.shaderProgram, modelMat);
+      mesh.draw(webGL, this.getShaderProgram(), modelMat);
     }
   }
 
   public dispose(webGL: WebGLRenderingContext): void {
-    this.modelChangedEventDeregister(this.handleModelChanged);
-    this.shaderProgram.dispose(webGL);
-    this.axes.dispose(webGL);
+    this.getShaderProgram().dispose(webGL);
+    this.axes!.dispose(webGL);
+    this.disposeListener();
     Array.from(this.geometryMap.values()).forEach(mesh => mesh.dispose(webGL));
   }
 
@@ -142,17 +146,18 @@ export class EntityScene extends Scene {
     this.camera.viewportHeight = height;
   }
 
-  private handleModelChanged = (model: Model | undefined) => {
-    this.model = model;
-    this.modelChanged = true;
-  }
-
   private updateGeometry(webGL: WebGLRenderingContext): void {
-    if(this.model && this.model instanceof EntityModel) {
-      this.model.assemblies.assemblies.forEach(assembly => this.updateGeometryForAssembly(webGL, assembly));
-    } else {
-      Array.from(this.geometryMap.values()).forEach(mesh => mesh.dispose(webGL));
-    }
+    this.persistanceMap.forEach((v, k) => this.persistanceMap.set(k, false));
+
+    (this.getContext().model as EntityModel).assemblies.assemblies.forEach(
+      subassembly => this.updateGeometryForAssembly(webGL, subassembly));
+
+    this.persistanceMap.forEach((v, k) => {
+      if(!v) {
+        this.geometryMap.get(k)?.dispose(webGL);
+        this.persistanceMap.delete(k);
+      }
+    });
   }
 
   private updateGeometryForAssembly(webGL: WebGLRenderingContext, assembly: Assembly): void {
@@ -170,5 +175,22 @@ export class EntityScene extends Scene {
     }
 
     this.geometryMap.set(box, mesh);
+    this.persistanceMap.set(box, true);
+  }
+
+  private getShaderProgram(): ShaderProgram {
+    if(this.shaderProgram) {
+      return this.shaderProgram;
+    } else {
+      throw new Error('Scene ShaderProgram accessed before being initialised.');
+    }
+  }
+
+  private getContext(): EntityContext {
+    if(this.context) {
+      return (this.context as EntityContext);
+    } else {
+      throw new Error('Scene Context accessed before being set.');
+    }
   }
 }
