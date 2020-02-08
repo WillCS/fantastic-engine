@@ -9,14 +9,28 @@ import { Mat4 } from '../../math/matrix';
 import { DynamicMesh } from '../dynamicMesh';
 import { Box, Assembly, EntityModel } from '../../model/entityModel';
 import { buildBoxMesh, updateBoxMesh } from './entitySceneResources';
+import { EditorContext } from '../../state/editorContext';
+import { observe } from 'mobx';
 
 export class EntityScene extends Scene {
-  private camera:         Camera;
-  private shaderProgram?: ShaderProgram;
-  private axes?:          StaticMesh;
+  private camera:          Camera;
+  private shaderProgram?:  ShaderProgram;
+  private axes?:           StaticMesh;
+
+  private modelChanged:    boolean;
+  private geometryMap:     Map<Box, DynamicMesh>;
+  private persistanceMap:  Map<Box, boolean>;
+  private disposeListener: () => void;
+
+  private context?:        EditorContext;
 
   public constructor() {
     super();
+
+    this.disposeListener = () => {};
+    this.modelChanged    = false;
+    this.geometryMap     = new Map<Box, DynamicMesh>();
+    this.persistanceMap  = new Map<Box, boolean>();
 
     this.camera = new OrbitalCamera(Vec3.zero(), Math.PI / 4, Math.PI / 4, 100);
     this.camera.viewportWidth    = this.viewportWidth;
@@ -24,6 +38,12 @@ export class EntityScene extends Scene {
     this.camera.projectionType   = ProjectionType.PERSPECTIVE;
     this.camera.farPlaneDistance = 200;
     (this.camera as OrbitalCamera).azimuth = (Math.PI / 4)
+  }
+
+  public setContext(context: EditorContext): void {
+    this.context         = context;
+    this.disposeListener = observe(this.context.model, change => this.modelChanged = true);
+    this.modelChanged    = true;
   }
 
   public init(webGL: WebGLRenderingContext): void {
@@ -38,10 +58,10 @@ export class EntityScene extends Scene {
   public preRender(webGL: WebGLRenderingContext, time: number): void {
     this.shaderProgram!.enable(webGL);
     
-    // if(this.modelChanged) {
-    //   this.updateGeometry(webGL);
-    //   this.modelChanged = false;
-    // }
+    if(this.modelChanged) {
+      this.updateGeometry(webGL);
+      this.modelChanged = false;
+    }
 
     webGL.clearColor(132 / 255, 191 / 255, 225 / 255, 1.0);
     webGL.lineWidth(2);
@@ -57,12 +77,10 @@ export class EntityScene extends Scene {
 
   public render(webGL: WebGLRenderingContext, time: number): void {
     super.render(webGL, time);
-    this.axes!.draw(webGL, this.shaderProgram!, Mat4.identity());
+    this.axes?.draw(webGL, this.shaderProgram!, Mat4.identity());
 
-    // if(this.model) {
-    //   (this.model as EntityModel).assemblies.assemblies.forEach(
-    //       subAssembly => this.renderAssembly(webGL, subAssembly, time, Mat4.identity()));
-    // }
+    (this.context?.model as EntityModel).assemblies.assemblies.forEach(
+      subAssembly => this.renderAssembly(webGL, subAssembly, time, Mat4.identity()));
   }
 
   private renderAssembly(
@@ -82,18 +100,18 @@ export class EntityScene extends Scene {
     const zRot = rotateOffset.z || 0;
 
     let modelMat: Mat4 = modelTransformMatrix
-        .translate(x, y, z)
-        .translate(xRot, yRot, zRot)
-        .rotateX(assembly.rotationAngle.x || 0)
-        .rotateY(assembly.rotationAngle.y || 0)
-        .rotateZ(assembly.rotationAngle.z || 0)
-        .translate(-xRot, -yRot, -zRot);
+      .translate(x, y, z)
+      .translate(xRot, yRot, zRot)
+      .rotateX(assembly.rotationAngle.x || 0)
+      .rotateY(assembly.rotationAngle.y || 0)
+      .rotateZ(assembly.rotationAngle.z || 0)
+      .translate(-xRot, -yRot, -zRot);
 
     assembly.cubes.boxes.forEach(
-        box => this.renderBox(webGL, box, time, modelMat));
+      box => this.renderBox(webGL, box, time, modelMat));
 
     assembly.children.assemblies.forEach(
-        subAssembly => this.renderAssembly(webGL, subAssembly, time, modelMat));
+      subAssembly => this.renderAssembly(webGL, subAssembly, time, modelMat));
   }
 
   private renderBox(
@@ -118,6 +136,7 @@ export class EntityScene extends Scene {
   public dispose(webGL: WebGLRenderingContext): void {
     this.shaderProgram!.dispose(webGL);
     this.axes!.dispose(webGL);
+    this.disposeListener();
     Array.from(this.geometryMap.values()).forEach(mesh => mesh.dispose(webGL));
   }
 
@@ -125,6 +144,20 @@ export class EntityScene extends Scene {
     super.setViewportSize(width, height);
     this.camera.viewportWidth  = width;
     this.camera.viewportHeight = height;
+  }
+
+  private updateGeometry(webGL: WebGLRenderingContext): void {
+    this.persistanceMap.forEach((v, k) => this.persistanceMap.set(k, false));
+
+    (this.context?.model as EntityModel).assemblies.assemblies.forEach(
+      subassembly => this.updateGeometryForAssembly(webGL, subassembly));
+
+    this.persistanceMap.forEach((v, k) => {
+      if(!v) {
+        this.geometryMap.get(k)?.dispose(webGL);
+        this.persistanceMap.delete(k);
+      }
+    });
   }
 
   private updateGeometryForAssembly(webGL: WebGLRenderingContext, assembly: Assembly): void {
@@ -142,5 +175,6 @@ export class EntityScene extends Scene {
     }
 
     this.geometryMap.set(box, mesh);
+    this.persistanceMap.set(box, true);
   }
 }

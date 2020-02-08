@@ -21,21 +21,11 @@ export default class App extends Component<any, AppState, any> {
   public constructor(props: any) {
     super(props);
 
-    this.renderManager = new RenderManager();
-
     this.state = {
       contextStore: new ContextStore(),
     };
-  }
 
-  public componentDidMount(): void {
-    // this.stateMutator.registerContextChangeListener(this.renderManager.contextChanged);
-    // this.stateMutator.registerContextChangeListener(this.createNewModel)
-  }
-
-  public componentWillUnmount(): void {
-    // this.stateMutator.deregisterContextChangeListener(this.renderManager.contextChanged);
-    // this.stateMutator.deregisterContextChangeListener(this.createNewModel)
+    this.renderManager = new RenderManager(this.state.contextStore);
   }
 
   public render(): ReactNode {

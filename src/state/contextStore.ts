@@ -1,8 +1,11 @@
 import { AppContext } from "./context";
 import { DefaultContext } from "./appContexts/defaultContext";
+import { observable } from "mobx";
 
 export class ContextStore {
-  private context:     AppContext;
+  @observable
+  public context:      AppContext;
+
   private oldContext?: AppContext;
 
   public contextChanged: boolean;
@@ -10,10 +13,6 @@ export class ContextStore {
   public constructor() {
     this.context        = new DefaultContext(this);
     this.contextChanged = true;
-  }
-  
-  public getContext(): AppContext {
-    return this.context;
   }
 
   public getPreviousContext(): AppContext | undefined {

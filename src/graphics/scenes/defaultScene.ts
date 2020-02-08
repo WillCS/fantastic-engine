@@ -6,13 +6,10 @@ import { Mat4 } from "../../math/matrix";
 import { Vec3 } from "../../math/vector";
 import { WebGLHelper } from "../webGLHelper";
 import { 
-  texVertSource,
-  texFragSource,
   getCubeTop, 
   getCubeBase, 
   getCubeBaseOutline
 } from "./defaultSceneResources";
-import { Texture2D } from "../2DTexture";
 import { colourVertSource, colourFragSource } from "./commonSceneResources";
 
 export class DefaultScene extends Scene {

@@ -9,6 +9,7 @@ export class EntityContext extends EditorContext {
 
   public constructor(model?: EntityModel) {
     super(new EntityScene(), model || new EntityModel());
+    (this.scene as EntityScene).setContext(this);
   }
 
   public populateControlBar(): ControlButtonDescriptor[] {

@@ -34,11 +34,7 @@ export class Viewport extends Component<ViewportProps> {
       this.webGL = WebGLHelper.setupCanvas(canvas);
       
       if(!this.props.renderManager.isInitialised()) {
-        if(!this.props.context.getScene()) {
-          this.props.context.createScene(this.webGL);
-        }
-
-        this.props.renderManager.init(this.props.context.getScene()!);
+        this.props.renderManager.init(this.props.context.scene);
       }
 
       WebGLHelper.resizeCanvasToProperSize(canvas);

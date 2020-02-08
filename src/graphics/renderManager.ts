@@ -33,12 +33,12 @@ export class RenderManager {
 
   public render(webGL: WebGLRenderingContext, time: number): void {
     if(this.contextStore.contextChanged) {
-      this.contextStore.getContext().scene.init(webGL);
+      this.contextStore.context.scene.init(webGL);
 
       if(this.scene) {
         this.previousScene = this.scene;
-        this.scene = this.contextStore.getContext().scene;
-        this.transitioning = true;
+        this.scene = this.contextStore.context.scene;
+        this.transitioning = this.scene !== this.previousScene;
       }
 
       this.contextStore.contextChanged = false;
