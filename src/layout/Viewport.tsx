@@ -22,9 +22,6 @@ export class Viewport extends Component<ViewportProps> {
     super(props);
 
     this.renderTargetRef = React.createRef();
-
-    this.doLoop = this.doLoop.bind(this);
-    this.handleResize = this.handleResize.bind(this);
   }
 
   public componentDidMount(): void {
@@ -52,8 +49,15 @@ export class Viewport extends Component<ViewportProps> {
 
   public render(): ReactNode {
     return (
-      <span className='viewport'>
-        <canvas id='renderTarget' ref={this.renderTargetRef}>
+      <span className = 'viewport'>
+        <canvas 
+          id          = 'renderTarget'
+          ref         = {this.renderTargetRef}
+          onMouseDown = {this.handleMouseDown}
+          onMouseMove = {this.handleMouseMove}
+          onMouseUp   = {this.handleMouseUp}
+          onWheel     = {this.handleScroll}
+        >
       
         </canvas>
         <ReactResizeDetector handleWidth handleHeight onResize={this.handleResize} />
@@ -61,14 +65,14 @@ export class Viewport extends Component<ViewportProps> {
     )
   }
 
-  private doLoop(t: number): void {
+  private doLoop = (t: number) => {
     if(this.rendering) {
       this.props.renderManager.render(this.webGL, t);
       window.requestAnimationFrame(this.doLoop);
     }
   }
 
-  private handleResize(width: number, height: number): void {
+  private handleResize = (width: number, height: number) => {
     const canvas = this.renderTargetRef.current;
 
     if(canvas) {
@@ -76,5 +80,32 @@ export class Viewport extends Component<ViewportProps> {
     }
 
     this.props.renderManager.updateViewportSize(width, height);
+  }
+
+  private handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    const { x, y } = this.getViewportCoordinates(event.clientX, event.clientY);
+    this.props.context.onMouseDown(x, y, event.button);
+  }
+
+  private handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    const { x, y } = this.getViewportCoordinates(event.clientX, event.clientY);
+    this.props.context.onMouseMoved(x, y);
+  }
+
+  private handleMouseUp = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    const { x, y } = this.getViewportCoordinates(event.clientX, event.clientY);
+    this.props.context.onMouseUp(x, y, event.button);
+  }
+
+  private handleScroll = (event: React.WheelEvent<HTMLCanvasElement>) => {
+    this.props.context.onScrolled(event.deltaY);
+  }
+
+  private getViewportCoordinates(clientX: number, clientY: number): { x: number, y: number} {
+    const domRect = this.renderTargetRef.current!.getClientRects().item(0)!;
+    return {
+      x: clientX - domRect.left,
+      y: clientY - domRect.top,
+    };
   }
 }

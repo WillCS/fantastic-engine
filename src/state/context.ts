@@ -11,4 +11,9 @@ export abstract class AppContext {
   }
 
   public abstract populateControlBar(): ControlButtonDescriptor[];
+
+  public onMouseDown(x: number, y: number, button: number): void { }
+  public onMouseMoved(x: number, y: number): void  { }
+  public onMouseUp(x: number, y: number, button: number): void  { }
+  public onScrolled(delta: number): void  { }
 }

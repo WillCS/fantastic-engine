@@ -18,6 +18,7 @@ export interface CollapsibleState {
 
 export class Collapsible extends Component<CollapsibleProps, CollapsibleState> {
   private contentRef: RefObject<HTMLDivElement>;
+  
   public constructor(props: CollapsibleProps) {
     super(props);
 
