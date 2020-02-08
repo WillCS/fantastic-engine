@@ -5,11 +5,13 @@ import './Properties.css';
 import { StringInput } from './StringInput';
 import { VectorInput } from './VectorInput';
 import { BooleanInput } from './BooleanInput';
+import { observer } from 'mobx-react';
 
 export interface PropertyViewProps {
   item: any | undefined;
 }
 
+@observer
 export class PropertyView extends Component<PropertyViewProps> {
   public render(): ReactNode {
     return (

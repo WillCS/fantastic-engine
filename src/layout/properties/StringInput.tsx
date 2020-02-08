@@ -1,5 +1,6 @@
 import React, { ReactNode, PureComponent } from 'react';
 import './Properties.css';
+import { observer } from 'mobx-react';
 
 export interface StringInputProps {
   name:           string;
@@ -7,6 +8,7 @@ export interface StringInputProps {
   outputCallback: (output: string) => void;
 }
 
+@observer
 export class StringInput extends PureComponent<StringInputProps> {
   public constructor(props: StringInputProps) {
     super(props);

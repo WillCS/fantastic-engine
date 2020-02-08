@@ -10,7 +10,8 @@ import { DynamicMesh } from '../dynamicMesh';
 import { Box, Assembly, EntityModel } from '../../model/entityModel';
 import { buildBoxMesh, updateBoxMesh } from './entitySceneResources';
 import { EditorContext } from '../../state/editorContext';
-import { observe } from 'mobx';
+import { deepObserve } from 'mobx-utils';
+import { EntityContext } from '../../state/appContexts/entityContext';
 
 export class EntityScene extends Scene {
   private camera:          Camera;
@@ -42,7 +43,7 @@ export class EntityScene extends Scene {
 
   public setContext(context: EditorContext): void {
     this.context         = context;
-    this.disposeListener = observe(this.context.model, change => this.modelChanged = true);
+    this.disposeListener = deepObserve(this.context.model, change => this.modelChanged = true);
     this.modelChanged    = true;
   }
 
@@ -79,7 +80,7 @@ export class EntityScene extends Scene {
     super.render(webGL, time);
     this.axes?.draw(webGL, this.shaderProgram!, Mat4.identity());
 
-    (this.context?.model as EntityModel).assemblies.assemblies.forEach(
+    (this.getContext().model as EntityModel).assemblies.assemblies.forEach(
       subAssembly => this.renderAssembly(webGL, subAssembly, time, Mat4.identity()));
   }
 
@@ -149,7 +150,7 @@ export class EntityScene extends Scene {
   private updateGeometry(webGL: WebGLRenderingContext): void {
     this.persistanceMap.forEach((v, k) => this.persistanceMap.set(k, false));
 
-    (this.context?.model as EntityModel).assemblies.assemblies.forEach(
+    (this.getContext().model as EntityModel).assemblies.assemblies.forEach(
       subassembly => this.updateGeometryForAssembly(webGL, subassembly));
 
     this.persistanceMap.forEach((v, k) => {
@@ -176,5 +177,13 @@ export class EntityScene extends Scene {
 
     this.geometryMap.set(box, mesh);
     this.persistanceMap.set(box, true);
+  }
+
+  private getContext(): EntityContext {
+    if(this.context) {
+      return (this.context as EntityContext);
+    } else {
+      throw new Error('Scene Context accessed before being set.');
+    }
   }
 }

@@ -62,7 +62,6 @@ export class AssemblyList {
   @observable
   public assemblies: Assembly[];
 
-  @observable
   public readonly parent: any;
 
   public constructor(assemblies: Assembly[], parent: any) { 
@@ -85,7 +84,6 @@ export class BoxList {
   @observable
   public boxes: Box[]; 
 
-  @observable
   public readonly parent: any;
   
   public constructor(boxes: Box[], parent: any) {
