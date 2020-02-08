@@ -9,9 +9,9 @@ import { Mat4 } from '../../math/matrix';
 import { DynamicMesh } from '../dynamicMesh';
 import { Box, Assembly, EntityModel } from '../../model/entityModel';
 import { buildBoxMesh, updateBoxMesh } from './entitySceneResources';
-import { EditorContext } from '../../state/editorContext';
 import { deepObserve } from 'mobx-utils';
 import { EntityContext } from '../../state/appContexts/entityContext';
+import { AppContext } from '../../state/context';
 
 export class EntityScene extends Scene {
   private camera:          Camera;
@@ -22,8 +22,6 @@ export class EntityScene extends Scene {
   private geometryMap:     Map<Box, DynamicMesh>;
   private persistanceMap:  Map<Box, boolean>;
   private disposeListener: () => void;
-
-  private context?:        EditorContext;
 
   public constructor() {
     super();
@@ -41,15 +39,16 @@ export class EntityScene extends Scene {
     (this.camera as OrbitalCamera).azimuth = (Math.PI / 4)
   }
 
-  public setContext(context: EditorContext): void {
-    this.context         = context;
-    this.disposeListener = deepObserve(this.context.model, change => this.modelChanged = true);
+  public setContext(context: AppContext): void {
+    super.setContext(context);
+
+    this.disposeListener = deepObserve(this.getContext().model, change => this.modelChanged = true);
     this.modelChanged    = true;
   }
 
   public init(webGL: WebGLRenderingContext): void {
     this.shaderProgram = new ShaderProgram(
-      WebGLHelper.buildShaderProgram(webGL, modelVertSource.default, modelFragSource.default)!);
+      WebGLHelper.buildShaderProgram(webGL, modelVertSource.default, modelFragSource.default));
 
     this.shaderProgram.setCamera(this.camera);
 
@@ -57,7 +56,7 @@ export class EntityScene extends Scene {
   }
 
   public preRender(webGL: WebGLRenderingContext, time: number): void {
-    this.shaderProgram!.enable(webGL);
+    this.getShaderProgram().enable(webGL);
     
     if(this.modelChanged) {
       this.updateGeometry(webGL);
@@ -73,12 +72,12 @@ export class EntityScene extends Scene {
 
     webGL.enable(webGL.DEPTH_TEST);
 
-    this.shaderProgram!.setUniforms(webGL);
+    this.getShaderProgram().setUniforms(webGL);
   }
 
   public render(webGL: WebGLRenderingContext, time: number): void {
     super.render(webGL, time);
-    this.axes?.draw(webGL, this.shaderProgram!, Mat4.identity());
+    this.axes?.draw(webGL, this.getShaderProgram(), Mat4.identity());
 
     (this.getContext().model as EntityModel).assemblies.assemblies.forEach(
       subAssembly => this.renderAssembly(webGL, subAssembly, time, Mat4.identity()));
@@ -130,12 +129,12 @@ export class EntityScene extends Scene {
     let modelMat: Mat4 = modelTransformMatrix.translate(x, y, z);
 
     if(mesh) {
-      mesh.draw(webGL, this.shaderProgram!, modelMat);
+      mesh.draw(webGL, this.getShaderProgram(), modelMat);
     }
   }
 
   public dispose(webGL: WebGLRenderingContext): void {
-    this.shaderProgram!.dispose(webGL);
+    this.getShaderProgram().dispose(webGL);
     this.axes!.dispose(webGL);
     this.disposeListener();
     Array.from(this.geometryMap.values()).forEach(mesh => mesh.dispose(webGL));
@@ -177,6 +176,14 @@ export class EntityScene extends Scene {
 
     this.geometryMap.set(box, mesh);
     this.persistanceMap.set(box, true);
+  }
+
+  private getShaderProgram(): ShaderProgram {
+    if(this.shaderProgram) {
+      return this.shaderProgram;
+    } else {
+      throw new Error('Scene ShaderProgram accessed before being initialised.');
+    }
   }
 
   private getContext(): EntityContext {

@@ -1,9 +1,9 @@
-import { Vec3, Vec2 } from "../math/vector";
-import { TextureList, TexturePointer } from "./texture";
-import { Model } from "./model";
-import { TreeItemStyling } from "../layout/tree/treeLayout";
-import { hasProperties, property, PropertyType, Readability } from "../properties/properties";
-import { observable } from "mobx";
+import { Vec3, Vec2 } from '../math/vector';
+import { TextureList, TexturePointer } from './texture';
+import { Model } from './model';
+import { TreeItemStyling } from '../layout/tree/treeLayout';
+import { hasProperties, property, PropertyType, Readability } from '../properties/properties';
+import { observable } from 'mobx';
 
 @hasProperties
 export class EntityModel implements Model {
@@ -18,7 +18,7 @@ export class EntityModel implements Model {
   public textures:   TextureList;
 
   public constructor() {
-    this.name       = "Entity Model";
+    this.name       = 'Entity Model';
     this.assemblies = new AssemblyList([], this);
     this.textures   = new TextureList([], this);
   }
