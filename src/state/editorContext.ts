@@ -29,7 +29,7 @@ export abstract class EditorContext extends AppContext {
   }
 
   public onMouseMoved(x: number, y: number): void  {
-    console.log(this.panning);
+    
   }
 
   public onMouseUp(x: number, y: number, button: number): void  {
