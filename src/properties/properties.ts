@@ -15,18 +15,30 @@ export enum PropertyType {
   STRING, INT, NUMBER, VEC2, VEC3, VEC2I, VEC3I, BOOLEAN, TEXTURE
 }
 
-export interface PropertyDescription {
-  name:        string,
-  key:         string,
-  readability: Readability,
-  type:        PropertyType
+export interface PropertyConstraints {
+  min?: any;
+  max?: any;
 }
 
-export function property(type: PropertyType, readability: Readability, name: string): (target: any, key: string | symbol) => void {
+export interface PropertyDescription {
+  name:        string;
+  key:         string;
+  readability: Readability;
+  type:        PropertyType;
+  constraints: PropertyConstraints;
+}
+
+export function property(type: PropertyType, readability: Readability, name: string, constraints?: PropertyConstraints): (target: any, key: string | symbol) => void {
   return function (target: Object, key: string | symbol): void {
     if(typeof(key) === 'string') {
       Object.defineProperty(target, `__property.${key}`, {
-        value: { name: name, key: key, readability: readability, type: type }
+        value: { 
+          name: name,
+          key: key,
+          readability: readability,
+          type: type,
+          constraints: constraints || { min: undefined, max: undefined }
+        }
       });
     }
   }

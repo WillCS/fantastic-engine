@@ -53,6 +53,8 @@ export class PropertyView extends Component<PropertyViewProps> {
           <VectorInput
             name           = {property.key}
             integral       = {false}
+            min            = {property.constraints.min}
+            max            = {property.constraints.max}
             value          = {this.getItemPropertyValue(property)}
             outputCallback = {this.getOutputCallback(property)}
           />
@@ -63,6 +65,8 @@ export class PropertyView extends Component<PropertyViewProps> {
           <VectorInput
             name           = {property.key}
             integral       = {true}
+            min            = {property.constraints.min}
+            max            = {property.constraints.max}
             value          = {this.getItemPropertyValue(property)}
             outputCallback = {this.getOutputCallback(property)}
           />

@@ -12,6 +12,7 @@ import { buildBoxMesh, updateBoxMesh } from './entitySceneResources';
 import { deepObserve } from 'mobx-utils';
 import { EntityContext } from '../../state/appContexts/entityContext';
 import { AppContext } from '../../state/context';
+import { MathHelper } from '../../math/mathHelper';
 
 export class EntityScene extends Scene {
   private camera:          Camera;
@@ -102,9 +103,9 @@ export class EntityScene extends Scene {
     let modelMat: Mat4 = modelTransformMatrix
       .translate(x, y, z)
       .translate(xRot, yRot, zRot)
-      .rotateX(assembly.rotationAngle.x || 0)
-      .rotateY(assembly.rotationAngle.y || 0)
-      .rotateZ(assembly.rotationAngle.z || 0)
+      .rotateX(MathHelper.radToDeg(assembly.rotationAngle.x) || 0)
+      .rotateY(MathHelper.radToDeg(assembly.rotationAngle.y) || 0)
+      .rotateZ(MathHelper.radToDeg(assembly.rotationAngle.z) || 0)
       .translate(-xRot, -yRot, -zRot);
 
     assembly.cubes.boxes.forEach(

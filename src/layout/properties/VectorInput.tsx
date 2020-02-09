@@ -7,7 +7,9 @@ import { observer } from 'mobx-react';
 export interface VectorInputProps {
   name:           string;
   value:          Vec2 | Vec3 | Vec4;
-  integral:       boolean;
+  integral?:      boolean;
+  min?:           number;
+  max?:           number;
   outputCallback: (output: Vec2 | Vec3 | Vec4) => void;
 }
 
@@ -22,13 +24,15 @@ export class VectorInput extends PureComponent<VectorInputProps> {
       <div className = 'inputContainer'>
         { MathHelper.range(this.getNumDimensions()).map(component =>
           <input
-            className = { this.getInputClassName() }
-            key       = { component }
+            className = {this.getInputClassName()}
+            key       = {component}
             type      = 'number'
-            step      = { this.props.integral ? 1 : 0.1 }
-            name      = { `this.props.name${component}` }
-            value     = { this.getValueOfVectorComponent(component) }
-            onChange  = { this.getValueHandler(component) }
+            step      = {this.props.integral ? 1 : 0.001}
+            min       = {this.props.min}
+            max       = {this.props.max}
+            name      = {`this.props.name${component}`}
+            value     = {this.getValueOfVectorComponent(component)}
+            onChange  = {this.getValueHandler(component)}
           />
         )}
       </div>
@@ -77,10 +81,15 @@ export class VectorInput extends PureComponent<VectorInputProps> {
   }
 
   private getValueHandler(componentIndex: number): (event: React.ChangeEvent<HTMLInputElement>) => void {
-    const component = this;
-    return function(event: React.ChangeEvent<HTMLInputElement>): void {
-      const newValue: Vec2 | Vec3 | Vec4 = component.props.value.copy();
-      const parseFunc = component.props.integral ? parseInt : parseFloat;
+    return (event: React.ChangeEvent<HTMLInputElement>) => {
+      if(!event.currentTarget.validity.valid) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+
+      const newValue: Vec2 | Vec3 | Vec4 = this.props.value.copy();
+      const parseFunc = this.props.integral ? parseInt : parseFloat;
 
       switch(componentIndex) {
         case 0:
@@ -97,7 +106,7 @@ export class VectorInput extends PureComponent<VectorInputProps> {
           break;
       }
 
-      component.props.outputCallback(newValue);
+      this.props.outputCallback(newValue);
     }
   }
 }

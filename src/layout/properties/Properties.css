@@ -35,14 +35,14 @@ div.inputContainer > input {
 }
 
 div.inputContainer > input[type=number] {
-  appearance: textfield;
+  appearance: textfield !important;
 }
 
 div.inputContainer > input[type=number]::-webkit-inner-spin-button, 
 div.inputContainer > input[type=number]::-webkit-outer-spin-button { 
-  appearance: none;
-  display: none;
-  margin: 0;
+  appearance: none !important;
+  display: none !important;
+  margin: 0 !important;
 }
 
 div.inputContainer > input[type=number]:first-child {

@@ -34,5 +34,13 @@ export let MathHelper = {
 
   isPowerOfTwo(n: number): boolean {
     return (n & (n - 1)) === 0;
+  },
+
+  radToDeg(rad: number): number {
+    return rad * (Math.PI / 180);
+  },
+
+  degToRad(deg: number): number {
+    return deg * (180 / Math.PI);
   }
 };

@@ -171,7 +171,7 @@ export class Box {
   public position:      Vec3;
 
   @observable
-  @property(PropertyType.VEC3I, Readability.EDITABLE, 'Size')
+  @property(PropertyType.VEC3I, Readability.EDITABLE, 'Size', { min: 0 })
   public dimensions:    Vec3;
 
   @observable
