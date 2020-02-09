@@ -1,4 +1,7 @@
 import { AppContext } from "../state/context";
+import { Camera } from "./camera";
+import { Vec4, Vec3 } from "../math/vector";
+import { Ray } from "../math/ray";
 
 export abstract class Scene {
   protected viewportWidth:  number = 0;
@@ -7,6 +10,8 @@ export abstract class Scene {
   protected transitionBeginTime: number = 0;
 
   protected context?: AppContext;
+
+  public abstract getCamera(): Camera;
 
   /**
    *  Initialise the parts of the scene that are dependent on WebGL.
@@ -70,5 +75,20 @@ export abstract class Scene {
    */
   public transitionTo(scene: Scene, webGL: WebGLRenderingContext, time: number): boolean {
     return true;
+  }
+
+  public castRay(viewportX: number, viewportY: number): Ray {
+    const normalisedX: number = (2 * viewportX) / this.viewportWidth - 1;
+    const normalisedY: number = 1 - (2 * viewportY) / this.viewportHeight;
+
+    const rayClip = new Vec4(normalisedX, normalisedY, -1, 1);
+
+    const invertedClip = this.getCamera().getInverseProjection().multiply(rayClip);
+
+    const eye = new Vec4(invertedClip.x, invertedClip.y, -1, 0);
+
+    const rayDirection = this.getCamera().getInverseViewTransform().multiply(eye);
+    
+    return new Ray(this.getCamera().location, rayDirection.toVec3().normalize());
   }
 }

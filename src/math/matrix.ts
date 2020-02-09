@@ -11,8 +11,16 @@ export class Mat4 {
     return this.matrix[y * 4 + x];
   }
 
-  public set(x: number, y: number, value: number): number {
-    return this.matrix[y * 4 + x] = value;
+  public getRC(row: number, column: number): number {
+    return this.matrix[row * 4 + column];
+  }
+
+  public set(x: number, y: number, value: number): void {
+    this.matrix[y * 4 + x] = value;
+  }
+
+  public setRC(row: number, column: number, value: number): void {
+    this.matrix[row * 4 + column] = value;
   }
 
   public getRow(n: number): Vec4 {
@@ -156,6 +164,57 @@ export class Mat4 {
 
   public translate(x: number, y: number, z: number): Mat4 {
     return this.multiply(Mat4.translationMatrix(x, y, z));
+  }
+
+  /**
+   *  Quick solution thanks to willnode's answer
+   *  https://stackoverflow.com/a/44446912
+   *  on stackoverflow
+   */
+  public invert(): Mat4 {
+    var A2323 = this.get(2, 2) * this.get(3, 3) - this.get(3, 2) * this.get(2, 3);
+    var A1323 = this.get(1, 2) * this.get(3, 3) - this.get(3, 2) * this.get(1, 3);
+    var A1223 = this.get(1, 2) * this.get(2, 3) - this.get(2, 2) * this.get(1, 3);
+    var A0323 = this.get(0, 2) * this.get(3, 3) - this.get(3, 2) * this.get(0, 3);
+    var A0223 = this.get(0, 2) * this.get(2, 3) - this.get(2, 2) * this.get(0, 3);
+    var A0123 = this.get(0, 2) * this.get(1, 3) - this.get(1, 2) * this.get(0, 3);
+    var A2313 = this.get(2, 1) * this.get(3, 3) - this.get(3, 1) * this.get(2, 3);
+    var A1313 = this.get(1, 1) * this.get(3, 3) - this.get(3, 1) * this.get(1, 3);
+    var A1213 = this.get(1, 1) * this.get(2, 3) - this.get(2, 1) * this.get(1, 3);
+    var A2312 = this.get(2, 1) * this.get(3, 2) - this.get(3, 1) * this.get(2, 2);
+    var A1312 = this.get(1, 1) * this.get(3, 2) - this.get(3, 1) * this.get(1, 2);
+    var A1212 = this.get(1, 1) * this.get(2, 2) - this.get(2, 1) * this.get(1, 2);
+    var A0313 = this.get(0, 1) * this.get(3, 3) - this.get(3, 1) * this.get(0, 3);
+    var A0213 = this.get(0, 1) * this.get(2, 3) - this.get(2, 1) * this.get(0, 3);
+    var A0312 = this.get(0, 1) * this.get(3, 2) - this.get(3, 1) * this.get(0, 2);
+    var A0212 = this.get(0, 1) * this.get(2, 2) - this.get(2, 1) * this.get(0, 2);
+    var A0113 = this.get(0, 1) * this.get(1, 3) - this.get(1, 1) * this.get(0, 3);
+    var A0112 = this.get(0, 1) * this.get(1, 2) - this.get(1, 1) * this.get(0, 2);
+
+    var det = this.get(0, 0) * ( this.get(1, 1) * A2323 - this.get(2, 1) * A1323 + this.get(3, 1) * A1223 ) 
+            - this.get(1, 0) * ( this.get(0, 1) * A2323 - this.get(2, 1) * A0323 + this.get(3, 1) * A0223 ) 
+            + this.get(2, 0) * ( this.get(0, 1) * A1323 - this.get(1, 1) * A0323 + this.get(3, 1) * A0123 ) 
+            - this.get(3, 0) * ( this.get(0, 1) * A1223 - this.get(1, 1) * A0223 + this.get(2, 1) * A0123 ) ;
+    det = 1 / det;
+
+    return new Mat4([
+      det *   ( this.get(1, 1) * A2323 - this.get(2, 1) * A1323 + this.get(3, 1) * A1223 ),
+      det * - ( this.get(1, 0) * A2323 - this.get(2, 0) * A1323 + this.get(3, 0) * A1223 ),
+      det *   ( this.get(1, 0) * A2313 - this.get(2, 0) * A1313 + this.get(3, 0) * A1213 ),
+      det * - ( this.get(1, 0) * A2312 - this.get(2, 0) * A1312 + this.get(3, 0) * A1212 ),
+      det * - ( this.get(0, 1) * A2323 - this.get(2, 1) * A0323 + this.get(3, 1) * A0223 ),
+      det *   ( this.get(0, 0) * A2323 - this.get(2, 0) * A0323 + this.get(3, 0) * A0223 ),
+      det * - ( this.get(0, 0) * A2313 - this.get(2, 0) * A0313 + this.get(3, 0) * A0213 ),
+      det *   ( this.get(0, 0) * A2312 - this.get(2, 0) * A0312 + this.get(3, 0) * A0212 ),
+      det *   ( this.get(0, 1) * A1323 - this.get(1, 1) * A0323 + this.get(3, 1) * A0123 ),
+      det * - ( this.get(0, 0) * A1323 - this.get(1, 0) * A0323 + this.get(3, 0) * A0123 ),
+      det *   ( this.get(0, 0) * A1313 - this.get(1, 0) * A0313 + this.get(3, 0) * A0113 ),
+      det * - ( this.get(0, 0) * A1312 - this.get(1, 0) * A0312 + this.get(3, 0) * A0112 ),
+      det * - ( this.get(0, 1) * A1223 - this.get(1, 1) * A0223 + this.get(2, 1) * A0123 ),
+      det *   ( this.get(0, 0) * A1223 - this.get(1, 0) * A0223 + this.get(2, 0) * A0123 ),
+      det * - ( this.get(0, 0) * A1213 - this.get(1, 0) * A0213 + this.get(2, 0) * A0113 ),
+      det *   ( this.get(0, 0) * A1212 - this.get(1, 0) * A0212 + this.get(2, 0) * A0112 ),
+    ]);
   }
 
   public static scalingMatrix(x: number, y: number, z: number): Mat4 {

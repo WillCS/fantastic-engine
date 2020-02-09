@@ -8,19 +8,24 @@ export enum ProjectionType {
 }
 
 export abstract class Camera {
-  public abstract get location():      Vec3;
-  public abstract getProjection():     Mat4;
-  public abstract getViewTransform():  Mat4;
-  public abstract getUpVector():       Vec3;
-  public abstract getLookVector():     Vec3;
+  public abstract get location():            Vec3;
+  public abstract getProjection():           Mat4;
+  public abstract getViewTransform():        Mat4;
+  public abstract getInverseProjection():    Mat4;
+  public abstract getInverseViewTransform(): Mat4;
+  public abstract getUpVector():             Vec3;
+  public abstract getLookVector():           Vec3;
 
   protected abstract updateProjectionMatrix(): void;
   protected abstract updateViewTransformMatrix(): void;
 
-  protected projectionMatrix:     Mat4;
-  protected viewTransformMatrix:  Mat4;
-  protected fov:                  number;
-  protected aspectRatio:          number;
+  protected projectionMatrix:           Mat4;
+  protected inverseProjectionMatrix:    Mat4;
+  protected viewTransformMatrix:        Mat4;
+  protected inverseViewTransformMatrix: Mat4;
+
+  protected fov:                        number;
+  protected aspectRatio:                number;
 
   public projectionType: ProjectionType;
 
@@ -34,8 +39,10 @@ export abstract class Camera {
     this.aspectRatio = this.width / this.height;
     this.fov         = MathHelper.TWO_PI / 4;
 
-    this.projectionMatrix     = Mat4.identity();
-    this.viewTransformMatrix  = Mat4.identity();
+    this.projectionMatrix     =       Mat4.identity();
+    this.viewTransformMatrix  =       Mat4.identity();
+    this.inverseProjectionMatrix =    Mat4.identity();
+    this.inverseViewTransformMatrix = Mat4.identity();
 
     this.projectionType = ProjectionType.PERSPECTIVE;
 
@@ -71,6 +78,9 @@ export abstract class Camera {
 }
 
 export class OrbitalCamera extends Camera {
+  private inverseProjectionCalculated    = false;
+  private inverseViewTransformCalculated = false;
+
   constructor(
       private originPoint:      Vec3,
       private azimuthalAngle:   number,
@@ -133,6 +143,24 @@ export class OrbitalCamera extends Camera {
     return this.viewTransformMatrix;
   }
 
+  public getInverseProjection(): Mat4 {
+    if(!this.inverseProjectionCalculated) {
+      this.inverseProjectionCalculated = true;
+      this.inverseProjectionMatrix = this.projectionMatrix.invert();
+    }
+
+    return this.inverseProjectionMatrix;
+  }
+
+  public getInverseViewTransform(): Mat4 {
+    if(!this.inverseViewTransformCalculated) {
+      this.inverseViewTransformCalculated = true;
+      this.inverseViewTransformMatrix = this.viewTransformMatrix.invert();
+    }
+    
+    return this.inverseViewTransformMatrix;
+  }
+
   public getUpVector(): Vec3 {
     return (this.getLookVector().negate().cross(new Vec3(
       Math.cos(this.azimuth - (MathHelper.TWO_PI / 4)),
@@ -162,6 +190,8 @@ export class OrbitalCamera extends Camera {
           this.farPlaneDist);
         break;
     }
+
+    this.inverseProjectionCalculated = false;
   }
 
   protected updateViewTransformMatrix(): void {
@@ -172,5 +202,7 @@ export class OrbitalCamera extends Camera {
     newMatrix = newMatrix.translate(-this.location.x, -this.location.y, -this.location.z);
 
     this.viewTransformMatrix = newMatrix;
+
+    this.inverseViewTransformCalculated = false;
   }
 }

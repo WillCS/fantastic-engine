@@ -40,6 +40,10 @@ export class EntityScene extends Scene {
     (this.camera as OrbitalCamera).azimuth = (Math.PI / 4)
   }
 
+  public getCamera(): Camera {
+    return this.camera;
+  }
+
   public setContext(context: AppContext): void {
     super.setContext(context);
 

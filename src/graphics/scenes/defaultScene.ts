@@ -46,6 +46,10 @@ export class DefaultScene extends Scene {
     (this.camera as OrbitalCamera).azimuth = (Math.PI / 4)
   }
 
+  public getCamera(): Camera {
+    return this.camera;
+  }
+
   public init(webGL: WebGLRenderingContext): void {
     this.shaderProgram = new ShaderProgram(
         WebGLHelper.buildShaderProgram(webGL, colourVertSource.default, colourFragSource.default)!);
