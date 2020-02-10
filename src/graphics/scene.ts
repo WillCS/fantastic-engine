@@ -1,6 +1,6 @@
 import { AppContext } from "../state/context";
 import { Camera } from "./camera";
-import { Vec4, Vec3 } from "../math/vector";
+import { Vec4 } from "../math/vector";
 import { Ray } from "../math/ray";
 
 export abstract class Scene {
