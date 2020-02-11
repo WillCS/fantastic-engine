@@ -22,8 +22,8 @@ button.controlButton:active {
 span.gearSpindle {
   position: absolute;
   display: inline-block;
-  background-color: #acabab10;
-  border-color: #585858;
+  background-color: #00000000;
+  border-color: var(--highlight-colour);
   border-style: solid;
   width: 12px;
   height: 12px;
@@ -36,7 +36,7 @@ span.gearSpindle {
 
 span.gearSpindle > span {
   position: absolute;
-  background-color: #585858;
+  background-color: var(--highlight-colour);
   width: 8px;
   height: 8px;
   border-radius: 3px;
@@ -45,11 +45,11 @@ span.gearSpindle > span {
 
 button.controlButton.gear:hover > span.gearSpindle {
   animation: rotate 5s linear infinite;
-  border-color: #58d695;
+  border-color: var(--accent-colour);
 }
 
 button.controlButton.gear:hover > span.gearSpindle > span {
-  background-color: #58d695;
+  background-color: var(--accent-colour);
 }
 
 @keyframes rotate {
@@ -119,13 +119,13 @@ button.controlButton > span.new:nth-child(7) {
 button.controlButton.creeper > span {
   position: absolute;
   display: inline-block;
-  background-color: #585858;
+  background-color: var(--highlight-colour);
   transition: background-color 0.2s;
   border: none;
 }
 
 button.controlButton.creeper:hover > span {
-  background-color: #58d695;
+  background-color: var(--accent-colour);
 }
 
 button.controlButton.creeper > span.creeper:nth-child(8) {
@@ -168,13 +168,13 @@ button.controlButton.creeper > span.creeper:nth-child(12) {
 button.controlButton.anvil > span {
   position: absolute;
   display: inline-block;
-  background-color: #585858;
+  background-color: var(--highlight-colour);
   transition: background-color 0.2s;
   border: none;
 }
 
 button.controlButton.anvil:hover > span {
-  background-color: #58d695;
+  background-color: var(--accent-colour);
 }
 
 button.controlButton.anvil > span.anvil:nth-child(8) {
@@ -210,15 +210,15 @@ button.controlButton.anvil > span.anvil:nth-child(11) {
 button.controlButton.trash > span {
   position: absolute;
   display: inline-block;
-  background-color: #585858;
+  background-color: var(--highlight-colour);
   transition: background-color 0.2s, border-color 0.2s;
-  border: 1px #585858 solid;
+  border: 1px var(--highlight-colour) solid;
   border-radius: 5px;
 }
 
 button.controlButton.trash:hover > span {
-  background-color: #FF7448;
-  border-color: #FF7448;
+  background-color: var(--negative-accent-colour);
+  border-color: var(--negative-accent-colour);
 }
 
 button.controlButton.trash > span:nth-child(1) {
@@ -247,14 +247,14 @@ button.controlButton.trash > span:nth-child(3) {
 button.controlButton.exit > span {
   position: absolute;
   display: inline-block;
-  background-color: #585858;
+  background-color: var(--highlight-colour);
   transition: background-color 0.2s, border-color 0.2s;
   border: 0px solid;
   border-radius: 5px;
 }
 
 button.controlButton.exit:hover > span {
-  background-color: #FF7448;
+  background-color: var(--negative-accent-colour);
 }
 
 button.controlButton.exit > span:nth-child(1) {

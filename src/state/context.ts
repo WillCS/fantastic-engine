@@ -6,8 +6,12 @@ export abstract class AppContext {
   @observable
   public scene: Scene;
 
+  @observable
+  public settingsOpen: boolean;
+
   protected constructor(scene: Scene) {
     this.scene = scene;
+    this.settingsOpen = false;
   }
 
   public abstract populateControlBar(): ControlButtonDescriptor[];

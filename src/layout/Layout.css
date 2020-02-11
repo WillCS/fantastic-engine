@@ -2,7 +2,7 @@ span.controlBar {
   display: inline-block;
   min-width: 50px;
   height: 100vh;
-  background-color: #272727;
+  background-color: var(--lowlight-colour);
   position: relative;
   left: 0;
   top: 0;
@@ -40,7 +40,7 @@ span.detailContainer {
 div.detailView {
   position: relative;
   float: right;
-  background-color: #2f2f2f;
+  background-color: var(--background-colour);
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -63,7 +63,7 @@ div.collapsibleContent {
   position: relative;
   overflow-y: scroll;
   scrollbar-width: thin;
-  scrollbar-color: #585858 #00000000;
+  scrollbar-color: var(--highlight-colour) #00000000;
   /* transition: height 0.5s; */
 }
 
@@ -82,7 +82,7 @@ div.collapsibleContainer.closed > div.collapsibleContent {
 div.collapsibleLabel {
   position: relative;
   height: 20px;
-  background-color: #585858;
+  background-color: var(--highlight-colour);
   cursor: pointer;
 }
 
@@ -95,8 +95,8 @@ span.collapsibleArrow {
   height: 7px;
   border-top: none;
   border-left: none;
-  border-bottom: 1px solid #B6F5D5;
-  border-right: 1px solid #B6F5D5;
+  border-bottom: 1px solid var(--text-colour);
+  border-right: 1px solid var(--text-colour);
 }
 
 div.collapsibleContainer.open span.collapsibleArrow {
@@ -111,7 +111,7 @@ span.collapsibleTitle {
   position: relative;
   font-size: 14px;
   left: 10px;
-  color: #B6F5D5;
+  color: var(--text-colour);
   font-weight: bold;
   user-select: none;
 }

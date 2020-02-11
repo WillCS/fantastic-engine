@@ -113,17 +113,17 @@ export class OrbitalCamera extends Camera {
   }
 
   public set azimuth(newAzimuth: number) {
-    this.azimuthalAngle = newAzimuth;
+    this.azimuthalAngle = newAzimuth % MathHelper.TWO_PI;
     this.updateViewTransformMatrix();
   }
 
   public set inclination(newInclination: number) {
-    this.inclinationAngle = newInclination;
+    this.inclinationAngle = MathHelper.clamp(newInclination, 0, Math.PI);
     this.updateViewTransformMatrix();
   }
 
   public set radius(newRadius: number) {
-    this.radiusDistance = newRadius;
+    this.radiusDistance = MathHelper.clamp(newRadius, this.nearPlaneDist, this.farPlaneDist / 2)
     this.updateViewTransformMatrix();
   }
 

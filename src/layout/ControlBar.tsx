@@ -3,8 +3,17 @@ import { Component, ReactNode } from 'react';
 import './Layout.css';
 import { ControlButton, ControlButtonType } from '../layout/control/ControlButton';
 import { AppIcon } from './icon/AppIcon';
+import { AppContext } from '../state/context';
 
-export class ControlBar extends Component {
+export interface ControlBarProps {
+  context: AppContext;
+}
+
+export class ControlBar extends Component<ControlBarProps> {
+  public constructor(props: ControlBarProps) {
+    super(props);
+  }
+
   public render(): ReactNode {
     return (
       <span className='controlBar'>
@@ -17,14 +26,14 @@ export class ControlBar extends Component {
           <ControlButton
             type={ControlButtonType.GEAR}
             title='Settings'
-            onClick={this.handleClick}
+            onClick={this.handleSettingsClick}
           />
         </div>
       </span>
     );
   }
 
-  private handleClick(): void {
-    
+  private handleSettingsClick = () => {
+    this.props.context.settingsOpen = true;
   }
 }

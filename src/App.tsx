@@ -9,6 +9,8 @@ import { ControlButton, ControlButtonDescriptor } from './layout/control/Control
 import { EditorContext } from './state/editorContext';
 import { ContextStore } from './state/contextStore';
 import { observer } from 'mobx-react';
+import { Modal } from './layout/modal/Modal';
+import { AppContext } from './state/context';
 
 export interface AppState {
   contextStore: ContextStore;
@@ -31,7 +33,7 @@ export default class App extends Component<any, AppState, any> {
   public render(): ReactNode {
     return (
       <div className='appContainer'>
-        <ControlBar>
+        <ControlBar context = {this.state.contextStore.context}>
           { this.state.contextStore.context.populateControlBar().map(
             (buttonProps: ControlButtonDescriptor) => (
               <ControlButton
@@ -51,7 +53,22 @@ export default class App extends Component<any, AppState, any> {
           context       = {this.state.contextStore.context}
           renderManager = {this.renderManager}
         />
+        <Modal 
+          visible    = {this.state.contextStore.context.settingsOpen}
+          header     = 'Settings'
+          closeModal = {this.closeSettings}
+        >
+          
+        </Modal>
       </div>
     );
+  }
+
+  private closeSettings = () => {
+    this.getContext().settingsOpen = false;
+  }
+
+  private getContext(): AppContext {
+    return this.state.contextStore.context;
   }
 }

@@ -1,5 +1,4 @@
-import React, { CSSProperties, RefObject } from 'react';
-import { Component, ReactNode } from 'react';
+import React, { Component, ReactNode, CSSProperties, RefObject } from 'react';
 import './Layout.css';
 
 export interface CollapsibleProps {
