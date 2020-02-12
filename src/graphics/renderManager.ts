@@ -1,5 +1,6 @@
 import { Scene } from './scene';
 import { ContextStore } from '../state/contextStore';
+import { Settings } from '../state/settings';
 
 export class RenderManager {
   private previousScene?: Scene;
@@ -9,7 +10,8 @@ export class RenderManager {
   private transitioning: boolean = false;
 
   public constructor(
-    private contextStore: ContextStore
+    private contextStore: ContextStore,
+    private settings:     Settings
   ) { }
 
   public isInitialised(): boolean {

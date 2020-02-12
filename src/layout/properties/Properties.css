@@ -130,3 +130,16 @@ input.booleanInputProperty:checked ~ span.booleanSwitch span.booleanSwitchThumb 
 input.booleanInputProperty:checked ~ span.booleanSwitch span.booleanSwitchActive {
   left: 10px;
 }
+
+label.selectionLabel {
+  margin-inline: 5px;
+  cursor: pointer;
+}
+
+label.selectionLabel.selected {
+  border-bottom: 2px var(--accent-colour) solid;
+}
+
+input.selectionInputProperty {
+  display: none;
+}

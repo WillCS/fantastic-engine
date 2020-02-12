@@ -6,6 +6,7 @@ import { StringInput } from './StringInput';
 import { VectorInput } from './VectorInput';
 import { BooleanInput } from './BooleanInput';
 import { observer } from 'mobx-react';
+import { SelectionInput } from './SelectionInput';
 
 export interface PropertyViewProps {
   item: any | undefined;
@@ -77,6 +78,15 @@ export class PropertyView extends Component<PropertyViewProps> {
             name           = {property.key}
             value          = {this.getItemPropertyValue(property)}
             outputCallback = {this.getOutputCallback(property)}
+          />
+        );
+      case PropertyType.SELECTION:
+        return (
+          <SelectionInput
+            name           = {property.key}
+            value          = {this.getItemPropertyValue(property)}
+            outputCallback = {this.getOutputCallback(property)}
+            allowedValues  = {property.constraints.allowedValues}
           />
         )
     }

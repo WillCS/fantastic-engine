@@ -1,6 +1,7 @@
 import { Scene } from '../graphics/scene';
 import { observable } from 'mobx';
 import { ControlButtonDescriptor } from '../layout/control/ControlButton';
+import { Settings } from './settings';
 
 export abstract class AppContext {
   @observable
@@ -9,7 +10,7 @@ export abstract class AppContext {
   @observable
   public settingsOpen: boolean;
 
-  protected constructor(scene: Scene) {
+  protected constructor(protected settings: Settings, scene: Scene) {
     this.scene = scene;
     this.settingsOpen = false;
   }

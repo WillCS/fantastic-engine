@@ -3,6 +3,7 @@ import { observable } from 'mobx';
 import { Model } from '../model/model';
 import { Scene } from '../graphics/scene';
 import { OrbitalCamera } from '../graphics/camera';
+import { Settings } from './settings';
 
 export abstract class EditorContext extends AppContext {
   @observable
@@ -15,8 +16,8 @@ export abstract class EditorContext extends AppContext {
   protected lastMouseX: number;
   protected lastMouseY: number;
 
-  protected constructor(scene: Scene, model: Model) {
-    super(scene);
+  protected constructor(scene: Scene, model: Model, settings: Settings) {
+    super(settings, scene);
     this.model = model;
 
     this.panning    = false;
@@ -25,7 +26,9 @@ export abstract class EditorContext extends AppContext {
   }
 
   public onMouseDown(x: number, y: number, button: number): void {
-    if(!this.panning && button === 1) {
+    if(!this.panning && button === 0) {
+      document.addEventListener('mouseup',   this.endPanning, { capture: true });
+
       this.panning = true;
       this.lastMouseX = x;
       this.lastMouseY = y;
@@ -47,11 +50,17 @@ export abstract class EditorContext extends AppContext {
     }
   }
 
-  public onMouseUp(x: number, y: number, button: number): void  {
-    if(this.panning && button === 1) {
+  private endPanning = (event: MouseEvent) => {
+    document.removeEventListener('mouseup',   this.endPanning, { capture: true });
+
+    if(this.panning && event.button === 0) {
       this.panning = false;
     }
+
+    event.stopPropagation();
   }
+
+  public onMouseUp(x: number, y: number, button: number): void  { }
 
   public onScrolled(delta: number): void  {
     if(this.scene.getCamera() instanceof OrbitalCamera) {

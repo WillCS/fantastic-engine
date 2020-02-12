@@ -12,12 +12,14 @@ export enum Readability {
 }
 
 export enum PropertyType {
-  STRING, INT, NUMBER, VEC2, VEC3, VEC2I, VEC3I, BOOLEAN, TEXTURE
+  STRING, INT, NUMBER, VEC2, VEC3, VEC2I, VEC3I, BOOLEAN, TEXTURE, INTERVAL, SELECTION
 }
 
 export interface PropertyConstraints {
-  min?: any;
-  max?: any;
+  min?:           any;
+  max?:           any;
+  step?:          any;
+  allowedValues?: {};
 }
 
 export interface PropertyDescription {

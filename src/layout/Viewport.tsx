@@ -6,6 +6,7 @@ import { AppContext } from "../state/context";
 import ReactResizeDetector from 'react-resize-detector';
 import { RenderManager } from "../graphics/renderManager";
 import { observer } from "mobx-react";
+import { SettingsContext } from "../state/settings";
 
 export interface ViewportProps {
   context: AppContext;
@@ -14,6 +15,8 @@ export interface ViewportProps {
 
 @observer
 export class Viewport extends Component<ViewportProps> {
+  public static contextType = SettingsContext;
+  
   private renderTargetRef: RefObject<HTMLCanvasElement>;
   private webGL!: WebGLRenderingContext;
   private rendering: boolean = false;

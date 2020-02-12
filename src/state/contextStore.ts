@@ -1,6 +1,7 @@
 import { AppContext } from "./context";
 import { DefaultContext } from "./appContexts/defaultContext";
 import { observable } from "mobx";
+import { Settings } from "./settings";
 
 export class ContextStore {
   @observable
@@ -10,8 +11,10 @@ export class ContextStore {
 
   public contextChanged: boolean;
 
-  public constructor() {
-    this.context        = new DefaultContext(this);
+  public constructor(
+    private settings: Settings
+  ) {
+    this.context        = new DefaultContext(this, this.settings);
     this.contextChanged = true;
   }
 
