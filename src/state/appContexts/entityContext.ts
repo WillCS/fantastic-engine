@@ -32,7 +32,8 @@ export class EntityContext extends EditorContext {
       }, { 
         key:     'trash',
         type:    ControlButtonType.TRASH,
-        title:   'Delete an object'
+        title:   'Delete an object',
+        onClick: this.delete
       }, { 
         key:     'exit',
         type:    ControlButtonType.EXIT,
@@ -41,7 +42,7 @@ export class EntityContext extends EditorContext {
     ];
   }
 
-  private addAssembly: (() => void) = () => {
+  private addAssembly = () => {
     let parentList: AssemblyList | undefined = undefined;
 
     if(this.selection !== undefined) {
@@ -66,10 +67,10 @@ export class EntityContext extends EditorContext {
     let newAssembly = new Assembly(parentList);
 
     parentList.assemblies.push(newAssembly);
-    this.selection = newAssembly;
+    this.selection.select(newAssembly);
   }
 
-  private addBox: (() => void) = () => {
+  private addBox = () => {
     let parentList: BoxList | undefined = undefined;
 
     if(this.selection !== undefined) {
@@ -94,5 +95,19 @@ export class EntityContext extends EditorContext {
 
     parentList.boxes.push(newBox);
     this.selection = newBox;
+  }
+
+  private delete = () => {
+    let parentList: BoxList | AssemblyList | undefined = undefined;
+
+    if(this.selection !== undefined) {
+      if(this.selection.parent) {
+        if(this.selection.parent instanceof BoxList) {
+
+        } else if(this.selection.parent instanceof AssemblyList) {
+
+        }
+      }
+    }
   }
 }

@@ -4,13 +4,14 @@ import { Model } from '../model/model';
 import { Scene } from '../graphics/scene';
 import { OrbitalCamera } from '../graphics/camera';
 import { Settings } from './settings';
+import { SelectionContainer } from './selection';
 
 export abstract class EditorContext extends AppContext {
   @observable
   public model: Model;
 
   @observable
-  public selection: any;
+  public selection: SelectionContainer;
 
   protected panning:    boolean;
   protected lastMouseX: number;
@@ -23,6 +24,8 @@ export abstract class EditorContext extends AppContext {
     this.panning    = false;
     this.lastMouseX = 0;
     this.lastMouseY = 0;
+
+    this.selection = new SelectionContainer();
   }
 
   public onMouseDown(x: number, y: number, button: number): void {

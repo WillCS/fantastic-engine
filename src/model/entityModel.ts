@@ -33,7 +33,14 @@ export class EntityModel implements Model {
     } else if(parent instanceof BoxList) {
       return parent.boxes;
     } else if(parent instanceof Assembly) {
-      return [parent.children, parent.cubes];
+      const children = [];
+      if(parent.children.assemblies.length > 0) {
+        children.push(parent.children);
+      }
+      
+      parent.cubes.boxes.forEach(box => children.push(box));
+
+      return children;
     } else {
       return parent;
     }
