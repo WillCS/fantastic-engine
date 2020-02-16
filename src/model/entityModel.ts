@@ -30,10 +30,16 @@ export class EntityModel implements Model {
       return parent.assemblies;
     } else if(parent instanceof TextureList) {
       return parent.textures;
-    } else if(parent instanceof BoxList) {
-      return parent.boxes;
     } else if(parent instanceof Assembly) {
-      return [parent.children, parent.cubes];
+      const children = [];
+
+      if(parent.children.assemblies.length > 0) {
+        children.push(parent.children);
+      }
+
+      parent.cubes.boxes.forEach(box => children.push(box));
+
+      return children;
     } else {
       return parent;
     }
@@ -46,14 +52,12 @@ export class EntityModel implements Model {
       return { name: 'Assemblies' };
     } else if(treeObject instanceof TextureList) {
       return { name: 'Textures' };
-    } else if(treeObject instanceof BoxList) {
-      return { name: 'Boxes' };
     } else if(treeObject instanceof Assembly) {
       return { name: treeObject.name }
     } else if(treeObject instanceof Box) {
       return { name: treeObject.name };
     } else {
-      return { name: 'something else' };
+      throw new Error('EntityModel tried to decorate an object that it shouldn\'t have to!');
     }
   }
 }
