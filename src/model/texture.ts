@@ -2,9 +2,11 @@ import { Vec2 } from "../math/vector";
 import { hasProperties, property, PropertyType, Readability } from "../properties/properties";
 import { Box } from "./entityModel";
 import { observable, computed } from "mobx";
+import { Selectable } from "../state/selection";
+import { TreeViewItem, TreeItemStyling } from "../layout/tree/tree";
 
 @hasProperties
-export class Texture {
+export class Texture implements Selectable, TreeViewItem {
   @observable
   @property(PropertyType.STRING, Readability.EDITABLE, 'Name')
   public name: string;
@@ -18,12 +20,26 @@ export class Texture {
   private uvMap:          HTMLImageElement;
   private loadedTexture?: HTMLImageElement;
 
-  public constructor(name: string, size: Vec2) {
+  public constructor(name: string, size: Vec2, 
+    private readonly parent: Selectable
+  ) {
     this.name  = name;
     this.size  = size;
     
     this.boxes = [];
     this.uvMap = new Image(this.size.x, this.size.y);
+  }
+
+  public populate(): TreeViewItem[] {
+    return [];
+  }
+
+  public decorate(): TreeItemStyling {
+    return { name: this.name };
+  }
+
+  public getParent(): Selectable | undefined {
+    return this.parent;
   }
 
   public addBox(box: Box): void {
@@ -89,8 +105,23 @@ export class Texture {
   }
 }
 
-export class TextureList {
-  public constructor(public textures: Texture[], parent: any) { }
+export class TextureList implements Selectable, TreeViewItem {
+  public constructor(
+    public textures: Texture[],
+    private parent: Selectable
+  ) { }
+
+  public populate(): TreeViewItem[] {
+    return this.textures;
+  }
+
+  public decorate(): TreeItemStyling {
+    return { name: 'Textures' };
+  }
+
+  public getParent(): Selectable | undefined {
+    return this.parent;
+  }
 }
 
 export class TexturePointer {

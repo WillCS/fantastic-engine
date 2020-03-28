@@ -1,5 +1,5 @@
-import { TreeLayout } from "../layout/tree/treeLayout";
+import { TreeViewItem } from "../layout/tree/tree";
 
-export interface Model extends TreeLayout {
+export interface Model extends TreeViewItem {
 
 }

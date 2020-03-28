@@ -5,13 +5,14 @@ import { Scene } from '../graphics/scene';
 import { OrbitalCamera } from '../graphics/camera';
 import { Settings } from './settings';
 import { Change } from './change';
+import { Selectable } from './selection';
 
 export abstract class EditorContext extends AppContext {
   @observable
   public model: Model;
 
   @observable
-  public selection: any;
+  public selection?: Selectable;
 
   @observable
   public history: Change[];
@@ -68,10 +69,14 @@ export abstract class EditorContext extends AppContext {
 
   public onMouseUp(x: number, y: number, button: number): void  { }
 
-  public onScrolled(delta: number): void  {
+  public onScrolled(delta: number): void {
     if(this.scene.getCamera() instanceof OrbitalCamera) {
       const camera: OrbitalCamera = this.scene.getCamera() as OrbitalCamera;
       camera.radius += delta;
     }
+  }
+
+  public select(selectable: Selectable): void {
+    this.selection = selectable;
   }
 }

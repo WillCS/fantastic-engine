@@ -8,6 +8,7 @@ import { observer } from 'mobx-react';
 import { AppContext } from '../state/context';
 import { EditorContext } from '../state/editorContext';
 import { TextureView } from './TextureView';
+import { Selectable } from '../state/selection';
 
 export interface DetailViewProps {
   show:    boolean;
@@ -106,7 +107,7 @@ export class DetailView extends Component<DetailViewProps, DetailVewState> {
       )});
   }
 
-  private handleSelectionChanged = (newSelection: any) => {
+  private handleSelectionChanged = (newSelection: Selectable) => {
     this.getContext().selection = newSelection;
   }
 

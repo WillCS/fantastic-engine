@@ -1,18 +1,19 @@
 import React, { CSSProperties } from 'react';
 import { Component, ReactNode } from 'react';
-import { TreeItemStyling, TreeLayout } from './treeLayout';
 import './Tree.css';
 import { observer } from 'mobx-react';
+import { TreeViewItem, TreeItemStyling } from './tree';
+import { Selectable } from '../../state/selection';
 
 export interface TreeItemProps {
   item:         any;
   styling:      TreeItemStyling;
   depth:        number;
-  rootItem:     TreeLayout;
-  selection:    any | undefined;
-  setSelection: (selection: any | undefined) => void;
+  rootItem:     TreeViewItem;
+  selection?:   Selectable;
+  setSelection: (selection: Selectable) => void;
   openParent:   () => void;
-  childItems:   any[];
+  childItems:   TreeViewItem[];
 }
 
 export interface TreeItemState {
@@ -80,21 +81,21 @@ export class TreeItem extends Component<TreeItemProps, TreeItemState> {
             </span>
           </span>
         </div>
-        <div className = 'treeItemDescendents'>
-          { hasChildren && this.props.childItems.map((child, index) => {
+        { hasChildren && <div className = 'treeItemDescendents'>
+          { this.props.childItems.map((child, index) => {
             return <TreeItem
               key          = {index}
               item         = {child}
               depth        = {this.props.depth + 1}
               rootItem     = {this.props.rootItem}
-              styling      = {this.props.rootItem.decorate(child)}
+              styling      = {child.decorate()}
               selection    = {this.props.selection}
               setSelection = {this.props.setSelection}
-              childItems   = {this.props.rootItem.populate(child)}
+              childItems   = {child.populate()}
               openParent   = {this.cascadeOpen}
             />
           })}
-        </div> 
+        </div>} 
       </div>
     );
   }

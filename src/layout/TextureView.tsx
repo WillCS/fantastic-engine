@@ -34,7 +34,7 @@ export class TextureView extends Component<TextureViewProps> {
   }
 
   public componentDidUpdate(): void {
-    console.log("shet");
+
   }
 
   public render(): ReactNode {
@@ -57,8 +57,11 @@ export class TextureView extends Component<TextureViewProps> {
         texture = selection;
       } else if(selection instanceof Assembly) {
         texture = selection.texture;
-      } else if(selection.parent && selection.parent instanceof Assembly) {
-        texture = selection.parent.texture;
+      } else {
+        const parent = selection.getParent();
+        if(parent && parent instanceof Assembly) {
+          texture = parent.texture;
+        }
       }
     }
 

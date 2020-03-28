@@ -1,12 +1,13 @@
 import { Vec3, Vec2 } from '../math/vector';
 import { TextureList, Texture } from './texture';
 import { Model } from './model';
-import { TreeItemStyling } from '../layout/tree/treeLayout';
 import { hasProperties, property, PropertyType, Readability } from '../properties/properties';
 import { observable } from 'mobx';
+import { Selectable } from '../state/selection';
+import { TreeViewItem, TreeItemStyling } from '../layout/tree/tree';
 
 @hasProperties
-export class EntityModel implements Model {
+export class EntityModel implements Model, Selectable, TreeViewItem {
   @observable
   @property(PropertyType.STRING, Readability.EDITABLE, 'Name')
   public name:       string;
@@ -23,54 +24,36 @@ export class EntityModel implements Model {
     this.textures   = new TextureList([], this);
   }
 
-  public populate(parent: any): any {
-    if(parent instanceof EntityModel) {
-      return [this.assemblies, this.textures];
-    } else if(parent instanceof AssemblyList) {
-      return parent.assemblies;
-    } else if(parent instanceof TextureList) {
-      return parent.textures;
-    } else if(parent instanceof Assembly) {
-      const children = [];
-
-      if(parent.children.assemblies.length > 0) {
-        children.push(parent.children);
-      }
-
-      parent.cubes.boxes.forEach(box => children.push(box));
-
-      return children;
-    } else {
-      return parent;
-    }
+  public populate(): TreeViewItem[] {
+    return [this.assemblies, this.textures];
   }
 
-  public decorate(treeObject: any): TreeItemStyling {
-    if(treeObject instanceof EntityModel) {
-      return { name: treeObject.name };
-    } else if(treeObject instanceof AssemblyList) {
-      return { name: 'Assemblies' };
-    } else if(treeObject instanceof TextureList) {
-      return { name: 'Textures' };
-    } else if(treeObject instanceof Assembly) {
-      return { name: treeObject.name }
-    } else if(treeObject instanceof Box) {
-      return { name: treeObject.name };
-    } else {
-      throw new Error('EntityModel tried to decorate an object that it shouldn\'t have to!');
-    }
+  public decorate(): TreeItemStyling {
+    return { name: this.name };
+  }
+
+  getParent(): Selectable | undefined {
+    return undefined;
   }
 }
 
-export class AssemblyList {
+export class AssemblyList implements Selectable, TreeViewItem {
   @observable
   public assemblies: Assembly[];
 
-  public readonly parent: any;
+  private readonly parent: any;
 
   public constructor(assemblies: Assembly[], parent: any) { 
     this.assemblies = assemblies;
     this.parent     = parent;
+  }
+
+  public populate(): TreeViewItem[] {
+    return this.assemblies;
+  }
+
+  public decorate(): TreeItemStyling {
+    return { name: 'Assemblies' };
   }
 
   public copyTo(parent: any): AssemblyList {
@@ -82,13 +65,17 @@ export class AssemblyList {
 
     return newList;
   }
+
+  getParent(): Selectable | undefined {
+    return this.parent;
+  }
 }
 
-export class BoxList {
+export class BoxList implements Selectable  {
   @observable
   public boxes: Box[]; 
 
-  public readonly parent: any;
+  private readonly parent: any;
   
   public constructor(boxes: Box[], parent: any) {
     this.boxes  = boxes;
@@ -104,10 +91,14 @@ export class BoxList {
 
     return newList;
   }
+
+  getParent(): Selectable | undefined {
+    return this.parent;
+  }
 }
 
 @hasProperties
-export class Assembly {
+export class Assembly implements Selectable {
   @observable
   @property(PropertyType.STRING, Readability.EDITABLE, 'Name')
   public name:          string;
@@ -138,7 +129,7 @@ export class Assembly {
   @property(PropertyType.TEXTURE, Readability.EDITABLE, 'Texture')
   public texture:       Texture | undefined;
 
-  public constructor(public readonly parent: any) {
+  public constructor(private readonly parent: any) {
     this.name          = 'Assembly';
     this.rotationPoint = Vec3.zero();
     this.rotationAngle = Vec3.zero();
@@ -146,6 +137,22 @@ export class Assembly {
     this.textureOffset = Vec2.zero();
     this.children      = new AssemblyList([], this);
     this.cubes         = new BoxList([], this);
+  }
+
+  public populate(): TreeViewItem[] {
+    const children = [];
+
+      if(this.children.assemblies.length > 0) {
+        children.push(this.children);
+      }
+
+      this.cubes.boxes.forEach(box => children.push(box));
+
+      return children;
+  }
+
+  public decorate(): TreeItemStyling {
+    return { name: this.name };
   }
 
   public copyTo(parent: any): Assembly {
@@ -162,10 +169,14 @@ export class Assembly {
 
     return newAssembly;
   }
+
+  getParent(): Selectable | undefined {
+    return this.parent;
+  }
 }
 
 @hasProperties
-export class Box {
+export class Box implements Selectable, TreeViewItem {
   @observable
   @property(PropertyType.STRING, Readability.EDITABLE, 'Name')
   public name:          string;
@@ -186,12 +197,20 @@ export class Box {
   @property(PropertyType.BOOLEAN, Readability.EDITABLE, 'Mirrored')
   public mirrored:      boolean;
 
-  public constructor(public readonly parent: any) {
+  public constructor(private readonly parent: any) {
     this.name          = 'Box';
     this.position      = Vec3.zero();
     this.dimensions    = Vec3.zero();
     this.textureCoords = Vec2.zero();
     this.mirrored      = false;
+  }
+
+  public populate(): TreeViewItem[] {
+    return [];
+  }
+
+  public decorate(): TreeItemStyling {
+    return { name: this.name };
   }
 
   public copyTo(parent: any): Box {
@@ -204,5 +223,9 @@ export class Box {
     newBox.mirrored      = this.mirrored;
 
     return newBox;
+  }
+
+  getParent(): Selectable | undefined {
+    return this.parent;
   }
 }

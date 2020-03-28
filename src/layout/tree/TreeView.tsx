@@ -1,14 +1,15 @@
 import React from 'react';
 import { Component, ReactNode } from 'react';
-import { TreeLayout } from './treeLayout';
 import { TreeItem } from './TreeItem';
 import './Tree.css';
 import { observer } from 'mobx-react';
+import { TreeViewItem } from './tree';
+import { Selectable } from '../../state/selection';
 
 export interface TreeViewProps {
   selectionChanged: (item: any) => void;
-  root:             TreeLayout | undefined;
-  selection:        any | undefined;
+  root:             TreeViewItem;
+  selection?:       Selectable;
 }
 
 @observer
@@ -27,10 +28,10 @@ export class TreeView extends Component<TreeViewProps> {
             item         = {this.props.root}
             depth        = {0}
             rootItem     = {this.props.root}
-            styling      = {this.props.root.decorate(this.props.root)}
+            styling      = {this.props.root.decorate()}
             selection    = {this.props.selection}
             setSelection = {this.setSelection}
-            childItems   = {this.props.root.populate(this.props.root)}
+            childItems   = {this.props.root.populate()}
             openParent   = {() => {}}
           />
         }

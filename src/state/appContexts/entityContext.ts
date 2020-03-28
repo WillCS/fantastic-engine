@@ -49,11 +49,13 @@ export class EntityContext extends EditorContext {
         parentList = this.selection.children;
       } else if(this.selection instanceof AssemblyList) {
         parentList = this.selection;
-      } else if(this.selection instanceof Box) {
-        parentList = ((this.selection.parent as BoxList).parent as Assembly).children;
-      } else if(this.selection.parent) {
-        if(this.selection.parent instanceof Assembly) {
-          parentList = (this.selection.parent as Assembly).children;
+      } else {
+        const parent = this.selection.getParent();
+
+        if(this.selection instanceof Box) {
+          parentList = ((parent as BoxList).getParent() as Assembly).children;
+        } else if(parent && parent instanceof Assembly) {
+          parentList = parent.children;
         }
       }
     } 
@@ -66,7 +68,7 @@ export class EntityContext extends EditorContext {
     let newAssembly = new Assembly(parentList);
 
     parentList.assemblies.push(newAssembly);
-    this.selection = newAssembly;
+    this.select(newAssembly);
   }
 
   private addBox: (() => void) = () => {
@@ -78,10 +80,10 @@ export class EntityContext extends EditorContext {
       } else if(this.selection instanceof BoxList) {
         parentList = this.selection;
       } else if(this.selection instanceof Box) {
-        parentList = this.selection.parent as BoxList;
-      } else if(this.selection.parent) {
-        if(this.selection.parent instanceof Assembly) {
-          parentList = (this.selection.parent as Assembly).cubes;
+        parentList = this.selection.getParent() as BoxList;
+      } else if(this.selection.getParent()) {
+        if(this.selection.getParent() instanceof Assembly) {
+          parentList = (this.selection.getParent() as Assembly).cubes;
         }
       }
     } 
@@ -93,6 +95,6 @@ export class EntityContext extends EditorContext {
     let newBox = new Box(parentList);
 
     parentList.boxes.push(newBox);
-    this.selection = newBox;
+    this.select(newBox);
   }
 }
