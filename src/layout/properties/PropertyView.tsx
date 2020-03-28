@@ -7,13 +7,20 @@ import { VectorInput } from './VectorInput';
 import { BooleanInput } from './BooleanInput';
 import { observer } from 'mobx-react';
 import { SelectionInput } from './SelectionInput';
+import { AppContext } from '../../state/context';
+import { EditorContext } from '../../state/editorContext';
+import { SettingsContext, Settings } from '../../state/settings';
+import { FieldChange } from '../../state/change';
 
 export interface PropertyViewProps {
-  item: any | undefined;
+  item:         any | undefined;
+  context:      AppContext;
 }
 
 @observer
 export class PropertyView extends Component<PropertyViewProps> {
+  public static contextType = SettingsContext;
+  
   public render(): ReactNode {
     return (
       <table className='propertyTable'>
@@ -98,7 +105,22 @@ export class PropertyView extends Component<PropertyViewProps> {
 
   private getOutputCallback(property: PropertyDescription): (output: any) => void {
     const component = this;
-    return function(output: any): void {
+
+    return (output: any) => {
+      if(this.props.context instanceof EditorContext) {
+        const pastValue = component.props.item[property.key];
+        this.props.context.history.push(
+          new FieldChange(component.props.item, property.key, pastValue, output));
+
+        console.log((this.context as Settings).changeHistoryMaxSize);
+
+        if(this.props.context.history.length > (this.context as Settings).changeHistoryMaxSize) {
+          this.props.context.history.shift();
+        }
+
+        console.log(this.props.context.history);
+      }
+
       component.props.item[property.key] = output;
     }
   }

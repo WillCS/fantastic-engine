@@ -1,5 +1,5 @@
 import { Vec3, Vec2 } from '../math/vector';
-import { TextureList, TexturePointer } from './texture';
+import { TextureList, Texture } from './texture';
 import { Model } from './model';
 import { TreeItemStyling } from '../layout/tree/treeLayout';
 import { hasProperties, property, PropertyType, Readability } from '../properties/properties';
@@ -136,7 +136,7 @@ export class Assembly {
 
   @observable
   @property(PropertyType.TEXTURE, Readability.EDITABLE, 'Texture')
-  public texture:       TexturePointer | undefined;
+  public texture:       Texture | undefined;
 
   public constructor(public readonly parent: any) {
     this.name          = 'Assembly';

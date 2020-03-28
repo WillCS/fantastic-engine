@@ -65,7 +65,10 @@ export default class App extends Component<any, AppState, any> {
             header     = 'Settings'
             closeModal = {this.closeSettings}
           >
-            <PropertyView item = {this.settings}>
+            <PropertyView
+              item         = {this.settings}
+              context      = {this.getContext()}
+            >
               
             </PropertyView>
           </Modal>

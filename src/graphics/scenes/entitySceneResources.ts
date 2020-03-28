@@ -30,7 +30,7 @@ export function buildBoxMesh(webGL: WebGLRenderingContext, box: Box): DynamicMes
     vertices:        getBoxVertices(box),
     indices:         getBoxIndices(box),
     normals:         getBoxNormals(box),
-    decoration:      getBoxColours(box),
+    decoration:      getBoxTexCoords(box),
     defaultDrawMode: webGL.TRIANGLES,
     texture:         undefined
   };
@@ -93,48 +93,78 @@ function getBoxIndices(box: Box): number[] {
      8,  9, 10, // NORTH-WEST | -X
     10,  9, 11, // SOUTH-WEST |
 
-    12, 13, 14, // SOUTH-WEST | -Z
-    14, 13, 15, // SOUTH-EAST |
+    12, 14, 13, // SOUTH-WEST | -Z
+    13, 14, 15, // SOUTH-EAST |
 
-    16, 17, 18, // SOUTH-EAST | +X
-    18, 17, 19, // NORTH-EAST |
+    16, 18, 17, // SOUTH-EAST | +X
+    17, 18, 19, // NORTH-EAST |
 
     22, 21, 20, // BOTTOM     | -Y
     23, 22, 20  // 
   ];
 }
 
-function getBoxColours(box: Box): number[] {
+function getBoxTexCoords(box: Box): number[] {
+  const texU = box.textureCoords.x;
+  const texV = box.textureCoords.y;
+  const dx   = box.dimensions.x;
+  const dy   = box.dimensions.y;
+  const dz   = box.dimensions.z;
+  
   return [
-    yPlusR,  yPlusG,  yPlusB,
-    yPlusR,  yPlusG,  yPlusB,
-    yPlusR,  yPlusG,  yPlusB,
-    yPlusR,  yPlusG,  yPlusB,
+    // +Y
+    texU + dz + dx,      texV,
+    texU + dz + dx,      texV + dz,
+    texU + dz + dx + dx, texV + dz,
 
-    zPlusR,  zPlusG,  zPlusB,
-    zPlusR,  zPlusG,  zPlusB,
-    zPlusR,  zPlusG,  zPlusB,
-    zPlusR,  zPlusG,  zPlusB,
+    texU + dz + dx,      texV, 
+    texU + dz + dx + dx, texV + dz,
+    texU + dz + dx + dx, texV,
 
-    xMinusR, xMinusG, xMinusB,
-    xMinusR, xMinusG, xMinusB,
-    xMinusR, xMinusG, xMinusB,
-    xMinusR, xMinusG, xMinusB,
+    // +Z
+    texU + dx + dx + dz + dz, texV + dz,
+    texU + dx + dx + dz + dz, texV + dz + dy,
+    texU + dx + dz + dz     , texV + dz,
 
-    zMinusR, zMinusG, zMinusB,
-    zMinusR, zMinusG, zMinusB,
-    zMinusR, zMinusG, zMinusB,
-    zMinusR, zMinusG, zMinusB,
+    texU + dx + dz + dz     , texV + dz,
+    texU + dx + dx + dz + dz, texV + dz + dy,
+    texU + dx + dz + dz     , texV + dz + dy,
 
-    xPlusR,  xPlusG,  xPlusB,
-    xPlusR,  xPlusG,  xPlusB,
-    xPlusR,  xPlusG,  xPlusB,
-    xPlusR,  xPlusG,  xPlusB,
-    
-    yMinusR, yMinusG, yMinusB,
-    yMinusR, yMinusG, yMinusB,
-    yMinusR, yMinusG, yMinusB,
-    yMinusR, yMinusG, yMinusB
+    // -X
+    texU + dz, texV + dz,
+    texU + dz, texV + dz + dy,
+    texU     , texV + dz,
+
+    texU     , texV + dz,
+    texU + dz, texV + dz + dy,
+    texU     , texV + dz + dy,
+
+    // -Z
+    texU + dz,      texV + dz,
+    texU + dz + dx, texV + dz,
+    texU + dz     , texV + dz + dy,
+
+    texU + dz     , texV + dz + dy,
+    texU + dz + dx, texV + dz,
+    texU + dz + dx, texV + dz + dy,
+
+    // +X
+    texU + dx + dz,      texV + dz,
+    texU + dx + dz + dz, texV + dz,
+    texU + dx + dz     , texV + dz + dy,
+
+    texU + dx + dz     , texV + dz + dy,
+    texU + dx + dz + dz, texV + dz,
+    texU + dx + dz + dz, texV + dz + dy,
+
+    // -Y
+    texU + dz     , texV + dz,
+    texU + dz     , texV,
+    texU + dz + dx, texV,
+
+    texU + dz + dx, texV + dz,
+    texU + dz     , texV + dz,
+    texU + dz + dx, texV
   ];
 }
 

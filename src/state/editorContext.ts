@@ -4,6 +4,7 @@ import { Model } from '../model/model';
 import { Scene } from '../graphics/scene';
 import { OrbitalCamera } from '../graphics/camera';
 import { Settings } from './settings';
+import { Change } from './change';
 
 export abstract class EditorContext extends AppContext {
   @observable
@@ -12,6 +13,9 @@ export abstract class EditorContext extends AppContext {
   @observable
   public selection: any;
 
+  @observable
+  public history: Change[];
+
   protected panning:    boolean;
   protected lastMouseX: number;
   protected lastMouseY: number;
@@ -19,6 +23,8 @@ export abstract class EditorContext extends AppContext {
   protected constructor(scene: Scene, model: Model, settings: Settings) {
     super(settings, scene);
     this.model = model;
+
+    this.history    = [];
 
     this.panning    = false;
     this.lastMouseX = 0;

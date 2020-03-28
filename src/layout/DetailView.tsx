@@ -7,6 +7,7 @@ import { PropertyView } from './properties/PropertyView';
 import { observer } from 'mobx-react';
 import { AppContext } from '../state/context';
 import { EditorContext } from '../state/editorContext';
+import { TextureView } from './TextureView';
 
 export interface DetailViewProps {
   show:    boolean;
@@ -25,7 +26,7 @@ export class DetailView extends Component<DetailViewProps, DetailVewState> {
 
     this.state = {
       expandedChildren:    0,
-      childExpandedStates: [true, true]
+      childExpandedStates: [true, true, false]
     };
   }
 
@@ -57,7 +58,20 @@ export class DetailView extends Component<DetailViewProps, DetailVewState> {
               resizable = {this.isChildResizable(1)}
             >
               <PropertyView
-                item = {this.getContext().selection}
+                item         = {this.getContext().selection}
+                context      = {this.props.context}
+              />
+            </Collapsible>
+            <Collapsible
+              title     = 'TEXTURE'
+              index     = {2}
+              startOpen = {this.state.childExpandedStates[2]}
+              onOpen    = {this.handleChildOpened}
+              onClose   = {this.handleChildClosed}
+              resizable = {this.isChildResizable(2)}
+            >
+              <TextureView
+                context = {this.props.context}
               />
             </Collapsible>
           </div>
