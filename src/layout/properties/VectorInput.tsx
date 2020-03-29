@@ -13,10 +13,18 @@ export interface VectorInputProps {
   outputCallback: (output: Vec2 | Vec3 | Vec4) => void;
 }
 
+export interface VectorInputState {
+  value: Vec2 | Vec3 | Vec4;
+}
+
 @observer
-export class VectorInput extends PureComponent<VectorInputProps> {
+export class VectorInput extends PureComponent<VectorInputProps, VectorInputState> {
   public constructor(props: VectorInputProps) {
     super(props);
+
+    this.state = {
+      value: this.props.value
+    };
   }
 
   public render(): ReactNode {
@@ -24,15 +32,16 @@ export class VectorInput extends PureComponent<VectorInputProps> {
       <div className = 'inputContainer'>
         { MathHelper.range(this.getNumDimensions()).map(component =>
           <input
-            className = {this.getInputClassName()}
-            key       = {component}
+            className = { this.getInputClassName() }
+            key       = { component }
             type      = 'number'
-            step      = {this.props.integral ? 1 : 0.001}
-            min       = {this.props.min}
-            max       = {this.props.max}
-            name      = {`this.props.name${component}`}
-            value     = {this.getValueOfVectorComponent(component)}
-            onChange  = {this.getValueHandler(component)}
+            step      = { this.props.integral ? 1 : 0.001 }
+            min       = { this.props.min }
+            max       = { this.props.max }
+            name      = { `this.props.name${component}` }
+            value     = { this.getValueOfVectorComponent(component) }
+            onBlur    = { this.handleBlurred }
+            onChange  = { this.getValueHandler(component) }
           />
         )}
       </div>
@@ -55,16 +64,16 @@ export class VectorInput extends PureComponent<VectorInputProps> {
     let val: number;
     switch(componentIndex) {
       case 0:
-        val = this.props.value.x;
+        val = this.state.value.x;
         break;
       case 1: 
-        val = this.props.value.y;
+        val = this.state.value.y;
         break;
       case 2: 
-        val = (this.props.value as Vec3).z;
+        val = (this.state.value as Vec3).z;
         break;
       case 3: 
-        val = (this.props.value as Vec4).w;
+        val = (this.state.value as Vec4).w;
         break;
       default: 
         val = NaN;
@@ -106,7 +115,15 @@ export class VectorInput extends PureComponent<VectorInputProps> {
           break;
       }
 
-      this.props.outputCallback(newValue);
+      this.setState({
+        value: newValue
+      });
+    }
+  }
+
+  private handleBlurred = (event: React.FocusEvent<HTMLInputElement>) => {
+    if(typeof this.props.outputCallback === 'function') {
+      this.props.outputCallback(this.state.value);
     }
   }
 }

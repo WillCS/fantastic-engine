@@ -9,6 +9,9 @@ export abstract class Change {
   public abstract revert(): void;
 }
 
+/**
+ * A record of a change to one of an object's properties.
+ */
 export class FieldChange extends Change {
   public constructor(
     objectChanged:           any,
@@ -26,6 +29,9 @@ export class FieldChange extends Change {
   }
 }
 
+/**
+ * A record of an addition of a new item to a collection object.
+ */
 export class ItemAddedChange<T> extends Change {
   public constructor(
     objectChanged:    CollectionObject<T>,
@@ -41,6 +47,9 @@ export class ItemAddedChange<T> extends Change {
   }
 }
 
+/**
+ * A record of a deletion of an item from a collection object.
+ */
 export class ItemRemovedChange<T> extends Change {
   public constructor(
     objectChanged:      CollectionObject<T>,

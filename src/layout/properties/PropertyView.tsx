@@ -112,7 +112,7 @@ export class PropertyView extends Component<PropertyViewProps> {
         this.props.context.history.push(
           new FieldChange(component.props.item, property.key, pastValue, output));
 
-        console.log((this.context as Settings).changeHistoryMaxSize);
+        console.log((this.context as Settings));
 
         if(this.props.context.history.length > (this.context as Settings).changeHistoryMaxSize) {
           this.props.context.history.shift();
