@@ -129,8 +129,10 @@ export class VectorInput extends PureComponent<VectorInputProps, VectorInputStat
   }
 
   private handleBlurred = (event: React.FocusEvent<HTMLInputElement>) => {
-    if(typeof this.props.outputCallback === 'function') {
-      this.props.outputCallback(this.state.value);
+    if(this.props.value !== this.state.value) {
+      if(typeof this.props.outputCallback === 'function') {
+        this.props.outputCallback(this.state.value);
+      }
     }
   }
 }

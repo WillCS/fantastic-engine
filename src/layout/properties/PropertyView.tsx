@@ -109,16 +109,13 @@ export class PropertyView extends Component<PropertyViewProps> {
     return (output: any) => {
       if(this.props.context instanceof EditorContext) {
         const pastValue = component.props.item[property.key];
+        
         this.props.context.history.push(
           new FieldChange(component.props.item, property.key, pastValue, output));
-
-        console.log((this.context as Settings));
 
         if(this.props.context.history.length > (this.context as Settings).changeHistoryMaxSize) {
           this.props.context.history.shift();
         }
-
-        console.log(this.props.context.history);
       }
 
       component.props.item[property.key] = output;
