@@ -73,6 +73,11 @@ export class Vec2 {
     return [this.x, this.y];
   }
 
+  public equals(that: Vec2): boolean {
+    return this.x === that.x && 
+           this.y === that.y;
+  } 
+
   public static fromArray(vec: number[]): Vec2 {
     return new Vec2(vec[0], vec[1]);
   }
@@ -196,6 +201,12 @@ export class Vec3 {
     return [this.x, this.y, this.z];
   }
 
+  public equals(that: Vec3): boolean {
+    return this.x === that.x && 
+           this.y === that.y && 
+           this.z === that.z;
+  }
+
   public static fromArray(vec: number[]): Vec3 {
     return new Vec3(vec[0], vec[1], vec[2]);
   }
@@ -312,6 +323,13 @@ export class Vec4 {
 
   public toArray(): number[] {
     return [this.x, this.y, this.z, this.w];
+  }
+
+  public equals(that: Vec4): boolean {
+    return this.x === that.x && 
+           this.y === that.y && 
+           this.z === that.z &&
+           this.w === that.w;
   }
 
   public static fromArray(vec: number[]): Vec4 {

@@ -6,6 +6,7 @@ import { OrbitalCamera } from '../graphics/camera';
 import { Settings } from './settings';
 import { Change } from './change';
 import { Selectable } from './selection';
+import { ControlButtonDescriptor, ControlButtonType } from '../layout/control/ControlButton';
 
 export abstract class EditorContext extends AppContext {
   @observable
@@ -17,6 +18,9 @@ export abstract class EditorContext extends AppContext {
   @observable
   public history: Change[];
 
+  @observable
+  public undoneHistory: Change[];
+
   protected panning:    boolean;
   protected lastMouseX: number;
   protected lastMouseY: number;
@@ -25,11 +29,41 @@ export abstract class EditorContext extends AppContext {
     super(settings, scene);
     this.model = model;
 
-    this.history    = [];
+    this.history       = [];
+    this.undoneHistory = [];
 
     this.panning    = false;
     this.lastMouseX = 0;
     this.lastMouseY = 0;
+  }
+
+  public populateControlBar(): ControlButtonDescriptor[] {
+    return [
+      { 
+        key:     'trash',
+        type:    ControlButtonType.TRASH,
+        title:   'Delete an object'
+      }, {
+        key:     'undo',
+        type:    ControlButtonType.NEW_ASSEMBLY,
+        title:   'Undo an action',
+        onClick: this.undo
+      }, { 
+        key:     'redo',
+        type:    ControlButtonType.NEW_COMPONENT,
+        title:   'Redo a previously undone action',
+        onClick: this.redo
+      }, { 
+        key:     'exit',
+        type:    ControlButtonType.EXIT,
+        title:   'Exit'
+      }
+    ];
+  }
+
+  public makeChange(change: Change): void {
+    this.applyChange(change);
+    this.undoneHistory = [];
   }
 
   public onMouseDown(x: number, y: number, button: number): void {
@@ -78,5 +112,36 @@ export abstract class EditorContext extends AppContext {
 
   public select(selectable: Selectable): void {
     this.selection = selectable;
+  }
+
+  private applyChange(change: Change): void {
+    change.apply();
+
+    this.history.push(change);
+
+    if(this.history.length > this.settings.changeHistoryMaxSize) {
+      this.history.shift();
+    }
+  }
+
+  private undo = () => {
+    const changeToUndo = this.history.pop();
+
+    if(changeToUndo) {
+      changeToUndo.revert();
+      this.undoneHistory.push(changeToUndo);
+
+      if(this.undoneHistory.length > this.settings.changeHistoryMaxSize) {
+        this.undoneHistory.shift();
+      }
+    }
+  }
+
+  private redo = () => {
+    const changeToRedo = this.undoneHistory.pop();
+
+    if(changeToRedo) {
+      this.applyChange(changeToRedo);
+    }
   }
 }

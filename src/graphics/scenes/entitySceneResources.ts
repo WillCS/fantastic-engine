@@ -1,29 +1,29 @@
 import { DynamicMesh, MeshData } from "../dynamicMesh";
 import { Box } from "../../model/entityModel";
 
-const xPlusR  = 1;
-const xPlusG  = 0;
-const xPlusB  = 0;
+// const xPlusR  = 1;
+// const xPlusG  = 0;
+// const xPlusB  = 0;
 
-const yPlusR  = 0;
-const yPlusG  = 1;
-const yPlusB  = 0;
+// const yPlusR  = 0;
+// const yPlusG  = 1;
+// const yPlusB  = 0;
 
-const zPlusR  = 0;
-const zPlusG  = 0;
-const zPlusB  = 1;
+// const zPlusR  = 0;
+// const zPlusG  = 0;
+// const zPlusB  = 1;
 
-const xMinusR = 0;
-const xMinusG = 1;
-const xMinusB = 1;
+// const xMinusR = 0;
+// const xMinusG = 1;
+// const xMinusB = 1;
 
-const yMinusR = 1;
-const yMinusG = 0;
-const yMinusB = 1;
+// const yMinusR = 1;
+// const yMinusG = 0;
+// const yMinusB = 1;
 
-const zMinusR = 1;
-const zMinusG = 1;
-const zMinusB = 0;
+// const zMinusR = 1;
+// const zMinusG = 1;
+// const zMinusB = 0;
 
 export function buildBoxMesh(webGL: WebGLRenderingContext, box: Box): DynamicMesh {
   const meshData: MeshData = {

@@ -14,7 +14,8 @@ export class EntityContext extends EditorContext {
   }
 
   public populateControlBar(): ControlButtonDescriptor[] {
-    return [
+    const editorButtons = super.populateControlBar();
+    let entityButtons: ControlButtonDescriptor[] = [
       {
         key:     'assembly',
         type:    ControlButtonType.NEW_ASSEMBLY,
@@ -29,16 +30,10 @@ export class EntityContext extends EditorContext {
         key:     'texture',
         type:    ControlButtonType.NEW_TEXTURE,
         title:   'Add a new Texture'
-      }, { 
-        key:     'trash',
-        type:    ControlButtonType.TRASH,
-        title:   'Delete an object'
-      }, { 
-        key:     'exit',
-        type:    ControlButtonType.EXIT,
-        title:   'Exit'
       }
     ];
+
+    return entityButtons.concat(editorButtons);
   }
 
   private addAssembly: (() => void) = () => {

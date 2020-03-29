@@ -9,7 +9,7 @@ import { observer } from 'mobx-react';
 import { SelectionInput } from './SelectionInput';
 import { AppContext } from '../../state/context';
 import { EditorContext } from '../../state/editorContext';
-import { SettingsContext, Settings } from '../../state/settings';
+import { SettingsContext } from '../../state/settings';
 import { FieldChange } from '../../state/change';
 
 export interface PropertyViewProps {
@@ -109,16 +109,8 @@ export class PropertyView extends Component<PropertyViewProps> {
     return (output: any) => {
       if(this.props.context instanceof EditorContext) {
         const pastValue = component.props.item[property.key];
-        
-        this.props.context.history.push(
-          new FieldChange(component.props.item, property.key, pastValue, output));
-
-        if(this.props.context.history.length > (this.context as Settings).changeHistoryMaxSize) {
-          this.props.context.history.shift();
-        }
+        this.props.context.makeChange(new FieldChange(component.props.item, property.key, pastValue, output));
       }
-
-      component.props.item[property.key] = output;
     }
   }
 }

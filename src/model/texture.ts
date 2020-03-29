@@ -1,7 +1,7 @@
 import { Vec2 } from "../math/vector";
 import { hasProperties, property, PropertyType, Readability } from "../properties/properties";
 import { Box } from "./entityModel";
-import { observable, computed } from "mobx";
+import { observable } from "mobx";
 import { Selectable } from "../state/selection";
 import { TreeViewItem, TreeItemStyling } from "../layout/tree/tree";
 
