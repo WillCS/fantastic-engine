@@ -1,6 +1,6 @@
 import { Vec3, Vec2 } from '../math/vector';
 import { TextureList, Texture } from './texture';
-import { Model } from './model';
+import { Model, CollectionObject } from './model';
 import { hasProperties, property, PropertyType, Readability } from '../properties/properties';
 import { observable } from 'mobx';
 import { Selectable } from '../state/selection';
@@ -37,7 +37,7 @@ export class EntityModel implements Model, Selectable, TreeViewItem {
   }
 }
 
-export class AssemblyList implements Selectable, TreeViewItem {
+export class AssemblyList implements Selectable, TreeViewItem, CollectionObject<Assembly> {
   @observable
   public assemblies: Assembly[];
 
@@ -69,9 +69,39 @@ export class AssemblyList implements Selectable, TreeViewItem {
   getParent(): Selectable | undefined {
     return this.parent;
   }
+
+  getChildren(): Assembly[] {
+    return this.assemblies;
+  }
+
+  size(): number {
+    return this.assemblies.length;
+  }
+
+  addChild(child: Assembly, index?: number): void {
+    if(index) {
+      this.assemblies = this.assemblies.splice(index, 0, child);
+    } else {
+      this.assemblies.push(child);
+    }
+  }
+
+  removeChild(child: Assembly): number | undefined {
+    let removedIndex: number | undefined;
+    this.assemblies = this.assemblies.filter((assembly, index) => {
+      if(assembly === child) {
+        removedIndex = index;
+        return false;
+      }
+
+      return true;
+    })
+
+    return removedIndex;
+  }
 }
 
-export class BoxList implements Selectable  {
+export class BoxList implements Selectable, CollectionObject<Box>  {
   @observable
   public boxes: Box[]; 
 
@@ -80,6 +110,36 @@ export class BoxList implements Selectable  {
   public constructor(boxes: Box[], parent: any) {
     this.boxes  = boxes;
     this.parent = parent;
+  }
+
+  getChildren(): Box[] {
+    return this.boxes;
+  }
+
+  size(): number {
+    return this.boxes.length;
+  }
+
+  addChild(child: Box, index?: number): void {
+    if(index) {
+      this.boxes = this.boxes.splice(index, 0, child);
+    } else {
+      this.boxes.push(child);
+    }
+  }
+
+  removeChild(child: Box): number | undefined {
+    let removedIndex: number | undefined;
+    this.boxes = this.boxes.filter((box, index) => {
+      if(box === child) {
+        removedIndex = index;
+        return false;
+      }
+
+      return true;
+    })
+
+    return removedIndex;
   }
 
   public copyTo(parent: any): BoxList {
