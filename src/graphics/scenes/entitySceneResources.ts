@@ -96,8 +96,8 @@ function getBoxIndices(box: Box): number[] {
     12, 14, 13, // SOUTH-WEST | -Z
     13, 14, 15, // SOUTH-EAST |
 
-    16, 18, 17, // SOUTH-EAST | +X
-    17, 18, 19, // NORTH-EAST |
+    17, 18, 16, // SOUTH-EAST | +X
+    19, 18, 17, // NORTH-EAST |
 
     22, 21, 20, // BOTTOM     | -Y
     23, 22, 20  // 

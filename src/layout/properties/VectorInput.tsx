@@ -58,7 +58,7 @@ export class VectorInput extends PureComponent<VectorInputProps> {
             className    = { this.getInputClassName() }
             key          = { component }
             type         = 'number'
-            step         = { this.props.integral ? 1 : 0.001 }
+            step         = { this.props.integral ? 1 : 0 }
             min          = { this.props.min }
             max          = { this.props.max }
             name         = { `this.props.name${component}` }
