@@ -32,16 +32,17 @@ export class VectorInput extends PureComponent<VectorInputProps, VectorInputStat
       <div className = 'inputContainer'>
         { MathHelper.range(this.getNumDimensions()).map(component =>
           <input
-            className = { this.getInputClassName() }
-            key       = { component }
-            type      = 'number'
-            step      = { this.props.integral ? 1 : 0.001 }
-            min       = { this.props.min }
-            max       = { this.props.max }
-            name      = { `this.props.name${component}` }
-            value     = { this.getValueOfVectorComponent(component) }
-            onBlur    = { this.handleBlurred }
-            onChange  = { this.getValueHandler(component) }
+            className  = { this.getInputClassName() }
+            key        = { component }
+            type       = 'number'
+            step       = { this.props.integral ? 1 : 0.001 }
+            min        = { this.props.min }
+            max        = { this.props.max }
+            name       = { `this.props.name${component}` }
+            value      = { this.getValueOfVectorComponent(component) }
+            onBlur     = { this.handleBlurred }
+            onChange   = { this.getValueHandler(component) }
+            onKeyPress = { this.handleKeyPressed }
           />
         )}
       </div>
@@ -118,6 +119,12 @@ export class VectorInput extends PureComponent<VectorInputProps, VectorInputStat
       this.setState({
         value: newValue
       });
+    }
+  }
+
+  private handleKeyPressed = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if(event.nativeEvent.key === 'Enter') {
+      event.currentTarget.blur();
     }
   }
 
